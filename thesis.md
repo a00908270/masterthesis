@@ -42,6 +42,8 @@ TODO
 
 TODO
 
+
+
 * many different platforms
 * complex field, hard to learn
 * complex setup for many environments (design, training, auswertung, storage service, …)
@@ -49,6 +51,8 @@ TODO
 # State of the Art
 
 ## Machine Learning
+
+
 
 *Machine learning—the process by which computers can get better at performing tasks through exposure to data, rather than through explicit programming—requires massive computational power, the kind usually found in clusters of energy-guzzling, cloud-based computer servers outfitted with specialized processors. But an emerging trend promises to bring the power of machine learning to mobile devices that may lack or have only intermittent online connectivity. This will give rise to machines that sense, perceive, learn from, and respond to their environment and their users, enabling the emergence of new product categories, reshaping how businesses engage with customers, and transforming how work gets done across industries.(https://www2.deloitte.com/insights/us/en/focus/signals-for-strategists/machine-learning-mobile-applications.html)*  TODO CITATION
 
@@ -76,10 +80,9 @@ Building a Docker container is fast, because images do not include a guest opera
 
 ### Microservices
 
-TODO As we break down an application into very specific domains, we need a uniform way to communicate between all the various pieces and domains. Web services have served this purpose for years, but the added isolation and granular focus that containers bring have paved a way for what is being named microservices.  \cite{baier-kub}
+Web services enable interoperability between different systems and applications by providing a defined interface of communication\cite{baier-kub}. An application interface is provided over the HTTP protocol. Microservices are often implemented as web services.  An often cited definition originates from Martin Fowler and James Lewis:
 
-> TODO In short, the microservice architectural style is an approach to developing a
-> single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms, often an HTTP resource API. These services are built around business capabilities and independently deployable by fully automated deployment machinery. There is a bare minimum of centralized management of these services, which may be written in different programming languages and use different data storage technologies. (deloitte)
+> In short, the microservice architectural style is an approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms, often an HTTP resource API. These services are built around business capabilities and independently deployable by fully automated deployment machinery. There is a bare minimum of centralized management of these services, which may be written in different programming languages and use different data storage technologies. \cite{lewis2014microservices}
 
 \bild{monolithic_vs_microservice}{15cm}{Monolithic Architecture vs. Microservice Architecture}{Monolithic Architecture vs. Microservice Architecture}
 
@@ -89,13 +92,13 @@ TODO As we break down an application into very specific domains, we need a unifo
 
 ### Kubernetes
 
+Kubernetes was developed by Google for administering applications, that are provided in containers, in a cluster of nodes. \cite{kub_intro}
+
 TODO Kubernetes is a system, developed by Google, for managing containerized applications across a cluster of nodes. The controlling services in a Kubernetes cluster are called the master components and have a number of unique services which are used to manage a cluster's workload and communications across the system\cite{kub_intro}. 
 
 ### Docker Swarm
 
 
-
-### Kubernetes 
 
 
 
