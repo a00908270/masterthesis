@@ -1,0 +1,75 @@
+\input{config.tex} % Importiere die Einstellungen aus der Präambel
+% hier beginnt der eigentliche Inhalt
+\begin{document}
+\pagenumbering{Roman} % große Römische Seitenummerierung
+\pagestyle{empty}
+
+% Titelseite
+\clearscrheadings\clearscrplain
+
+\begin{flushright} 
+	\includegraphics[width=75mm]{images/logo_uniwien.pdf}\\
+\end{flushright}
+
+\begin{center}
+\begin{Huge}
+MASTERARBEIT / MASTER'S THESIS\\
+\vspace{3mm}
+\end{Huge}
+
+\vspace{15mm}
+{\small Titel der Arbeit / Title of the Master's Thesis}\\
+\begin{Large}
+Container Based Execution Stack for Neural Networks\\
+\vspace{15mm}
+{\small verfasst von / submitted by}\\
+Benjamin Nussbaum, BSc \\
+
+\vspace{15mm}
+{\small angestrebter akademischer Grad / in partial fulfilment of the requirements for the degree of} \\
+{\textbf Diplom-Ingenieur} (Dipl.-Ing.)\\
+\end{Large}
+\end{center}
+
+\vspace{8mm}
+
+Wien, 2018 / Vienna, 2018\\[12mm]
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{p{8cm}ll}
+{\textbf Studienkennzahl lt. Studienblatt / \newline
+degree programme code as it appears on \newline the student record sheet} & 926 \\
+{\textbf Studienrichtung lt. Studienblatt / \newline degree programme as it appears on \newline the student record sheet} & Masterstudium Wirtschaftsinformatik  \\
+{\textbf Betreut von / Supervisor} & Univ.-Prof. Dipl.-Ing. Dr. Erich Schikuta
+\end{tabular}
+
+
+\clearpage
+
+\pagestyle{useheadings} % normale Kopf- und Fußzeilen für den Rest
+
+\chapter*{Erklärung / Declaration}
+
+Hiermit versichere ich, dass ich die vorliegende Arbeit selbstständig verfasst und keine anderen als die angegebenen Quellen und Hilfsmittel benutzt habe, dass alle Stellen der Arbeit, die wörtlich oder sinngemäß aus anderen Quellen übernommen wurden, als solche kenntlich gemacht und dass die Arbeit in gleicher oder ähnlicher Form noch keiner Prüfungsbehörde vorgelegt wurde.
+
+\vspace{15mm}
+
+I declare that I have authored this thesis independently, that I have not used other than the declared
+sources / resources, and that I have explicitly marked all material which has been quoted either
+literally or by content from the used sources.
+
+\vspace{5cm}
+Ort, Datum \hspace{10cm} Unterschrift\\
+Date \hspace{11.5cm} Signature\\
+
+\include{abstract}
+
+\tableofcontents
+
+\pagenumbering{arabic} % ab jetzt die normale arabische Nummerierung
+\include{thesis}
+
+\bibliographystyle{alphadin_martin}
+\bibliography{bibliography}
+
+
+\end{document}

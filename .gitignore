@@ -1,3 +1,8 @@
 /.DS_Store
 *LatexianTemp*
 .DS_Store
+*.aux
+*.out
+*.log
+latex/images/*
+*.toc

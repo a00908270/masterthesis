@@ -1,0 +1,1395 @@
+\chapter{Introduction}\label{introduction}
+
+This thesis presents an execution stack for neural networks using the
+\emph{Kubernetes}\footnote{https://kubernetes.io} container
+orchestration and a Java based microservice architecture, which is
+exposed to users and other systems via RESTful web services and a web
+frontend. The whole workflow including importing, training and
+evaluating a neural network model, becomes possible by using this
+service oriented approach (SOA). The presented stack runs on popular
+cloud platforms, like \emph{Google Cloud Platform}\footnote{https://cloud.google.com/kubernetes-engine},
+\emph{Amazon AWS}\footnote{https://aws.amazon.com/eks} and
+\emph{Microsoft Azure}\footnote{https://azure.microsoft.com/services/container-service}.
+Furthermore it is scalable and each component is extensible and
+interchangeable. This work is influenced by N2Sky \cite{schikuta_2013},
+a framework to exchange neural network specific knowledge and aims to
+support \emph{ViNNSL}, the Vienna Neural Network Specification Language
+\cite{kopica_2015} \cite{beran_2008}.
+
+\paragraph{Objectives:}\label{objectives}
+
+The first objective is to specify functional and non-functional
+requirements for the neural network system. This is followed by the
+characterisation of the API and the implemention of microservices that
+later define the neural network composition as a collection of loosly
+coupled services.
+
+The next step is to setup a \emph{Kubernetes} cluster to create the
+foundation of container orchestration.
+
+Finally the microservices are deployed to containers and combined in a
+cluster.
+
+\paragraph{Non-Objectives:}\label{non-objectives}
+
+The prototype does not fully implement the \emph{ViNNSL 2.0}, as
+described in \cite{kopica_2015} and provides limited data in-/output.
+This is described in section TODO.
+
+\section{Motivation}\label{motivation}
+
+Machine learning has become a highly discussed topic in information
+technology in the past years and the trend is further increasing. It has
+become an essential part of everyday life when using search engines or
+speech recognition systems, like personal assistants. Self-learning
+algorithms in applications learn from the input of their users and
+decide which news an individual should read next, which song to listen
+to or which social media post should appear first. Messages are being
+analyzed and possible answers automatically predicted.
+
+A recent Californian study shows that 6.5 million developers worldwide
+are currently involved in projects that use artificial intelligence
+techniques and another 5.8 million developers expect to implement these
+in near future \cite{evans}.
+
+Machine learning is not just a business area in the United States,
+survey results of 264 companies in the DACH region show, that 56 of them
+already use that kind of technology in production. In the near future
+112 companies plan to do so or already have initial experiences (see
+figure \ref{img.crisp_ml_verbreitung}). It is seen by a fifth of the
+decision-makers as a core area to improve the competitiveness and
+profitability of companies in future. \cite{crisp}
+
+\bilds{crisp_ml_verbreitung}{Distribution of machine learning of 264 companies in the DACH region \cite{crisp}}{Distribution of machine learning in 264 companies (DACH region) \cite{crisp}}
+
+At the same time more and more companies shift their business logic from
+a monolithic design to microservices. Each service is dedicated to a
+single task that can be developed, deployed, replaced and scaled
+independently. Test results have shown that not only this architecture
+can help reduce infrastructure costs
+\cite{villamizar2}\cite{villamizar}, but also reduces complexity of the
+code base and enables applications to dynamically adjust computing
+resources on demand \cite{villamizar}.
+
+The presented project combines these techniques and demonstrates a
+prototype that is open-source and is supported by common cloud
+providers. Developers can integrate their own solutions into the
+platform or exchange components ad libitum.
+
+\section{Structure}\label{structure}
+
+TODO
+
+\section{Problem Statement}\label{problem-statement}
+
+TODO
+
+\begin{itemize}
+\tightlist
+\item
+  many different platforms
+\item
+  complex field, hard to learn
+\item
+  complex setup for many environments (design, training, auswertung,
+  storage service, \ldots{})
+\end{itemize}
+
+\chapter{State of the Art}\label{state-of-the-art}
+
+\section{Machine Learning}\label{machine-learning}
+
+\emph{Machine learning---the process by which computers can get better
+at performing tasks through exposure to data, rather than through
+explicit programming---requires massive computational power, the kind
+usually found in clusters of energy-guzzling, cloud-based computer
+servers outfitted with specialized processors. But an emerging trend
+promises to bring the power of machine learning to mobile devices that
+may lack or have only intermittent online connectivity. This will give
+rise to machines that sense, perceive, learn from, and respond to their
+environment and their users, enabling the emergence of new product
+categories, reshaping how businesses engage with customers, and
+transforming how work gets done across
+industries.(https://www2.deloitte.com/insights/us/en/focus/signals-for-strategists/machine-learning-mobile-applications.html)}
+TODO CITATION
+
+\subsection{Classification}\label{classification}
+
+\subsubsection{LATEX Symbol classification
+application}\label{latex-symbol-classification-application}
+
+\begin{figure}
+\centering
+\includegraphics{./images/latex-symbol-classifier.png}
+\caption{\LaTeX symbol classification app}
+\end{figure}
+
+\subsection{Neural Network Frameworks}\label{neural-network-frameworks}
+
+\subsubsection{Tensorflow}\label{tensorflow}
+
+\subsubsection{Deeplearning4J}\label{deeplearning4j}
+
+\section{Container Orchestration}\label{container-orchestration}
+
+\subsection{Docker Containers}\label{docker-containers}
+
+Containers enable software developers to deploy applications that are
+portable and consistent across different environments and providers
+\cite{baier-kub} by running isolated on top of the operating system's
+kernel \cite{bashari}. As an organisation, Docker\footnote{https://docker.com}
+has seen an increase of popularity very quickly, mainly because of its
+advantages, which are speed, portability, scalability, rapid delivery,
+and density \cite{bashari}.
+
+Building a Docker container is fast, because they are small and and
+overhead of a virtual machine. The container format itself is
+standardized, which means that developers only have to ensure that their
+application runs inside the container, which is then bundled into a
+single unit. The unit can be deployed on any Linux system as well as on
+various cloud environments and therefore easily be scaled. Not using a
+full operating system makes containers use less resources than virtual
+machines, which ensures higher workloads with greater density.
+\cite{joy2015}
+
+\subsection{Microservices}\label{microservices}
+
+TODO As we break down an application into very specific domains, we need
+a uniform way to communicate between all the various pieces and domains.
+Web services have served this purpose for years, but the added isolation
+and granular focus that containers bring have paved a way for what is
+being named microservices. \cite{baier-kub}
+
+\begin{quote}
+TODO In short, the microservice architectural style is an approach to
+developing a single application as a suite of small services, each
+running in its own process and communicating with lightweight
+mechanisms, often an HTTP resource API. These services are built around
+business capabilities and independently deployable by fully automated
+deployment machinery. There is a bare minimum of centralized management
+of these services, which may be written in different programming
+languages and use different data storage technologies. (deloitte)
+\end{quote}
+
+\bild{monolithic_vs_microservice}{15cm}{Monolithic Architecture vs. Microservice Architecture}{Monolithic Architecture vs. Microservice Architecture}
+
+\subsection{Comparison of Container Orchestration
+Technologies}\label{comparison-of-container-orchestration-technologies}
+
+\subsection{Kubernetes}\label{kubernetes}
+
+TODO Kubernetes is a system, developed by Google, for managing
+containerized applications across a cluster of nodes. The controlling
+services in a Kubernetes cluster are called the master components and
+have a number of unique services which are used to manage a cluster's
+workload and communications across the system\cite{kub_intro}.
+
+\subsection{Docker Swarm}\label{docker-swarm}
+
+\subsection{Kubernetes}\label{kubernetes-1}
+
+\chapter{Requirements}\label{requirements}
+
+\section{Functional Requirements}\label{functional-requirements}
+
+\section{Non-Functional Requirements}\label{non-functional-requirements}
+
+\chapter{Specification}\label{specification}
+
+\section{Neural Network Objects}\label{neural-network-objects}
+
+\subsection{State of Neural Network
+Objects}\label{state-of-neural-network-objects}
+
+\bild{nn-states}{15cm}{State Machine of a Neural Network}{State Machine of a Neural Network}
+
+\chapter{Designing the API}\label{designing-the-api}
+
+\section{REST API Documentation}\label{rest-api-documentation}
+
+\subsection{Base URL}\label{base-url}
+
+\begin{verbatim}
+http[s]://<clusterip>
+\end{verbatim}
+
+\subsection{Import a new ViNNSL XML
+Defintion}\label{import-a-new-vinnsl-xml-defintion}
+
+\begin{verbatim}
+POST /vinnsl
+\end{verbatim}
+
+\subsubsection{Parameters}\label{parameters}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Type & Name & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{Body} & \textbf{vinnsl} \emph{required} & vinnsl &
+Vinnsl\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Responses}\label{responses}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{201} & Created & No Content\tabularnewline
+\textbf{500} & Server Error & Error\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Consumes}\label{consumes}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/xml}
+\end{itemize}
+
+\subsubsection{Produces}\label{produces}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{*/*}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags}
+
+\begin{itemize}
+\tightlist
+\item
+  vinnsl-service-controller
+\end{itemize}
+
+\subsubsection{Example HTTP request}\label{example-http-request}
+
+\paragraph{Header}\label{header}
+
+\begin{verbatim}
+Content-Type: application/xml
+\end{verbatim}
+
+\paragraph{Body}\label{body}
+
+\begin{verbatim}
+<vinnsl>
+  <description>
+    <identifier><!-- will be generated --></identifier>
+    <metadata>
+      <paradigm>classification</paradigm>
+      <name>Backpropagation Classification</name>
+      <description>Iris Classification Example</description>
+      <version>
+        <major>1</major>
+        <minor>0</minor>
+      </version>
+    </metadata>
+    <creator>
+      <name>Ronald Fisher</name>
+      <contact>ronald.fisher@institution.com</contact>
+    </creator>
+    <problemDomain>
+      <propagationType type="feedforward">
+        <learningType>supervised</learningType>
+      </propagationType>
+      <applicationField>Classification</applicationField>
+      <networkType>Backpropagation</networkType>
+      <problemType>Classifiers</problemType>
+    </problemDomain>
+    <endpoints>
+      <train>true</train>
+      <retrain>true</retrain>
+      <evaluate>true</evaluate>
+    </endpoints>
+    <structure>
+       <input>
+        <ID>Input1</ID>
+        <size>
+            <min>4</min>
+            <max>4</max>
+        </size>
+       </input>
+       <hidden>
+        <ID>Hidden1</ID>
+        <size>
+            <min>3</min>
+            <max>3</max>
+        </size>
+       </hidden>
+       <hidden>
+        <ID>Hidden2</ID>
+        <size>
+            <min>3</min>
+            <max>3</max>
+        </size>
+       </hidden>
+       <output>
+        <ID>Output1</ID>
+        <size>
+            <min>3</min>
+            <max>3</max>
+        </size>
+       </output>
+     </structure>
+     <parameters/>
+     <data>
+        <description>iris txt file with 3 classifications, 4 input vars</description>
+        <tabledescription>no input as table possible</tabledescription>
+        <filedescription>CSV file</filedescription>
+     </data>
+  </description>
+</vinnsl>
+\end{verbatim}
+
+\subsubsection{Example HTTP response}\label{example-http-response}
+
+Statuscode: \texttt{201} CREATED
+
+\paragraph{Header}\label{header-1}
+
+\begin{verbatim}
+Location: https://<baseURL>/vinnsl/5ade36bbd601800001206798
+\end{verbatim}
+
+\subsection{List all Neural Networks}\label{list-all-neural-networks}
+
+\begin{verbatim}
+GET /vinnsl
+\end{verbatim}
+
+\subsubsection{Responses}\label{responses-1}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{200} & OK & \textless{} Vinnsl \textgreater{}
+array\tabularnewline
+\textbf{404} & Not Found & No Content\tabularnewline
+\textbf{500} & Server Error & Error\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Produces}\label{produces-1}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags-1}
+
+\begin{itemize}
+\tightlist
+\item
+  vinnsl-service-controller
+\end{itemize}
+
+\subsubsection{Example HTTP Response}\label{example-http-response-1}
+
+\begin{verbatim}
+[
+    {
+        "identifier": "5ab91658e8cc45946600ea11",
+        "description": {},
+        "definition": {},
+        "data": {},
+        "instance": {},
+        "trainingresult": {},
+        "result": {},
+        "nncloud": {
+            "status": "CREATED",
+            "dl4jNetwork": "{}
+        }
+    },
+    ...
+]
+\end{verbatim}
+
+\subsection{Delete all Neural
+Networks}\label{delete-all-neural-networks}
+
+\begin{verbatim}
+DELETE /vinnsl/deleteall
+\end{verbatim}
+
+\subsubsection{Responses}\label{responses-2}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{200} & OK & object\tabularnewline
+\textbf{204} & No Content & No Content\tabularnewline
+\textbf{500} & Server Error & Error\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Produces}\label{produces-2}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags-2}
+
+\begin{itemize}
+\tightlist
+\item
+  vinnsl-service-controller
+\end{itemize}
+
+\subsection{Get Neural Network Object}\label{get-neural-network-object}
+
+\begin{verbatim}
+GET /vinnsl/{id}
+\end{verbatim}
+
+\subsubsection{Parameters}\label{parameters-1}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Type & Name & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{Path} & \textbf{id} \emph{required} & id & string\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Responses}\label{responses-3}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{200} & OK & Vinnsl\tabularnewline
+\textbf{404} & Not Found & No Content\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Produces}\label{produces-3}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/xml}
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags-3}
+
+\begin{itemize}
+\tightlist
+\item
+  vinnsl-service-controller
+\end{itemize}
+
+\subsubsection{Example HTTP response}\label{example-http-response-2}
+
+\begin{verbatim}
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<vinnsl>
+    <identifier>5ab91658e8cc45946600ea11</identifier>
+    <description>
+        <identifier></identifier>
+        <metadata>
+            <paradigm>classification</paradigm>
+            <name>Backpropagation Classification</name>
+            <description>Face Recognition Example</description>
+            <version>
+                <major>1</major>
+                <minor>5</minor>
+            </version>
+        </metadata>
+        <creator>
+            <name>Autor 1</name>
+            <contact>author1@institution.com</contact>
+        </creator>
+        <problemDomain>
+            <propagationType type="feedforward">
+                <learningType>supervised</learningType>
+            </propagationType>
+            <applicationField>EMS</applicationField>
+            <applicationField>Operations</applicationField>
+            <applicationField>FaceRecoginition</applicationField>
+            <networkType>Backpropagation</networkType>
+            <problemType>Classifiers</problemType>
+        </problemDomain>
+        <endpoints>
+            <train>true</train>
+            <retrain>true</retrain>
+            <evaluate>true</evaluate>
+        </endpoints>
+        <structure>
+            <input>
+                <ID>Input1</ID>
+                <dimension>
+                    <min>1</min>
+                    <max>1</max>
+                </dimension>
+                <size>
+                    <min>960</min>
+                    <max>960</max>
+                </size>
+            </input>
+            <hidden>
+                <ID>Hidden1</ID>
+                <dimension>
+                    <min>1</min>
+                    <max>1024</max>
+                </dimension>
+            </hidden>
+            <output>
+                <ID>Output1</ID>
+                <dimension>
+                    <min>1</min>
+                    <max>1</max>
+                </dimension>
+                <size>
+                    <min>1</min>
+                    <max>1</max>
+                </size>
+            </output>
+        </structure>
+        <parameters/>
+        <data>
+            <description>Input are face images with 32x30 px</description>
+            <tabledescription>no input as table possible</tabledescription>
+            <filedescription>prepare the input as file by reading the image files</filedescription>
+        </data>
+    </description>
+    <definition>
+        <identifier></identifier>
+        <problemDomain>
+            <propagationType type="feedforward">
+                <learningType>supervised</learningType>
+            </propagationType>
+            <applicationField>EMS</applicationField>
+            <applicationField>Operations</applicationField>
+            <applicationField>FaceRecoginition</applicationField>
+            <networkType>Backpropagation</networkType>
+            <problemType>Classifiers</problemType>
+        </problemDomain>
+        <endpoints></endpoints>
+        <executionEnvironment>
+            <serial>true</serial>
+        </executionEnvironment>
+        <structure>
+            <input>
+                <ID>Input1</ID>
+                <dimension>1</dimension>
+                <size>960</size>
+            </input>
+            <hidden>
+                <ID>Hidden1</ID>
+                <dimension>1</dimension>
+                <size>1024</size>
+            </hidden>
+            <output>
+                <ID>Output1</ID>
+                <dimension>1</dimension>
+                <size>1</size>
+            </output>
+            <connections/>
+        </structure>
+        <resultSchema>
+            <instance>true</instance>
+            <training>true</training>
+        </resultSchema>
+        <parameters>
+            <valueparameter name="learningrate">0.4</valueparameter>
+            <valueparameter name="biasInput">1</valueparameter>
+            <valueparameter name="biasHidden">1</valueparameter>
+            <valueparameter name="momentum">0.1</valueparameter>
+            <comboparameter name="ativationfunction">sigmoid</comboparameter>
+            <valueparameter name="threshold">0.00001</valueparameter>
+            <comboparameter name="activationfunction">sigmoid</comboparameter>
+        </parameters>
+        <data>
+            <description>Input are face images with 32x30 px</description>
+            <dataSchemaID>iris.txt</dataSchemaID>
+        </data>
+    </definition>
+    <data>
+        <identifier>5ab4e69c8f136a16bf81f093</identifier>
+        <data>
+            <file>5ab4e69c8f136a16bf81f093</file>
+        </data>
+    </data>
+</vinnsl>
+\end{verbatim}
+
+\subsection{Remove Neural Network
+Object}\label{remove-neural-network-object}
+
+\begin{verbatim}
+DELETE /vinnsl/{id}
+\end{verbatim}
+
+\subsubsection{Parameters}\label{parameters-2}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Type & Name & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{Path} & \textbf{id} \emph{required} & id & string\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Responses}\label{responses-4}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{200} & OK & ResponseEntity\tabularnewline
+\textbf{204} & No Content & No Content\tabularnewline
+\textbf{500} & Server Error & No Content\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Produces}\label{produces-4}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{*/*}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags-4}
+
+\begin{itemize}
+\tightlist
+\item
+  vinnsl-service-controller
+\end{itemize}
+
+\subsection{Add/Replace File of Neural
+Network}\label{addreplace-file-of-neural-network}
+
+\begin{verbatim}
+PUT /vinnsl/{id}/addfile
+\end{verbatim}
+
+\subsubsection{Parameters}\label{parameters-3}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Type & Name & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{Path} & \textbf{id} \emph{required} & id & string\tabularnewline
+\textbf{Query} & \textbf{fileId} \emph{required} & fileId &
+string\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Responses}\label{responses-5}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{200} & OK & Vinnsl\tabularnewline
+\textbf{404} & Not Found & No Content\tabularnewline
+\textbf{500} & Server Error & Error\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Consumes}\label{consumes-1}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Produces}\label{produces-5}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/xml}
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags-5}
+
+\begin{itemize}
+\tightlist
+\item
+  vinnsl-service-controller
+\end{itemize}
+
+\subsection{Add/Replace ViNNSL Definition of Neural
+Network}\label{addreplace-vinnsl-definition-of-neural-network}
+
+\begin{verbatim}
+PUT /vinnsl/{id}/definition
+\end{verbatim}
+
+\subsubsection{Parameters}\label{parameters-4}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Type & Name & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{Path} & \textbf{id} \emph{required} & id & string\tabularnewline
+\textbf{Body} & \textbf{def} \emph{required} & def &
+Definition\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Responses}\label{responses-6}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{200} & OK & Vinnsl\tabularnewline
+\textbf{404} & Not Found & No Content\tabularnewline
+\textbf{500} & Server Error & Error\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Consumes}\label{consumes-2}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/xml}
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Produces}\label{produces-6}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{*/*}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags-6}
+
+\begin{itemize}
+\tightlist
+\item
+  vinnsl-service-controller
+\end{itemize}
+
+\subsubsection{Example HTTP request}\label{example-http-request-1}
+
+\paragraph{Request body}\label{request-body}
+
+\begin{verbatim}
+<definition>
+<identifier><!-- will be generated --></identifier>
+<metadata>
+  <paradigm>classification</paradigm>
+  <name>Backpropagation Classification</name>
+  <description>Iris Classification Example</description>
+  <version>
+    <major>1</major>
+    <minor>0</minor>
+  </version>
+</metadata>
+<creator>
+  <name>Ronald Fisher</name>
+  <contact>ronald.fisher@institution.com</contact>
+</creator>
+<problemDomain>
+  <propagationType type="feedforward">
+    <learningType>supervised</learningType>
+  </propagationType>
+  <applicationField>Classification</applicationField>
+  <networkType>Backpropagation</networkType>
+  <problemType>Classifiers</problemType>
+</problemDomain>
+<endpoints>
+  <train>true</train>
+</endpoints>
+<executionEnvironment>
+    <serial>true</serial>
+</executionEnvironment>
+<structure>
+   <input>
+    <ID>Input1</ID>
+    <size>4</size>
+   </input>
+   <hidden>
+    <ID>Hidden1</ID>
+    <size>3</size>
+   </hidden>
+   <hidden>
+    <ID>Hidden2</ID>
+    <size>3</size>
+   </hidden>
+   <output>
+    <ID>Output1</ID>
+    <size>3</size>
+   </output>
+   <connections>
+    <!--<fullconnected>
+        <fromblock>Input1</fromblock>
+        <toblock>Hidden1</toblock>
+        <fromblock>Hidden1</fromblock>
+        <toblock>Output1</toblock>
+    </fullconnected>-->
+   </connections>
+ </structure>
+ <resultSchema>
+    <instance>true</instance>
+    <training>true</training>
+ </resultSchema>
+ <parameters>
+    <valueparameter name="learningrate">0.1</valueparameter>
+    <comboparameter name="activationfunction">tanh</comboparameter>
+    <valueparameter name="iterations">500</valueparameter>
+    <valueparameter name="seed">6</valueparameter>
+ </parameters>
+ <data>
+    <description>iris txt file with 3 classifications, 4 input vars</description>
+    <dataSchemaID>name/iris.txt</dataSchemaID>
+ </data>
+</definition>
+\end{verbatim}
+
+\subsection{Add/Replace ViNNSL Instanceschema of Neural
+Network}\label{addreplace-vinnsl-instanceschema-of-neural-network}
+
+\begin{verbatim}
+PUT /vinnsl/{id}/instanceschema
+\end{verbatim}
+
+\subsubsection{Parameters}\label{parameters-5}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Type & Name & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{Path} & \textbf{id} \emph{required} & id & string\tabularnewline
+\textbf{Body} & \textbf{instance} \emph{required} & instance &
+Instanceschema\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Responses}\label{responses-7}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{200} & OK & object\tabularnewline
+\textbf{404} & Not Found & No Content\tabularnewline
+\textbf{500} & Server Error & Error\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Consumes}\label{consumes-3}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/xml}
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Produces}\label{produces-7}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{*/*}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags-7}
+
+\begin{itemize}
+\tightlist
+\item
+  vinnsl-service-controller
+\end{itemize}
+
+\subsubsection{Example HTTP request}\label{example-http-request-2}
+
+\paragraph{Request body}\label{request-body-1}
+
+\begin{verbatim}
+<instanceschema>
+</instanceschema>
+\end{verbatim}
+
+\subsection{Add/Replace ViNNSL Resultschema of Neural
+Network}\label{addreplace-vinnsl-resultschema-of-neural-network}
+
+\begin{verbatim}
+PUT /vinnsl/{id}/resultschema
+\end{verbatim}
+
+\subsubsection{Parameters}\label{parameters-6}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Type & Name & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{Path} & \textbf{id} \emph{required} & id & string\tabularnewline
+\textbf{Body} & \textbf{resultSchema} \emph{required} & resultSchema &
+Resultschema\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Responses}\label{responses-8}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{200} & OK & object\tabularnewline
+\textbf{404} & Not Found & No Content\tabularnewline
+\textbf{500} & Server Error & Error\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Consumes}\label{consumes-4}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/xml}
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Produces}\label{produces-8}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{*/*}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags-8}
+
+\begin{itemize}
+\tightlist
+\item
+  vinnsl-service-controller
+\end{itemize}
+
+\subsubsection{Example HTTP request}\label{example-http-request-3}
+
+\paragraph{Request body}\label{request-body-2}
+
+\begin{verbatim}
+<resultschema>
+</resultschema>
+\end{verbatim}
+
+\subsection{Add/Replace ViNNSL Trainingresult of Neural
+Network}\label{addreplace-vinnsl-trainingresult-of-neural-network}
+
+\begin{verbatim}
+PUT /vinnsl/{id}/trainingresult
+\end{verbatim}
+
+\subsubsection{Parameters}\label{parameters-7}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Type & Name & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{Path} & \textbf{id} \emph{required} & id & string\tabularnewline
+\textbf{Body} & \textbf{trainingresult} \emph{required} & trainingresult
+& Trainingresultschema\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Responses}\label{responses-9}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{200} & OK & object\tabularnewline
+\textbf{404} & Not Found & No Content\tabularnewline
+\textbf{500} & Server Error & Error\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Consumes}\label{consumes-5}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/xml}
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Produces}\label{produces-9}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{*/*}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags-9}
+
+\begin{itemize}
+\tightlist
+\item
+  vinnsl-service-controller
+\end{itemize}
+
+\subsubsection{Example HTTP request}\label{example-http-request-4}
+
+\paragraph{Request body}\label{request-body-3}
+
+\begin{verbatim}
+<trainingresult>
+</trainingresult>
+\end{verbatim}
+
+\subsection{Get Status of all Neural
+Networks}\label{get-status-of-all-neural-networks}
+
+\begin{verbatim}
+GET /status
+\end{verbatim}
+
+\subsubsection{Responses}\label{responses-10}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{200} & OK & object\tabularnewline
+\textbf{404} & Not Found & No Content\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Produces}\label{produces-10}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags-10}
+
+\begin{itemize}
+\tightlist
+\item
+  nn-status-controller
+\end{itemize}
+
+\subsubsection{HTTP response example}\label{http-response-example}
+
+\begin{verbatim}
+{
+    "5ab91658e8cc45946600ea11": "INPROGRESS"
+}
+\end{verbatim}
+
+\subsection{Get Status of Neural
+Network}\label{get-status-of-neural-network}
+
+\begin{verbatim}
+GET /status/{id}
+\end{verbatim}
+
+\subsubsection{Parameters}\label{parameters-8}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Type & Name & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{Path} & \textbf{id} \emph{required} & id & string\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Responses}\label{responses-11}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{200} & OK & object\tabularnewline
+\textbf{404} & Not Found & No Content\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Produces}\label{produces-11}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags-11}
+
+\begin{itemize}
+\tightlist
+\item
+  nn-status-controller
+\end{itemize}
+
+\subsection{Set Status of a Neural
+Network}\label{set-status-of-a-neural-network}
+
+\begin{verbatim}
+PUT /status/{id}/{status}
+\end{verbatim}
+
+\subsubsection{Parameters}\label{parameters-9}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+\begin{minipage}[b]{0.08\columnwidth}\raggedright\strut
+Type\strut
+\end{minipage} & \begin{minipage}[b]{0.21\columnwidth}\raggedright\strut
+Name\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\raggedright\strut
+Description\strut
+\end{minipage} & \begin{minipage}[b]{0.49\columnwidth}\raggedright\strut
+Schema\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\textbf{Path}\strut
+\end{minipage} & \begin{minipage}[t]{0.21\columnwidth}\raggedright\strut
+\textbf{id} \emph{required}\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+id\strut
+\end{minipage} & \begin{minipage}[t]{0.49\columnwidth}\raggedright\strut
+string\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\textbf{Path}\strut
+\end{minipage} & \begin{minipage}[t]{0.21\columnwidth}\raggedright\strut
+\textbf{status} \emph{required}\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+status\strut
+\end{minipage} & \begin{minipage}[t]{0.49\columnwidth}\raggedright\strut
+enum (\texttt{CREATED,\ QUEUED,\ INPROGRESS,\ FINISHED,\ ERROR})\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Responses}\label{responses-12}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{200} & OK & object\tabularnewline
+\textbf{404} & Not Found & No Content\tabularnewline
+\textbf{500} & Server Error & Error\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Consumes}\label{consumes-6}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Produces}\label{produces-12}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags-12}
+
+\begin{itemize}
+\tightlist
+\item
+  nn-status-controller
+\end{itemize}
+
+\subsection{Get Deeplearning4J Transformation Object of Neural
+Network}\label{get-deeplearning4j-transformation-object-of-neural-network}
+
+\begin{verbatim}
+GET /dl4j/{id}
+\end{verbatim}
+
+\subsubsection{Parameters}\label{parameters-10}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Type & Name & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{Path} & \textbf{id} \emph{required} & id & string\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Responses}\label{responses-13}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{200} & OK & string\tabularnewline
+\textbf{404} & Not Found & No Content\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Produces}\label{produces-13}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags-13}
+
+\begin{itemize}
+\tightlist
+\item
+  dl4j-service-controller
+\end{itemize}
+
+\subsection{Put Deeplearning4J Transformation Object of Neural
+Network}\label{put-deeplearning4j-transformation-object-of-neural-network}
+
+\begin{verbatim}
+PUT /dl4j/{id}
+\end{verbatim}
+
+\subsubsection{Parameters}\label{parameters-11}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Type & Name & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{Path} & \textbf{id} \emph{required} & id & string\tabularnewline
+\textbf{Body} & \textbf{dl4J} \emph{required} & dl4J &
+string\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Responses}\label{responses-14}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{200} & OK & ResponseEntity\tabularnewline
+\textbf{404} & Not Found & No Content\tabularnewline
+\textbf{500} & Server Error & Error\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Consumes}\label{consumes-7}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Produces}\label{produces-14}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags-14}
+
+\begin{itemize}
+\tightlist
+\item
+  dl-4j-service-controller
+\end{itemize}
+
+\chapter{Implementation of a
+Prototype}\label{implementation-of-a-prototype}
+
+\section{User Interface}\label{user-interface}
+
+\bild{vinnsl-nn-ui}{15cm}{User Interface of Prototype}{User Interface of Prototype}
+
+\chapter{Use Cases}\label{use-cases}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\item
+  iris classification
+\item
+  MNIST?
+\item
+  hosted trained network
+\end{enumerate}
+
+\chapter{Future Work}\label{future-work}
+
+TODO
+
+\begin{itemize}
+\tightlist
+\item
+  more function\\
+\item
+  backend für tensorflow
+\item
+  grafischer NN designer
+\item
+  trainierte netzwerke als webservice veröffentlichen
+\end{itemize}
+
+\chapter{Conclusions}\label{conclusions}
+
+\chapter{Acknowledgments}\label{acknowledgments}
+
+\chapter{Dedication}\label{dedication}
+
+\chapter{Appendices}\label{appendices}
