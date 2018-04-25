@@ -60,7 +60,12 @@ figure \ref{img.crisp_ml_verbreitung}). It is seen by a fifth of the
 decision-makers as a core area to improve the competitiveness and
 profitability of companies in future. \cite{crisp}
 
-\bilds{crisp_ml_verbreitung}{Distribution of machine learning of 264 companies in the DACH region \cite{crisp}}{Distribution of machine learning in 264 companies (DACH region) \cite{crisp}}
+\begin{figure}
+\centering
+\includegraphics[width=15.00000cm]{images/crisp_ml_verbreitung}
+\caption{Distribution of machine learning of 264 companies in the DACH
+region \cite{crisp}}
+\end{figure}
 
 At the same time more and more companies shift their business logic from
 a monolithic design to microservices. Each service is dedicated to a
@@ -120,7 +125,7 @@ application}\label{latex-symbol-classification-application}
 
 \begin{figure}
 \centering
-\includegraphics{./images/latex-symbol-classifier.png}
+\includegraphics{./images/latex-symbol-classifier}
 \caption{\LaTeX symbol classification app}
 \end{figure}
 
@@ -153,11 +158,9 @@ ensures higher workloads with greater density. \cite{joy2015}
 
 \subsection{Microservices}\label{microservices}
 
-Web services enable interoperability between different systems and
-applications by providing a defined interface of
-communication\cite{baier-kub}. An application interface is provided over
-the HTTP protocol. Microservices are often implemented as web services.
-An often cited definition originates from Martin Fowler and James Lewis:
+The micoservice architecture pattern is a variant of a service-oriented
+architecture (SOA). An often cited definition originates from Martin
+Fowler and James Lewis:
 
 \begin{quote}
 In short, the microservice architectural style is an approach to
@@ -171,7 +174,11 @@ languages and use different data storage technologies.
 \cite{lewis2014microservices}
 \end{quote}
 
-\bild{monolithic_vs_microservice}{15cm}{Monolithic Architecture vs. Microservice Architecture}{Monolithic Architecture vs. Microservice Architecture}
+\begin{figure}
+\centering
+\includegraphics[width=15.00000cm]{images/monolithic_vs_microservice}
+\caption{Monolithic Architecture vs.~Microservice Architecture}
+\end{figure}
 
 \subsection{Comparison of Container Orchestration
 Technologies}\label{comparison-of-container-orchestration-technologies}
@@ -179,15 +186,59 @@ Technologies}\label{comparison-of-container-orchestration-technologies}
 \subsection{Kubernetes}\label{kubernetes}
 
 Kubernetes was developed by Google for administering applications, that
-are provided in containers, in a cluster of nodes. \cite{kub_intro}
+are provided in containers, in a cluster of nodes. The services that are
+responsible for controlling the cluster are called master components
+\cite{kub_intro}.
 
 TODO Kubernetes is a system, developed by Google, for managing
 containerized applications across a cluster of nodes. The controlling
 services in a Kubernetes cluster are called the master components and
 have a number of unique services which are used to manage a cluster's
-workload and communications across the system\cite{kub_intro}.
+workload and communications across the system \cite{kub_intro}.
+
+\subsubsection{Master Components}\label{master-components}
+
+\paragraph{Etcd}\label{etcd}
+
+TODO The etcd project, developed by the CoreOS team, is a lightweight
+distributed key-value store that can be distributed across multiple
+nodes. Kubernetes uses etcd to store configuration data that can be used
+by each of the nodes in the cluster. This can be used for service
+discovery and represents the state of the cluster that each component
+can reference to configure or reconfigure themselves. By providing a
+simple HTTP/JSON API, the interface for setting or retrieving values is
+very straight forward. Like most other components in the control plane,
+etcd can be configured on a single master server or, in production
+scenarios, distributed among a number of machines. The only requirement
+is that it be network accessible to each of the Kubernetes machines.
+
+\paragraph{kube-apiserver}\label{kube-apiserver}
+
+\paragraph{kube-scheduler}\label{kube-scheduler}
+
+\paragraph{kube-controller-manager}\label{kube-controller-manager}
+
+\paragraph{cloud-controller-manager}\label{cloud-controller-manager}
+
+\subsubsection{Node Components}\label{node-components}
+
+\paragraph{kubelet}\label{kubelet}
+
+\paragraph{kube-proxy}\label{kube-proxy}
+
+\paragraph{Container Runtime}\label{container-runtime}
+
+Docker
+
+\subsubsection{Addons}\label{addons}
+
+\paragraph{DNS}\label{dns}
+
+\paragraph{Dashboard}\label{dashboard}
 
 \subsection{Docker Swarm}\label{docker-swarm}
+
+https://github.com/GuillaumeRochat/container-orchestration-comparison
 
 \chapter{Requirements}\label{requirements}
 
@@ -202,11 +253,15 @@ workload and communications across the system\cite{kub_intro}.
 \subsection{State of Neural Network
 Objects}\label{state-of-neural-network-objects}
 
-\bild{nn-states}{15cm}{State Machine of a Neural Network}{State Machine of a Neural Network}
+\begin{figure}
+\centering
+\includegraphics[width=15.00000cm]{images/nn-states}
+\caption{State Machine of a Neural Network}
+\end{figure}
 
-\chapter{Designing the API}\label{designing-the-api}
+\chapter{REST API Documentation}\label{rest-api-documentation}
 
-\section{REST API Documentation}\label{rest-api-documentation}
+\section{vinnsl-service}\label{vinnsl-service}
 
 \subsection{Base URL}\label{base-url}
 
@@ -1357,7 +1412,11 @@ Prototype}\label{implementation-of-a-prototype}
 
 \section{User Interface}\label{user-interface}
 
-\bild{vinnsl-nn-ui}{15cm}{User Interface of Prototype}{User Interface of Prototype}
+\begin{figure}
+\centering
+\includegraphics[width=15.00000cm]{images/VINNSL-NN-UI}
+\caption{User Interface of Prototype}
+\end{figure}
 
 \chapter{Use Cases}\label{use-cases}
 

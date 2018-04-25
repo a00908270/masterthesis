@@ -26,7 +26,9 @@ A recent Californian study shows that 6.5 million developers worldwide are curre
 
 Machine learning is not just a business area in the United States, survey results of 264 companies in the DACH region show, that 56 of them already use that kind of technology in production. In the near future 112 companies plan to do so or already have initial experiences (see figure \ref{img.crisp_ml_verbreitung}). It is seen by a fifth of the decision-makers as a core area to improve the competitiveness and profitability of companies in future. \cite{crisp}
 
-\bilds{crisp_ml_verbreitung}{Distribution of machine learning of 264 companies in the DACH region \cite{crisp}}{Distribution of machine learning in 264 companies (DACH region) \cite{crisp}}
+<!--\bilds{crisp_ml_verbreitung}{Distribution of machine learning of 264 companies in the DACH region \cite{crisp}}{Distribution of machine learning in 264 companies (DACH region) \cite{crisp}}-->
+
+![Distribution of machine learning of 264 companies in the DACH region \cite{crisp}](images/crisp_ml_verbreitung.png){width=15cm}
 
 At the same time more and more companies shift their business logic from a monolithic design to microservices. Each service is dedicated to a single task that can be developed, deployed, replaced and scaled independently.  Test results have shown that not only this architecture can help reduce infrastructure costs \cite{villamizar2}\cite{villamizar}, but also reduces complexity of the code base and enables applications to dynamically adjust computing resources on demand \cite{villamizar}.
 
@@ -80,23 +82,55 @@ Building a Docker container is fast, because images do not include a guest opera
 
 ### Microservices
 
-Web services enable interoperability between different systems and applications by providing a defined interface of communication\cite{baier-kub}. An application interface is provided over the HTTP protocol. Microservices are often implemented as web services.  An often cited definition originates from Martin Fowler and James Lewis:
+The micoservice architecture pattern is a variant of a service-oriented architecture (SOA).  An often cited definition originates from Martin Fowler and James Lewis:
 
 > In short, the microservice architectural style is an approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms, often an HTTP resource API. These services are built around business capabilities and independently deployable by fully automated deployment machinery. There is a bare minimum of centralized management of these services, which may be written in different programming languages and use different data storage technologies. \cite{lewis2014microservices}
 
-\bild{monolithic_vs_microservice}{15cm}{Monolithic Architecture vs. Microservice Architecture}{Monolithic Architecture vs. Microservice Architecture}
+<!--\bild{monolithic_vs_microservice}{15cm}{Monolithic Architecture vs. Microservice Architecture}{Monolithic Architecture vs. Microservice Architecture}-->
 
-<!--![Monolithic Architecture vs. Microservice Architecture](./images/monolithic_vs_microservice.png)-->
+![Monolithic Architecture vs. Microservice Architecture](images/monolithic_vs_microservice.png){width=15cm}
 
 ### Comparison of Container Orchestration Technologies
 
 ### Kubernetes
 
-Kubernetes was developed by Google for administering applications, that are provided in containers, in a cluster of nodes. \cite{kub_intro}
+Kubernetes was developed by Google for administering applications, that are provided in containers, in a cluster of nodes. The services that are responsible for controlling the cluster are called master components \cite{kub_intro}. 
 
-TODO Kubernetes is a system, developed by Google, for managing containerized applications across a cluster of nodes. The controlling services in a Kubernetes cluster are called the master components and have a number of unique services which are used to manage a cluster's workload and communications across the system\cite{kub_intro}. 
+TODO Kubernetes is a system, developed by Google, for managing containerized applications across a cluster of nodes. The controlling services in a Kubernetes cluster are called the master components and have a number of unique services which are used to manage a cluster's workload and communications across the system \cite{kub_intro}. 
+
+#### Master Components
+
+##### Etcd
+
+TODO The etcd project, developed by the CoreOS team, is a lightweight distributed key-value store that can be distributed across multiple nodes. Kubernetes uses etcd to store configuration data that can be used by each of the nodes in the cluster. This can be used for service discovery and represents the state of the cluster that each component can reference to configure or reconfigure themselves. By providing a simple HTTP/JSON API, the interface for setting or retrieving values is very straight forward. Like most other components in the control plane, etcd can be configured on a single master server or, in production scenarios, distributed among a number of machines. The only requirement is that it be network accessible to each of the Kubernetes machines.
+
+##### kube-apiserver
+
+##### kube-scheduler
+
+##### kube-controller-manager
+
+##### cloud-controller-manager
+
+#### Node Components
+
+##### kubelet
+
+##### kube-proxy
+
+##### Container Runtime
+
+Docker
+
+#### Addons
+
+##### DNS
+
+##### Dashboard
 
 ### Docker Swarm
+
+https://github.com/GuillaumeRochat/container-orchestration-comparison
 
 
 
@@ -114,13 +148,15 @@ TODO Kubernetes is a system, developed by Google, for managing containerized app
 
 ### State of Neural Network Objects
 
-\bild{nn-states}{15cm}{State Machine of a Neural Network}{State Machine of a Neural Network}
+<!--\bild{nn-states}{15cm}{State Machine of a Neural Network}{State Machine of a Neural Network}-->
 
-# Designing the API
+![State Machine of a Neural Network](images/nn-states.png){width=15cm}
+
+# REST API Documentation
 
 
 
-## REST API Documentation
+## vinnsl-service
 
 ### Base URL
 
@@ -937,7 +973,9 @@ PUT /dl4j/{id}
 
 ## User Interface
 
-\bild{vinnsl-nn-ui}{15cm}{User Interface of Prototype}{User Interface of Prototype}
+<!--\bild{vinnsl-nn-ui}{15cm}{User Interface of Prototype}{User Interface of Prototype}-->
+
+![User Interface of Prototype](images/VINNSL-NN-UI.png){width=15cm}
 
 # Use Cases
 
