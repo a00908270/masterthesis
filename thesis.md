@@ -52,26 +52,6 @@ TODO
 
 # State of the Art
 
-## Machine Learning
-
-
-
-*Machine learning—the process by which computers can get better at performing tasks through exposure to data, rather than through explicit programming—requires massive computational power, the kind usually found in clusters of energy-guzzling, cloud-based computer servers outfitted with specialized processors. But an emerging trend promises to bring the power of machine learning to mobile devices that may lack or have only intermittent online connectivity. This will give rise to machines that sense, perceive, learn from, and respond to their environment and their users, enabling the emergence of new product categories, reshaping how businesses engage with customers, and transforming how work gets done across industries.(https://www2.deloitte.com/insights/us/en/focus/signals-for-strategists/machine-learning-mobile-applications.html)*  TODO CITATION
-
-### Classification
-
-#### LATEX Symbol classification application
-
-![\LaTeX symbol classification app](./images/latex-symbol-classifier.png)
-
-
-
-### Neural Network Frameworks
-
-#### Tensorflow
-
-#### Deeplearning4J
-
 ## Container Orchestration
 
 ### Docker Containers
@@ -90,7 +70,29 @@ The micoservice architecture pattern is a variant of a service-oriented architec
 
 ![Monolithic Architecture vs. Microservice Architecture](images/monolithic_vs_microservice.png){width=15cm}
 
-### Comparison of Container Orchestration Technologies
+## Machine Learning
+
+
+
+*Machine learning—the process by which computers can get better at performing tasks through exposure to data, rather than through explicit programming—requires massive computational power, the kind usually found in clusters of energy-guzzling, cloud-based computer servers outfitted with specialized processors. But an emerging trend promises to bring the power of machine learning to mobile devices that may lack or have only intermittent online connectivity. This will give rise to machines that sense, perceive, learn from, and respond to their environment and their users, enabling the emergence of new product categories, reshaping how businesses engage with customers, and transforming how work gets done across industries.(https://www2.deloitte.com/insights/us/en/focus/signals-for-strategists/machine-learning-mobile-applications.html)*  TODO CITATION
+
+### Classification
+
+#### LATEX Symbol classification application
+
+![\LaTeX symbol classification app](images/latex-symbol-classifier.png)
+
+
+
+### Neural Networks
+
+#### Tensorflow
+
+#### Deeplearning4J
+
+## 
+
+## Comparison of Container Orchestration Technologies
 
 ### Kubernetes
 
@@ -100,9 +102,9 @@ TODO Kubernetes is a system, developed by Google, for managing containerized app
 
 #### Master Components
 
-##### Etcd
+##### etcd
 
-TODO The etcd project, developed by the CoreOS team, is a lightweight distributed key-value store that can be distributed across multiple nodes. Kubernetes uses etcd to store configuration data that can be used by each of the nodes in the cluster. This can be used for service discovery and represents the state of the cluster that each component can reference to configure or reconfigure themselves. By providing a simple HTTP/JSON API, the interface for setting or retrieving values is very straight forward. Like most other components in the control plane, etcd can be configured on a single master server or, in production scenarios, distributed among a number of machines. The only requirement is that it be network accessible to each of the Kubernetes machines.
+etcd is a key-value store, accessible by a HTTP/JSON API,  which can be distributed across multiple nodes and is used by Kubernetes to store configuration data, which needs to be accessible across nodes deployed in the cluster. Is is essential for service discovery and to describe the state of the cluster, among other things. \cite{kub_intro}
 
 ##### kube-apiserver
 
@@ -143,6 +145,30 @@ https://github.com/GuillaumeRochat/container-orchestration-comparison
 ## Non-Functional Requirements 
 
 # Specification
+
+## Overview Microservices
+
+The neural network cloud execution stack consists of four main services that expose a RESTful API and two supporting services in charge of storing data. Figure \ref{img.overview_main_services} shows an overview of these services.
+
+### Vinnsl Service (vinnsl-service)
+
+The `vinnsl-service` is responsible for handling the import, management and manipulation of neural network objects and it's status. It maps the CRUD[^5] operations to HTTP methods. A new neural network is created by sending a `POST` request to the `/vinnsl` endpoint containing a ViNNSL Definition XML as body. Sending a `GET` request to the `/vinnsl` route returns a JSON object containing all ViNNSL neural network objects. 
+
+The `vinnsl-service` depends on the `vinnsl-db` service, which runs a MongoDB database to store the objects. 
+
+### Worker Service (nn-worker-service)
+
+The `nn-worker-service` implements a queue for neural network training and evaluation and 
+
+### Storage Service (nn-storage-service)
+
+### Frontend UI (vinnsl-ui)
+
+## Service Discovery and Load Balancing
+
+
+
+![Service Discovery with kube-dns](images/overview_main_services.png){width=15cm}
 
 ## Neural Network Objects
 
@@ -1007,3 +1033,5 @@ TODO
 [^3]: https://azure.microsoft.com/services/container-service
 [^0]: https://kubernetes.io
 [^4]: https://docker.com
+[^5]: Create, Read, Update, Delete
+

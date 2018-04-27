@@ -102,39 +102,6 @@ TODO
 
 \chapter{State of the Art}\label{state-of-the-art}
 
-\section{Machine Learning}\label{machine-learning}
-
-\emph{Machine learning---the process by which computers can get better
-at performing tasks through exposure to data, rather than through
-explicit programming---requires massive computational power, the kind
-usually found in clusters of energy-guzzling, cloud-based computer
-servers outfitted with specialized processors. But an emerging trend
-promises to bring the power of machine learning to mobile devices that
-may lack or have only intermittent online connectivity. This will give
-rise to machines that sense, perceive, learn from, and respond to their
-environment and their users, enabling the emergence of new product
-categories, reshaping how businesses engage with customers, and
-transforming how work gets done across
-industries.(https://www2.deloitte.com/insights/us/en/focus/signals-for-strategists/machine-learning-mobile-applications.html)}
-TODO CITATION
-
-\subsection{Classification}\label{classification}
-
-\subsubsection{LATEX Symbol classification
-application}\label{latex-symbol-classification-application}
-
-\begin{figure}
-\centering
-\includegraphics{./images/latex-symbol-classifier}
-\caption{\LaTeX symbol classification app}
-\end{figure}
-
-\subsection{Neural Network Frameworks}\label{neural-network-frameworks}
-
-\subsubsection{Tensorflow}\label{tensorflow}
-
-\subsubsection{Deeplearning4J}\label{deeplearning4j}
-
 \section{Container Orchestration}\label{container-orchestration}
 
 \subsection{Docker Containers}\label{docker-containers}
@@ -180,7 +147,42 @@ languages and use different data storage technologies.
 \caption{Monolithic Architecture vs.~Microservice Architecture}
 \end{figure}
 
-\subsection{Comparison of Container Orchestration
+\section{Machine Learning}\label{machine-learning}
+
+\emph{Machine learning---the process by which computers can get better
+at performing tasks through exposure to data, rather than through
+explicit programming---requires massive computational power, the kind
+usually found in clusters of energy-guzzling, cloud-based computer
+servers outfitted with specialized processors. But an emerging trend
+promises to bring the power of machine learning to mobile devices that
+may lack or have only intermittent online connectivity. This will give
+rise to machines that sense, perceive, learn from, and respond to their
+environment and their users, enabling the emergence of new product
+categories, reshaping how businesses engage with customers, and
+transforming how work gets done across
+industries.(https://www2.deloitte.com/insights/us/en/focus/signals-for-strategists/machine-learning-mobile-applications.html)}
+TODO CITATION
+
+\subsection{Classification}\label{classification}
+
+\subsubsection{LATEX Symbol classification
+application}\label{latex-symbol-classification-application}
+
+\begin{figure}
+\centering
+\includegraphics{images/latex-symbol-classifier}
+\caption{\LaTeX symbol classification app}
+\end{figure}
+
+\subsection{Neural Networks}\label{neural-networks}
+
+\subsubsection{Tensorflow}\label{tensorflow}
+
+\subsubsection{Deeplearning4J}\label{deeplearning4j}
+
+\section{}\label{section}
+
+\section{Comparison of Container Orchestration
 Technologies}\label{comparison-of-container-orchestration-technologies}
 
 \subsection{Kubernetes}\label{kubernetes}
@@ -198,19 +200,13 @@ workload and communications across the system \cite{kub_intro}.
 
 \subsubsection{Master Components}\label{master-components}
 
-\paragraph{Etcd}\label{etcd}
+\paragraph{etcd}\label{etcd}
 
-TODO The etcd project, developed by the CoreOS team, is a lightweight
-distributed key-value store that can be distributed across multiple
-nodes. Kubernetes uses etcd to store configuration data that can be used
-by each of the nodes in the cluster. This can be used for service
-discovery and represents the state of the cluster that each component
-can reference to configure or reconfigure themselves. By providing a
-simple HTTP/JSON API, the interface for setting or retrieving values is
-very straight forward. Like most other components in the control plane,
-etcd can be configured on a single master server or, in production
-scenarios, distributed among a number of machines. The only requirement
-is that it be network accessible to each of the Kubernetes machines.
+etcd is a key-value store, accessible by a HTTP/JSON API, which can be
+distributed across multiple nodes and is used by Kubernetes to store
+configuration data, which needs to be accessible across nodes deployed
+in the cluster. Is is essential for service discovery and to describe
+the state of the cluster, among other things. \cite{kub_intro}
 
 \paragraph{kube-apiserver}\label{kube-apiserver}
 
@@ -247,6 +243,48 @@ https://github.com/GuillaumeRochat/container-orchestration-comparison
 \section{Non-Functional Requirements}\label{non-functional-requirements}
 
 \chapter{Specification}\label{specification}
+
+\section{Overview Microservices}\label{overview-microservices}
+
+The neural network cloud execution stack consists of four main services
+that expose a RESTful API and two supporting services in charge of
+storing data. Figure \ref{img.overview_main_services} shows an overview
+of these services.
+
+\subsection{Vinnsl Service
+(vinnsl-service)}\label{vinnsl-service-vinnsl-service}
+
+The \texttt{vinnsl-service} is responsible for handling the import,
+management and manipulation of neural network objects and it's status.
+It maps the CRUD\footnote{Create, Read, Update, Delete} operations to
+HTTP methods. A new neural network is created by sending a \texttt{POST}
+request to the \texttt{/vinnsl} endpoint containing a ViNNSL Definition
+XML as body. Sending a \texttt{GET} request to the \texttt{/vinnsl}
+route returns a JSON object containing all ViNNSL neural network
+objects.
+
+The \texttt{vinnsl-service} depends on the \texttt{vinnsl-db} service,
+which runs a MongoDB database to store the objects.
+
+\subsection{Worker Service
+(nn-worker-service)}\label{worker-service-nn-worker-service}
+
+The \texttt{nn-worker-service} implements a queue for neural network
+training and evaluation and
+
+\subsection{Storage Service
+(nn-storage-service)}\label{storage-service-nn-storage-service}
+
+\subsection{Frontend UI (vinnsl-ui)}\label{frontend-ui-vinnsl-ui}
+
+\section{Service Discovery and Load
+Balancing}\label{service-discovery-and-load-balancing}
+
+\begin{figure}
+\centering
+\includegraphics[width=15.00000cm]{images/overview_main_services}
+\caption{Service Discovery with kube-dns}
+\end{figure}
 
 \section{Neural Network Objects}\label{neural-network-objects}
 
