@@ -28,7 +28,7 @@ Machine learning is not just a business area in the United States, survey result
 
 <!--\bilds{crisp_ml_verbreitung}{Distribution of machine learning of 264 companies in the DACH region \cite{crisp}}{Distribution of machine learning in 264 companies (DACH region) \cite{crisp}}-->
 
-![Distribution of machine learning of 264 companies in the DACH region \cite{crisp}](images/crisp_ml_verbreitung.png){width=15cm}
+![Distribution of machine learning of 264 companies in the DACH region \cite{crisp}](images/crisp_ml_verbreitung.png){width=10cm}
 
 At the same time more and more companies shift their business logic from a monolithic design to microservices. Each service is dedicated to a single task that can be developed, deployed, replaced and scaled independently.  Test results have shown that not only this architecture can help reduce infrastructure costs \cite{villamizar2}\cite{villamizar}, but also reduces complexity of the code base and enables applications to dynamically adjust computing resources on demand \cite{villamizar}.
 
@@ -88,7 +88,7 @@ The micoservice architecture pattern is a variant of a service-oriented architec
 
 #### Tensorflow
 
-#### Deeplearning4J
+#### DL4J
 
 ## 
 
@@ -146,23 +146,39 @@ https://github.com/GuillaumeRochat/container-orchestration-comparison
 
 # Specification
 
+## Use Case
+
+Figure \ref{img.use_case_nn} shows the UML use case diagram. 
+
+### Use Case Descriptions
+
+TODO
+
+
+
+![UML Use Case Diagram](images/use_case_nn.png){width=15cm}
+
 ## Overview Microservices
 
-The neural network cloud execution stack consists of four main services that expose a RESTful API and two supporting services in charge of storing data. Figure \ref{img.overview_main_services} shows an overview of these services.
+The neural network cloud execution stack consists of four main services that expose a RESTful API to users and two supporting services in charge of persisting data. Figure \ref{img.overview_main_services} shows an overview of these services.
 
 ### Vinnsl Service (vinnsl-service)
 
-The `vinnsl-service` is responsible for handling the import, management and manipulation of neural network objects and it's status. It maps the CRUD[^5] operations to HTTP methods. A new neural network is created by sending a `POST` request to the `/vinnsl` endpoint containing a ViNNSL Definition XML as body. Sending a `GET` request to the `/vinnsl` route returns a JSON object containing all ViNNSL neural network objects. 
+The `vinnsl-service` is responsible for handling the import, management and manipulation of neural network objects and it's status. It maps the CRUD[^5] operations to HTTP methods. A new neural network is created by sending a `POST` request to the `/vinnsl` endpoint containing a ViNNSL Definition XML as body. Sending a `GET` request to the `/vinnsl` route returns a JSON containing all ViNNSL neural network objects. 
 
 The `vinnsl-service` depends on the `vinnsl-db` service, which runs a MongoDB database to store the objects. 
 
-### Worker Service (nn-worker-service)
+### Worker Service (vinnsl-nn-worker)
 
-The `nn-worker-service` implements a queue for neural network training and evaluation and 
+The `vinnsl-nn-worker` implements a queue management for neural network training and transforms ViNNSL neural network models into DL4J models. It provides a wrapper of the DL4J platform, that handles the training or evaluation of the network.
 
-### Storage Service (nn-storage-service)
+### Storage Service (vinnsl-storage-service)
 
-### Frontend UI (vinnsl-ui)
+Binary files, like trained network models, images or csv files are essential in the pocess of creating and training neural networks. File management is handled by the `vinnsl-storage-service`.
+
+### Frontend UI (vinnsl-nn-ui)
+
+The Frontend UI is a web application that gives a brief overview of all neural network models, their training status and linked files.
 
 ## Service Discovery and Load Balancing
 
@@ -180,15 +196,13 @@ The `nn-worker-service` implements a queue for neural network training and evalu
 
 # REST API Documentation
 
-
-
-## vinnsl-service
-
 ### Base URL
 
 ```
 http[s]://<clusterip>
 ```
+
+## vinnsl-service
 
 ### Import a new ViNNSL XML Defintion
 
@@ -994,6 +1008,262 @@ PUT /dl4j/{id}
 #### Tags
 
 - dl-4j-service-controller
+
+## vinnsl-storage-service
+
+### Handle File Upload from HTML Form
+```
+POST /storage
+```
+
+
+#### Parameters
+
+|Type|Name|Description|Schema|
+|---|---|---|---|
+|**FormData**|**file**  <br>*required*|file|file|
+
+
+#### Responses
+
+|HTTP Code|Description|Schema|
+|---|---|---|
+|**200**|OK|string|
+|**201**|Created|No Content|
+|**404**|Not Found|No Content|
+
+
+#### Consumes
+
+* `multipart/form-data`
+
+
+#### Produces
+
+* `\*/*`
+
+
+#### Tags
+
+* vinnsl-storage-controller
+
+
+### List all Files
+```
+GET /storage
+```
+
+
+#### Responses
+
+|HTTP Code|Description|Schema|
+|---|---|---|
+|**200**|OK|[Model](#model)|
+|**404**|Not Found|No Content|
+
+
+#### Produces
+
+* `application/json`
+
+
+#### Tags
+
+* vinnsl-storage-controller
+
+
+### Download File by Original Filename
+```
+GET /storage/files/name/{filename}
+```
+
+
+#### Parameters
+
+|Type|Name|Description|Schema|
+|---|---|---|---|
+|**Path**|**filename**  <br>*required*|filename|string|
+
+
+#### Responses
+
+|HTTP Code|Description|Schema|
+|---|---|---|
+|**200**|OK|string (byte)|
+|**404**|Not Found|No Content|
+
+
+#### Produces
+
+* `\*/*`
+
+
+#### Tags
+
+* vinnsl-storage-controller
+
+
+### Download or Show File by FileID
+```
+GET /storage/files/{fileId}
+```
+
+
+#### Parameters
+
+|Type|Name|Description|Schema|
+|---|---|---|---|
+|**Path**|**fileId**  <br>*required*|fileId|string|
+|**Query**|**download**  <br>*optional*|download|boolean|
+
+
+#### Responses
+
+|HTTP Code|Description|Schema|
+|---|---|---|
+|**200**|OK|string (byte)|
+|**404**|Not Found|No Content|
+
+
+#### Produces
+
+* `\*/*`
+
+
+#### Tags
+
+* vinnsl-storage-controller
+
+
+### Delete File by FileID
+```
+DELETE /storage/files/{fileId}
+```
+
+
+#### Parameters
+
+|Type|Name|Description|Schema|
+|---|---|---|---|
+|**Path**|**fileId**  <br>*required*|fileId|string|
+
+
+#### Responses
+
+|HTTP Code|Description|Schema|
+|---|---|---|
+|**200**|OK|ResponseEntity|
+|**204**|No Content|No Content|
+|**403**|Forbidden|No Content|
+
+
+#### Produces
+
+* `\*/*`
+
+
+#### Tags
+
+* vinnsl-storage-controller
+
+
+### Get File Metadata by FileID
+```
+GET /storage/metadata/{fileId}
+```
+
+
+#### Parameters
+
+|Type|Name|Description|Schema|
+|---|---|---|---|
+|**Path**|**fileId**  <br>*required*|fileId|string|
+
+
+#### Responses
+
+|HTTP Code|Description|Schema|
+|---|---|---|
+|**200**|OK|< string, object > map|
+|**404**|Not Found|No Content|
+
+
+#### Produces
+
+* `\*/*`
+
+
+#### Tags
+
+* vinnsl-storage-controller
+
+
+### Upload MultipartFile
+```
+POST /storage/upload
+```
+
+
+#### Parameters
+
+|Type|Name|Description|Schema|
+|---|---|---|---|
+|**FormData**|**file**  <br>*required*|file|file|
+
+
+#### Responses
+
+|HTTP Code|Description|Schema|
+|---|---|---|
+|**200**|OK|object|
+|**201**|Created|No Content|
+|**404**|Not Found|No Content|
+
+
+#### Consumes
+
+* `multipart/form-data`
+
+
+#### Produces
+
+* `application/json`
+
+
+#### Tags
+
+* vinnsl-storage-controller
+
+
+### Upload File by URL
+```
+GET /storage/upload
+```
+
+
+#### Parameters
+
+|Type|Name|Description|Schema|
+|---|---|---|---|
+|**Query**|**url**  <br>*required*|url|string|
+
+
+#### Responses
+
+|HTTP Code|Description|Schema|
+|---|---|---|
+|**200**|OK|object|
+|**404**|Not Found|No Content|
+
+
+#### Produces
+
+* `application/json`
+
+
+#### Tags
+
+* vinnsl-storage-controller
 
 # Implementation of a Prototype 
 
