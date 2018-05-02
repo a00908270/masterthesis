@@ -158,9 +158,17 @@ TODO
 
 ![UML Use Case Diagram](images/use_case_nn.png){width=15cm}
 
+### Training Sequence Diagram
+
+TODO
+
+![Training Sequence Diagram](images/training_sequence.png){width=15cm}
+
 ## Overview Microservices
 
-The neural network cloud execution stack consists of four main services that expose a RESTful API to users and two supporting services in charge of persisting data. Figure \ref{img.overview_main_services} shows an overview of these services.
+The neural network cloud execution stack consists of four m
+
+ain services that expose a RESTful API to users and two supporting services in charge of persisting data. Figure \ref{img.overview_main_services} shows an overview of these services.
 
 ### Vinnsl Service (vinnsl-service)
 
@@ -1264,6 +1272,67 @@ GET /storage/upload
 #### Tags
 
 * vinnsl-storage-controller
+
+
+## vinnsl-worker-service
+
+### getWorkingQueue
+
+```
+GET /worker/queue
+```
+
+#### Responses
+
+| HTTP Code | Description  | Schema           |
+| --------- | ------------ | ---------------- |
+| **200**   | OK           | < string > array |
+| **401**   | Unauthorized | No Content       |
+| **403**   | Forbidden    | No Content       |
+| **404**   | Not Found    | No Content       |
+
+#### Produces
+
+- `\*/*`
+
+#### Tags
+
+- worker-controller
+
+### addToWorkingQueue
+
+```
+PUT /worker/queue/{id}
+```
+
+#### Parameters
+
+| Type     | Name                   | Description | Schema |
+| -------- | ---------------------- | ----------- | ------ |
+| **Path** | **id**  <br>*required* | id          | string |
+
+#### Responses
+
+| HTTP Code | Description  | Schema           |
+| --------- | ------------ | ---------------- |
+| **200**   | OK           | < string > array |
+| **201**   | Created      | No Content       |
+| **401**   | Unauthorized | No Content       |
+| **403**   | Forbidden    | No Content       |
+| **404**   | Not Found    | No Content       |
+
+#### Consumes
+
+- `application/json`
+
+#### Produces
+
+- `application/json`
+
+#### Tags
+
+- worker-controller
+
 
 # Implementation of a Prototype 
 

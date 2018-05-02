@@ -246,7 +246,7 @@ https://github.com/GuillaumeRochat/container-orchestration-comparison
 
 \section{Use Case}\label{use-case}
 
-Figure \ref{use_case_nn} shows the UML use case diagram.
+Figure \ref{img.use_case_nn} shows the UML use case diagram.
 
 \subsection{Use Case Descriptions}\label{use-case-descriptions}
 
@@ -258,12 +258,23 @@ TODO
 \caption{UML Use Case Diagram}
 \end{figure}
 
+\subsection{Training Sequence Diagram}\label{training-sequence-diagram}
+
+TODO
+
+\begin{figure}
+\centering
+\includegraphics[width=15.00000cm]{images/training_sequence}
+\caption{Training Sequence Diagram}
+\end{figure}
+
 \section{Overview Microservices}\label{overview-microservices}
 
-The neural network cloud execution stack consists of four main services
-that expose a RESTful API to users and two supporting services in charge
-of persisting data. Figure \ref{img.overview_main_services} shows an
-overview of these services.
+The neural network cloud execution stack consists of four m
+
+ain services that expose a RESTful API to users and two supporting
+services in charge of persisting data. Figure
+\ref{img.overview_main_services} shows an overview of these services.
 
 \subsection{Vinnsl Service
 (vinnsl-service)}\label{vinnsl-service-vinnsl-service}
@@ -1849,6 +1860,102 @@ HTTP Code & Description & Schema\tabularnewline
 \tightlist
 \item
   vinnsl-storage-controller
+\end{itemize}
+
+\section{vinnsl-worker-service}\label{vinnsl-worker-service}
+
+\subsection{getWorkingQueue}\label{getworkingqueue}
+
+\begin{verbatim}
+GET /worker/queue
+\end{verbatim}
+
+\subsubsection{Responses}\label{responses-23}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{200} & OK & \textless{} string \textgreater{}
+array\tabularnewline
+\textbf{401} & Unauthorized & No Content\tabularnewline
+\textbf{403} & Forbidden & No Content\tabularnewline
+\textbf{404} & Not Found & No Content\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Produces}\label{produces-23}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{\textbackslash{}*/*}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags-23}
+
+\begin{itemize}
+\tightlist
+\item
+  worker-controller
+\end{itemize}
+
+\subsection{addToWorkingQueue}\label{addtoworkingqueue}
+
+\begin{verbatim}
+PUT /worker/queue/{id}
+\end{verbatim}
+
+\subsubsection{Parameters}\label{parameters-19}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Type & Name & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{Path} & \textbf{id} \emph{required} & id & string\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Responses}\label{responses-24}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+HTTP Code & Description & Schema\tabularnewline
+\midrule
+\endhead
+\textbf{200} & OK & \textless{} string \textgreater{}
+array\tabularnewline
+\textbf{201} & Created & No Content\tabularnewline
+\textbf{401} & Unauthorized & No Content\tabularnewline
+\textbf{403} & Forbidden & No Content\tabularnewline
+\textbf{404} & Not Found & No Content\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Consumes}\label{consumes-10}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Produces}\label{produces-24}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{application/json}
+\end{itemize}
+
+\subsubsection{Tags}\label{tags-24}
+
+\begin{itemize}
+\tightlist
+\item
+  worker-controller
 \end{itemize}
 
 \chapter{Implementation of a
