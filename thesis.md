@@ -28,7 +28,7 @@ Machine learning is not just a business area in the United States, survey result
 
 <!--\bilds{crisp_ml_verbreitung}{Distribution of machine learning of 264 companies in the DACH region \cite{crisp}}{Distribution of machine learning in 264 companies (DACH region) \cite{crisp}}-->
 
-![Distribution of machine learning of 264 companies in the DACH region \cite{crisp}](images/crisp_ml_verbreitung.png){width=10cm}
+![Distribution of machine learning of 264 companies in the DACH region \cite{crisp}\label{img.crisp_ml_verbreitung}](images/crisp_ml_verbreitung.png){width=10cm}
 
 At the same time more and more companies shift their business logic from a monolithic design to microservices. Each service is dedicated to a single task that can be developed, deployed, replaced and scaled independently.  Test results have shown that not only this architecture can help reduce infrastructure costs \cite{villamizar2}\cite{villamizar}, but also reduces complexity of the code base and enables applications to dynamically adjust computing resources on demand \cite{villamizar}.
 
@@ -68,7 +68,7 @@ The micoservice architecture pattern is a variant of a service-oriented architec
 
 <!--\bild{monolithic_vs_microservice}{15cm}{Monolithic Architecture vs. Microservice Architecture}{Monolithic Architecture vs. Microservice Architecture}-->
 
-![Monolithic Architecture vs. Microservice Architecture](images/monolithic_vs_microservice.png){width=15cm}
+![Monolithic Architecture vs. Microservice Architecture \label{monolithic_vs_microservice}](images/monolithic_vs_microservice.png){width=15cm}
 
 ## Machine Learning
 
@@ -156,19 +156,29 @@ TODO
 
 
 
-![UML Use Case Diagram](images/use_case_nn.png){width=15cm}
+![UML Use Case Diagram \label{img.use_case_nn}](images/use_case_nn.png){width=15cm}
 
-### Training Sequence Diagram
+## Sequence Diagram
+
+### Sequence of Training
 
 TODO
 
-![Training Sequence Diagram](images/training_sequence.png){width=15cm}
+Figure \ref{img.training_sequence} shows the sequence diagram. 
+
+![Training Sequence Diagram \label{img.training_sequence}](images/training_sequence.png){width=15cm}
+
+## Data Schema
+
+TODO
+
+Figure \ref{img.db_schema} shows the data schema.
+
+![NoSQL Data Model \label{img.db_schema}](images/db_schema.png){width=15cm}
 
 ## Overview Microservices
 
-The neural network cloud execution stack consists of four m
-
-ain services that expose a RESTful API to users and two supporting services in charge of persisting data. Figure \ref{img.overview_main_services} shows an overview of these services.
+The neural network cloud execution stack consists of four main services that expose a RESTful API to users and two supporting services in charge of persisting data. Figure \ref{img.overview_main_services} shows an overview of these services.
 
 ### Vinnsl Service (vinnsl-service)
 
@@ -194,6 +204,14 @@ The Frontend UI is a web application that gives a brief overview of all neural n
 
 ![Service Discovery with kube-dns](images/overview_main_services.png){width=15cm}
 
+## UI Mockup
+
+TODO
+
+## Data Model Design
+
+TODO
+
 ## Neural Network Objects
 
 ### State of Neural Network Objects
@@ -204,7 +222,7 @@ The Frontend UI is a web application that gives a brief overview of all neural n
 
 # REST API Documentation
 
-### Base URL
+##### Base URL
 
 ```
 http[s]://<clusterip>

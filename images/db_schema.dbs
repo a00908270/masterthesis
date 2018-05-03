@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="MongoDb" id="Project_5cc0d1c" template="Default" database="MongoDb" >
+	<schema name="nn" catalogname="nn" >
+		<table name="vinnsl" >
+			<column name="_id" type="oid" length="800" decimal="0" jt="-8" mandatory="y" autoincrement="y" />
+			<column name="_class" type="string" length="800" decimal="0" jt="12" mandatory="y" />
+			<column name="description" type="map" length="800" decimal="0" jt="4999544" mandatory="y" >
+				<column name="identifier" type="string" length="800" decimal="0" jt="12" mandatory="y" />
+				<column name="metadata" type="map" length="800" decimal="0" jt="4999544" mandatory="y" >
+					<column name="paradigm" type="string" length="800" decimal="0" jt="12" mandatory="y" />
+					<column name="name" type="string" length="800" decimal="0" jt="12" mandatory="y" />
+					<column name="description" type="string" length="800" decimal="0" jt="12" mandatory="y" />
+					<column name="version" type="map" length="800" decimal="0" jt="4999544" mandatory="y" >
+						<column name="major" type="string" length="800" decimal="0" jt="12" mandatory="y" />
+						<column name="minor" type="string" length="800" decimal="0" jt="12" mandatory="y" />
+					</column>
+				</column>
+				<column name="creator" type="map" length="800" decimal="0" jt="4999544" >
+					<column name="name" type="string" length="800" decimal="0" jt="12" />
+					<column name="contact" type="string" length="800" decimal="0" jt="12" />
+				</column>
+				<column name="problemDomain" type="map" length="800" decimal="0" jt="4999544" >
+					<column name="propagationType" type="map" length="800" decimal="0" jt="4999544" >
+						<column name="learningType" type="string" length="800" decimal="0" jt="12" />
+						<column name="type" type="string" length="800" decimal="0" jt="12" />
+					</column>
+					<column name="applicationField" type="array" length="800" decimal="0" jt="2003" />
+					<column name="networkType" type="string" length="800" decimal="0" jt="12" />
+					<column name="problemType" type="string" length="800" decimal="0" jt="12" />
+				</column>
+				<column name="endpoints" type="map" length="800" decimal="0" jt="4999544" >
+					<column name="train" type="boolean" length="800" decimal="0" jt="16" />
+					<column name="retrain" type="boolean" length="800" decimal="0" jt="16" />
+					<column name="evaluate" type="boolean" length="800" decimal="0" jt="16" />
+				</column>
+				<column name="structure" type="map" length="800" decimal="0" jt="4999544" >
+					<column name="input" type="map" length="800" decimal="0" jt="4999544" >
+						<column name="_id" type="string" length="800" decimal="0" jt="12" />
+						<column name="size" type="map" length="800" decimal="0" jt="4999544" >
+							<column name="min" type="string" length="800" decimal="0" jt="12" />
+							<column name="max" type="string" length="800" decimal="0" jt="12" />
+						</column>
+					</column>
+					<column name="hidden" type="list" length="800" decimal="0" jt="4999545" >
+						<column name="_id" type="string" length="800" decimal="0" jt="12" />
+						<column name="size" type="map" length="800" decimal="0" jt="4999544" >
+							<column name="min" type="string" length="800" decimal="0" jt="12" />
+							<column name="max" type="string" length="800" decimal="0" jt="12" />
+						</column>
+					</column>
+					<column name="output" type="map" length="800" decimal="0" jt="4999544" >
+						<column name="_id" type="string" length="800" decimal="0" jt="12" />
+						<column name="size" type="map" length="800" decimal="0" jt="4999544" >
+							<column name="min" type="string" length="800" decimal="0" jt="12" />
+							<column name="max" type="string" length="800" decimal="0" jt="12" />
+						</column>
+					</column>
+				</column>
+				<column name="parameters" type="map" length="800" decimal="0" jt="4999544" />
+				<column name="data" type="map" length="800" decimal="0" jt="4999544" >
+					<column name="description" type="string" length="800" decimal="0" jt="12" />
+					<column name="tabledescription" type="string" length="800" decimal="0" jt="12" />
+					<column name="filedescription" type="string" length="800" decimal="0" jt="12" />
+				</column>
+			</column>
+			<column name="definition" type="map" length="800" decimal="0" jt="4999544" >
+				<column name="identifier" type="string" length="800" decimal="0" jt="12" />
+				<column name="problemDomain" type="map" length="800" decimal="0" jt="4999544" >
+					<column name="propagationType" type="map" length="800" decimal="0" jt="4999544" >
+						<column name="learningType" type="string" length="800" decimal="0" jt="12" />
+						<column name="type" type="string" length="800" decimal="0" jt="12" />
+					</column>
+					<column name="applicationField" type="array" length="800" decimal="0" jt="2003" />
+					<column name="networkType" type="string" length="800" decimal="0" jt="12" />
+					<column name="problemType" type="string" length="800" decimal="0" jt="12" />
+				</column>
+				<column name="endpoints" type="string" length="800" decimal="0" jt="12" />
+				<column name="executionEnvironment" type="map" length="800" decimal="0" jt="4999544" >
+					<column name="serial" type="boolean" length="800" decimal="0" jt="16" />
+				</column>
+				<column name="structure" type="map" length="800" decimal="0" jt="4999544" >
+					<column name="input" type="map" length="800" decimal="0" jt="4999544" >
+						<column name="_id" type="string" length="800" decimal="0" jt="12" />
+						<column name="size" type="string" length="800" decimal="0" jt="12" />
+					</column>
+					<column name="hidden" type="list" length="800" decimal="0" jt="4999545" >
+						<column name="_id" type="string" length="800" decimal="0" jt="12" />
+						<column name="size" type="string" length="800" decimal="0" jt="12" />
+					</column>
+					<column name="output" type="map" length="800" decimal="0" jt="4999544" >
+						<column name="_id" type="string" length="800" decimal="0" jt="12" />
+						<column name="size" type="string" length="800" decimal="0" jt="12" />
+					</column>
+					<column name="connections" type="map" length="800" decimal="0" jt="4999544" />
+				</column>
+				<column name="resultSchema" type="map" length="800" decimal="0" jt="4999544" >
+					<column name="instance" type="boolean" length="800" decimal="0" jt="16" />
+					<column name="training" type="boolean" length="800" decimal="0" jt="16" />
+				</column>
+				<column name="parameters" type="map" length="800" decimal="0" jt="4999544" >
+					<column name="valueparameterOrBoolparameterOrComboparameter" type="list" length="800" decimal="0" jt="4999545" >
+						<column name="value" type="string" length="800" decimal="0" jt="12" />
+						<column name="name" type="string" length="800" decimal="0" jt="12" />
+						<column name="_class" type="string" length="800" decimal="0" jt="12" />
+					</column>
+				</column>
+				<column name="data" type="map" length="800" decimal="0" jt="4999544" >
+					<column name="description" type="string" length="800" decimal="0" jt="12" />
+					<column name="dataSchemaID" type="string" length="800" decimal="0" jt="12" />
+				</column>
+			</column>
+			<column name="result" type="map" length="800" decimal="0" jt="4999544" >
+				<column name="file" type="string" length="800" decimal="0" jt="12" />
+			</column>
+			<column name="nncloud" type="map" length="800" decimal="0" jt="4999544" >
+				<column name="status" type="string" length="800" decimal="0" jt="12" />
+				<column name="dl4jNetwork" type="string" length="800" decimal="0" jt="12" />
+			</column>
+			<index name="_id_" unique="PRIMARY_KEY" >
+				<column name="_id" />
+			</index>
+		</table>
+	</schema>
+	<connector name="MongoDb" database="MongoDb" driver_class="com.dbschema.MongoJdbcDriver" driver_jar="mongojdbc1.2.jar" driver_desc="No Authentication &lt;/span&gt;&lt;br&gt;&lt;b&gt;Connect using MongoDb URI using the Advanced tab/enforce custom URI. Details in Help.&lt;br&gt;Connectivity logs are available in Help / Output Log.&lt;/b&gt;" host="localhost" port="27017" instance="nn" />
+	<layout name="Default Layout" id="Layout_5a32c72" show_relation="columns" >
+		<entity schema="nn" name="vinnsl" column="result" color="bfd4f5" x="405" y="345" />
+		<entity schema="nn" name="vinnsl" color="bfd4f5" x="195" y="240" />
+		<entity schema="nn" name="vinnsl" column="nncloud" color="bfd4f5" x="45" y="330" />
+		<entity schema="nn" name="vinnsl" column="definition" color="bfd4f5" x="345" y="90" />
+		<entity schema="nn" name="vinnsl" column="description" color="c8f5bf" x="45" y="45" />
+	</layout>
+	<layout name="Sample Layout with Tools" id="Layout_2ba9033" show_column_type="y" show_relation="columns" >
+		<entity schema="nn" name="vinnsl" color="bfd4f5" x="765" y="675" />
+		<entity schema="nn" name="vinnsl" column="description" color="c8f5bf" x="1425" y="195" />
+		<entity schema="nn" name="vinnsl" column="description.metadata" color="c8f5bf" x="1620" y="195" />
+		<entity schema="nn" name="vinnsl" column="description.metadata.version" color="c8f5bf" x="1800" y="195" />
+		<entity schema="nn" name="vinnsl" column="description.creator" color="c8f5bf" x="1620" y="330" />
+		<entity schema="nn" name="vinnsl" column="description.problemDomain" color="bfd4f5" x="765" y="285" />
+		<entity schema="nn" name="vinnsl" column="description.problemDomain.propagationType" color="bfd4f5" x="975" y="75" />
+		<entity schema="nn" name="vinnsl" column="description.endpoints" color="c8f5bf" x="1620" y="75" />
+		<entity schema="nn" name="vinnsl" column="description.structure" color="f5ddbf" x="1755" y="690" />
+		<entity schema="nn" name="vinnsl" column="description.structure.input" color="bfbff5" x="1425" y="690" />
+		<entity schema="nn" name="vinnsl" column="description.structure.input.size" color="bfbff5" x="1575" y="690" />
+		<entity schema="nn" name="vinnsl" column="description.structure.hidden" color="bfbff5" x="1425" y="690" />
+		<entity schema="nn" name="vinnsl" column="description.structure.hidden.size" color="bfbff5" x="1425" y="690" />
+		<entity schema="nn" name="vinnsl" column="description.structure.output" color="f5ddbf" x="1905" y="795" />
+		<entity schema="nn" name="vinnsl" column="description.structure.output.size" color="bfbff5" x="1425" y="690" />
+		<entity schema="nn" name="vinnsl" column="description.data" color="bfd4f5" x="765" y="135" />
+		<entity schema="nn" name="vinnsl" column="definition" color="bfd4f5" x="765" y="285" />
+		<entity schema="nn" name="vinnsl" column="definition.problemDomain" color="bfd4f5" x="990" y="285" />
+		<entity schema="nn" name="vinnsl" column="definition.problemDomain.propagationType" color="bfd4f5" x="1200" y="285" />
+		<entity schema="nn" name="vinnsl" column="definition.executionEnvironment" color="bfd4f5" x="990" y="420" />
+		<entity schema="nn" name="vinnsl" column="definition.structure" color="f5ddbf" x="1785" y="690" />
+		<entity schema="nn" name="vinnsl" column="definition.structure.input" color="bfbff5" x="1470" y="585" />
+		<entity schema="nn" name="vinnsl" column="definition.structure.hidden" color="f5ddbf" x="1965" y="690" />
+		<entity schema="nn" name="vinnsl" column="definition.structure.output" color="f5ddbf" x="1965" y="585" />
+		<entity schema="nn" name="vinnsl" column="definition.resultSchema" color="bfd4f5" x="765" y="675" />
+		<entity schema="nn" name="vinnsl" column="definition.parameters" color="d2bff5" x="45" y="585" />
+		<entity schema="nn" name="vinnsl" column="definition.parameters.valueparameterOrBoolparameterOrComboparameter" color="d2bff5" x="405" y="585" />
+		<entity schema="nn" name="vinnsl" column="definition.data" color="bfd4f5" x="990" y="180" />
+		<entity schema="nn" name="vinnsl" column="result" color="bfd4f5" x="945" y="585" />
+		<entity schema="nn" name="vinnsl" column="nncloud" color="bfd4f5" x="945" y="675" />
+		<callout x="765" y="600" pointer="NO" >
+			<comment><![CDATA[Double-click any collection or field to edit, right-click to start one of the tools below.
+Use the Relational Data Browse for simultaneously exploring data from multiple collections using virtual relations.
+All tools will be saved to project file and can be reopen.]]></comment>
+		</callout>
+		<group name="definition" color="ecf0f7" >
+			<entity schema="nn" name="vinnsl" column="definition" />
+			<entity schema="nn" name="vinnsl" column="definition.problemDomain" />
+			<entity schema="nn" name="vinnsl" column="description.problemDomain" />
+			<entity schema="nn" name="vinnsl" column="description.data" />
+			<entity schema="nn" name="vinnsl" column="definition.problemDomain.propagationType" />
+			<entity schema="nn" name="vinnsl" column="description.problemDomain.propagationType" />
+			<entity schema="nn" name="vinnsl" column="definition.data" />
+			<entity schema="nn" name="vinnsl" column="definition.executionEnvironment" />
+		</group>
+		<group name="description" color="eef7ec" >
+			<entity schema="nn" name="vinnsl" column="description" />
+			<entity schema="nn" name="vinnsl" column="description.metadata" />
+			<entity schema="nn" name="vinnsl" column="description.endpoints" />
+			<entity schema="nn" name="vinnsl" column="description.creator" />
+			<entity schema="nn" name="vinnsl" column="description.metadata.version" />
+		</group>
+		<group name="input" color="ececf7" >
+			<entity schema="nn" name="vinnsl" column="definition.structure.input" />
+			<entity schema="nn" name="vinnsl" column="description.structure.input" />
+			<entity schema="nn" name="vinnsl" column="description.structure.output.size" />
+			<entity schema="nn" name="vinnsl" column="description.structure.input.size" />
+			<entity schema="nn" name="vinnsl" column="description.structure.hidden.size" />
+			<entity schema="nn" name="vinnsl" column="description.structure.hidden" />
+		</group>
+		<group name="structure" color="f7f3ec" >
+			<entity schema="nn" name="vinnsl" column="definition.structure" />
+			<entity schema="nn" name="vinnsl" column="description.structure" />
+			<entity schema="nn" name="vinnsl" column="definition.structure.hidden" />
+			<entity schema="nn" name="vinnsl" column="definition.structure.output" />
+			<entity schema="nn" name="vinnsl" column="description.structure.output" />
+		</group>
+		<group name="vinnsl" color="ecf0f7" >
+			<entity schema="nn" name="vinnsl" />
+			<entity schema="nn" name="vinnsl" column="nncloud" />
+			<entity schema="nn" name="vinnsl" column="definition.resultSchema" />
+			<entity schema="nn" name="vinnsl" column="result" />
+		</group>
+		<group name="valueparameterOrBoolparameterOrComboparameter" color="f0ecf7" >
+			<entity schema="nn" name="vinnsl" column="definition.parameters.valueparameterOrBoolparameterOrComboparameter" />
+			<entity schema="nn" name="vinnsl" column="definition.parameters" />
+		</group>
+		<script name="Sample Query Editor" id="Editor_39e7b9d" language="SQL" >
+			<string><![CDATA[// PLACE THE CARET OVER EACH LINE AND PRESS EXECUTE ( F8 )
+
+nn.vinnsl.find()
+
+//OR
+
+USE nn;
+db.vinnsl.find()
+
+//OR
+
+USE nn;
+db.getCollection('vinnsl').find()]]></string>
+		</script>
+		<browser id="Browse_309102f" name="Sample Relational Data Browse" confirm_updates="y" >
+			<browse_table schema="nn" entity="vinnsl" x="20" y="20" width="400" height="300" />
+		</browser>
+		<query id="Query_46053c2" name="Sample Query Builder" >
+			<query_table schema="nn" name="vinnsl" alias="vinnsl" x="45" y="45" >
+				<column name="_id" />
+				<column name="_class" />
+				<column name="description" />
+				<column name="definition" />
+				<column name="result" />
+				<column name="nncloud" />
+			</query_table>
+		</query>
+	</layout>
+</project>

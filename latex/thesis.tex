@@ -64,7 +64,7 @@ profitability of companies in future. \cite{crisp}
 \centering
 \includegraphics[width=10.00000cm]{images/crisp_ml_verbreitung}
 \caption{Distribution of machine learning of 264 companies in the DACH
-region \cite{crisp}}
+region \cite{crisp}\label{img.crisp_ml_verbreitung}}
 \end{figure}
 
 At the same time more and more companies shift their business logic from
@@ -144,7 +144,8 @@ languages and use different data storage technologies.
 \begin{figure}
 \centering
 \includegraphics[width=15.00000cm]{images/monolithic_vs_microservice}
-\caption{Monolithic Architecture vs.~Microservice Architecture}
+\caption{Monolithic Architecture vs.~Microservice Architecture
+\label{monolithic_vs_microservice}}
 \end{figure}
 
 \section{Machine Learning}\label{machine-learning}
@@ -255,26 +256,41 @@ TODO
 \begin{figure}
 \centering
 \includegraphics[width=15.00000cm]{images/use_case_nn}
-\caption{UML Use Case Diagram}
+\caption{UML Use Case Diagram \label{img.use_case_nn}}
 \end{figure}
 
-\subsection{Training Sequence Diagram}\label{training-sequence-diagram}
+\section{Sequence Diagram}\label{sequence-diagram}
+
+\subsection{Sequence of Training}\label{sequence-of-training}
 
 TODO
+
+Figure \ref{img.training_sequence} shows the sequence diagram.
 
 \begin{figure}
 \centering
 \includegraphics[width=15.00000cm]{images/training_sequence}
-\caption{Training Sequence Diagram}
+\caption{Training Sequence Diagram \label{img.training_sequence}}
+\end{figure}
+
+\section{Data Schema}\label{data-schema}
+
+TODO
+
+Figure \ref{img.db_schema} shows the data schema.
+
+\begin{figure}
+\centering
+\includegraphics[width=15.00000cm]{images/db_schema}
+\caption{NoSQL Data Model \label{img.db_schema}}
 \end{figure}
 
 \section{Overview Microservices}\label{overview-microservices}
 
-The neural network cloud execution stack consists of four m
-
-ain services that expose a RESTful API to users and two supporting
-services in charge of persisting data. Figure
-\ref{img.overview_main_services} shows an overview of these services.
+The neural network cloud execution stack consists of four main services
+that expose a RESTful API to users and two supporting services in charge
+of persisting data. Figure \ref{img.overview_main_services} shows an
+overview of these services.
 
 \subsection{Vinnsl Service
 (vinnsl-service)}\label{vinnsl-service-vinnsl-service}
@@ -319,6 +335,14 @@ Balancing}\label{service-discovery-and-load-balancing}
 \caption{Service Discovery with kube-dns}
 \end{figure}
 
+\section{UI Mockup}\label{ui-mockup}
+
+TODO
+
+\section{Data Model Design}\label{data-model-design}
+
+TODO
+
 \section{Neural Network Objects}\label{neural-network-objects}
 
 \subsection{State of Neural Network
@@ -332,7 +356,7 @@ Objects}\label{state-of-neural-network-objects}
 
 \chapter{REST API Documentation}\label{rest-api-documentation}
 
-\subsection{Base URL}\label{base-url}
+\paragraph{Base URL}\label{base-url}
 
 \begin{verbatim}
 http[s]://<clusterip>
