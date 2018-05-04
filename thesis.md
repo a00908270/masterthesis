@@ -66,7 +66,7 @@ The micoservice architecture pattern is a variant of a service-oriented architec
 
 > In short, the microservice architectural style is an approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms, often an HTTP resource API. These services are built around business capabilities and independently deployable by fully automated deployment machinery. There is a bare minimum of centralized management of these services, which may be written in different programming languages and use different data storage technologies. \cite{lewis2014microservices}
 
-<!--\bild{monolithic_vs_microservice}{15cm}{Monolithic Architecture vs. Microservice Architecture}{Monolithic Architecture vs. Microservice Architecture}-->
+Figure \ref{monolithic_vs_microservice} shows the architectural difference between the monolithic and microservice architecture. 
 
 ![Monolithic Architecture vs. Microservice Architecture \label{monolithic_vs_microservice}](images/monolithic_vs_microservice.png){width=15cm}
 
@@ -90,7 +90,7 @@ The micoservice architecture pattern is a variant of a service-oriented architec
 
 #### DL4J
 
-## 
+
 
 ## Comparison of Container Orchestration Technologies
 
@@ -134,15 +134,40 @@ Docker
 
 https://github.com/GuillaumeRochat/container-orchestration-comparison
 
-
-
-
-
 # Requirements
 
 ## Functional Requirements
 
+TODO
+
+* NN in Cloud Rechnen
+* Verwendung der verständlichen Beschreibungssprache ViNNSl
+* all Devices, from everywhere
+* berechnetes Netzwerk kann in eig App verwendet werden / oder als Webservice exposed
+
+### User Interface
+
+#### Mockup
+
+TODO
+
+Figure \ref{vinnsl-ui-mockup} shows a sketch of the user interface.
+
+![Mockup: User Interface of Frontend Service\label{vinnsl-ui-mockup}](./images/vinnsl-ui-mockup.png){width=17cm}
+
 ## Non-Functional Requirements 
+
+### Quality
+
+### Technical
+
+### Software
+
+### Hardware
+
+### Documentation
+
+### Developer Environment
 
 # Specification
 
@@ -152,7 +177,7 @@ Figure \ref{img.use_case_nn} shows the UML use case diagram.
 
 ### Use Case Descriptions
 
-TODO
+TODO (hinzufügen: dev: kann trainiertes netz in eigener app verwenden ,data scientist: trainiertes netzwerk exportieren und developer überreichen)
 
 
 
@@ -168,7 +193,7 @@ Figure \ref{img.training_sequence} shows the sequence diagram.
 
 ![Training Sequence Diagram \label{img.training_sequence}](images/training_sequence.png){width=15cm}
 
-## Data Schema
+## Data Model Design
 
 TODO
 
@@ -198,19 +223,19 @@ Binary files, like trained network models, images or csv files are essential in 
 
 The Frontend UI is a web application that gives a brief overview of all neural network models, their training status and linked files.
 
+## User Interface Design
+
+Auf Grundlage des ersten Sketches, wurde ein erstes Designmodell entwickelt.
+
+Figure \ref{vinnsl-ui-design} shows the user interface design for the frontend web service.
+
+![User Interface Design for vinnsl-nn-ui\label{vinnsl-ui-design}](images/vinnsl-ui-design.png){width=17cm}
+
 ## Service Discovery and Load Balancing
 
 
 
 ![Service Discovery with kube-dns](images/overview_main_services.png){width=15cm}
-
-## UI Mockup
-
-TODO
-
-## Data Model Design
-
-TODO
 
 ## Neural Network Objects
 
@@ -219,6 +244,8 @@ TODO
 <!--\bild{nn-states}{15cm}{State Machine of a Neural Network}{State Machine of a Neural Network}-->
 
 ![State Machine of a Neural Network](images/nn-states.png){width=15cm}
+
+
 
 # REST API Documentation
 
@@ -1376,6 +1403,7 @@ TODO
 * backend für tensorflow
 * grafischer NN designer
 * trainierte netzwerke als webservice veröffentlichen
+* integration in knime platform
 
 # Conclusions 
 

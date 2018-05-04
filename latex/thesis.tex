@@ -141,6 +141,9 @@ languages and use different data storage technologies.
 \cite{lewis2014microservices}
 \end{quote}
 
+Figure \ref{monolithic_vs_microservice} shows the architectural
+difference between the monolithic and microservice architecture.
+
 \begin{figure}
 \centering
 \includegraphics[width=15.00000cm]{images/monolithic_vs_microservice}
@@ -180,8 +183,6 @@ application}\label{latex-symbol-classification-application}
 \subsubsection{Tensorflow}\label{tensorflow}
 
 \subsubsection{DL4J}\label{dl4j}
-
-\section{}\label{section}
 
 \section{Comparison of Container Orchestration
 Technologies}\label{comparison-of-container-orchestration-technologies}
@@ -241,7 +242,49 @@ https://github.com/GuillaumeRochat/container-orchestration-comparison
 
 \section{Functional Requirements}\label{functional-requirements}
 
+TODO
+
+\begin{itemize}
+\tightlist
+\item
+  NN in Cloud Rechnen
+\item
+  Verwendung der verständlichen Beschreibungssprache ViNNSl
+\item
+  all Devices, from everywhere
+\item
+  berechnetes Netzwerk kann in eig App verwendet werden / oder als
+  Webservice exposed
+\end{itemize}
+
+\subsection{User Interface}\label{user-interface}
+
+\subsubsection{Mockup}\label{mockup}
+
+TODO
+
+Figure \ref{vinnsl-ui-mockup} shows a sketch of the user interface.
+
+\begin{figure}
+\centering
+\includegraphics[width=17.00000cm]{./images/vinnsl-ui-mockup}
+\caption{Mockup: User Interface of Frontend
+Service\label{vinnsl-ui-mockup}}
+\end{figure}
+
 \section{Non-Functional Requirements}\label{non-functional-requirements}
+
+\subsection{Quality}\label{quality}
+
+\subsection{Technical}\label{technical}
+
+\subsection{Software}\label{software}
+
+\subsection{Hardware}\label{hardware}
+
+\subsection{Documentation}\label{documentation}
+
+\subsection{Developer Environment}\label{developer-environment}
 
 \chapter{Specification}\label{specification}
 
@@ -251,7 +294,9 @@ Figure \ref{img.use_case_nn} shows the UML use case diagram.
 
 \subsection{Use Case Descriptions}\label{use-case-descriptions}
 
-TODO
+TODO (hinzufügen: dev: kann trainiertes netz in eigener app verwenden
+,data scientist: trainiertes netzwerk exportieren und developer
+überreichen)
 
 \begin{figure}
 \centering
@@ -273,7 +318,7 @@ Figure \ref{img.training_sequence} shows the sequence diagram.
 \caption{Training Sequence Diagram \label{img.training_sequence}}
 \end{figure}
 
-\section{Data Schema}\label{data-schema}
+\section{Data Model Design}\label{data-model-design}
 
 TODO
 
@@ -326,6 +371,20 @@ management is handled by the \texttt{vinnsl-storage-service}.
 The Frontend UI is a web application that gives a brief overview of all
 neural network models, their training status and linked files.
 
+\section{User Interface Design}\label{user-interface-design}
+
+Auf Grundlage des ersten Sketches, wurde ein erstes Designmodell
+entwickelt.
+
+Figure \ref{vinnsl-ui-design} shows the user interface design for the
+frontend web service.
+
+\begin{figure}
+\centering
+\includegraphics[width=17.00000cm]{images/vinnsl-ui-design}
+\caption{User Interface Design for vinnsl-nn-ui\label{vinnsl-ui-design}}
+\end{figure}
+
 \section{Service Discovery and Load
 Balancing}\label{service-discovery-and-load-balancing}
 
@@ -334,14 +393,6 @@ Balancing}\label{service-discovery-and-load-balancing}
 \includegraphics[width=15.00000cm]{images/overview_main_services}
 \caption{Service Discovery with kube-dns}
 \end{figure}
-
-\section{UI Mockup}\label{ui-mockup}
-
-TODO
-
-\section{Data Model Design}\label{data-model-design}
-
-TODO
 
 \section{Neural Network Objects}\label{neural-network-objects}
 
@@ -1985,7 +2036,7 @@ array\tabularnewline
 \chapter{Implementation of a
 Prototype}\label{implementation-of-a-prototype}
 
-\section{User Interface}\label{user-interface}
+\section{User Interface}\label{user-interface-1}
 
 \begin{figure}
 \centering
@@ -2019,6 +2070,8 @@ TODO
   grafischer NN designer
 \item
   trainierte netzwerke als webservice veröffentlichen
+\item
+  integration in knime platform
 \end{itemize}
 
 \chapter{Conclusions}\label{conclusions}
