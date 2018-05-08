@@ -66,7 +66,7 @@ The micoservice architecture pattern is a variant of a service-oriented architec
 
 > In short, the microservice architectural style is an approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms, often an HTTP resource API. These services are built around business capabilities and independently deployable by fully automated deployment machinery. There is a bare minimum of centralized management of these services, which may be written in different programming languages and use different data storage technologies. \cite{lewis2014microservices}
 
-Figure \ref{monolithic_vs_microservice} shows the architectural difference between the monolithic and microservice architecture. 
+Figure \ref{monolithic_vs_microservice} shows the architectural difference between the monolithic and microservice architecture. Monolithic applications bundle user interface, data access layer and business logic together a single unit. In the microservice architecture each task has its own service. The user interface puts together information from multiple services.
 
 ![Monolithic Architecture vs. Microservice Architecture \label{monolithic_vs_microservice}](images/monolithic_vs_microservice.png){width=15cm}
 
@@ -77,12 +77,6 @@ Figure \ref{monolithic_vs_microservice} shows the architectural difference betwe
 *Machine learning—the process by which computers can get better at performing tasks through exposure to data, rather than through explicit programming—requires massive computational power, the kind usually found in clusters of energy-guzzling, cloud-based computer servers outfitted with specialized processors. But an emerging trend promises to bring the power of machine learning to mobile devices that may lack or have only intermittent online connectivity. This will give rise to machines that sense, perceive, learn from, and respond to their environment and their users, enabling the emergence of new product categories, reshaping how businesses engage with customers, and transforming how work gets done across industries.(https://www2.deloitte.com/insights/us/en/focus/signals-for-strategists/machine-learning-mobile-applications.html)*  TODO CITATION
 
 ### Classification
-
-#### LATEX Symbol classification application
-
-![\LaTeX symbol classification app](images/latex-symbol-classifier.png)
-
-
 
 ### Neural Networks
 
@@ -105,6 +99,8 @@ TODO Kubernetes is a system, developed by Google, for managing containerized app
 ##### etcd
 
 etcd is a key-value store, accessible by a HTTP/JSON API,  which can be distributed across multiple nodes and is used by Kubernetes to store configuration data, which needs to be accessible across nodes deployed in the cluster. Is is essential for service discovery and to describe the state of the cluster, among other things. \cite{kub_intro}
+
+etcd can also watch values for changes \cite{baier-kub}.
 
 ##### kube-apiserver
 
@@ -245,7 +241,19 @@ Figure \ref{vinnsl-ui-design} shows the user interface design for the frontend w
 
 ![State Machine of a Neural Network](images/nn-states.png){width=15cm}
 
+## Class Diagram
 
+### vinnsl-service
+
+![Class Diagram of vinnsl-service](images/uml-class-diagram-vinnsl-service.png){width=17cm}
+
+### vinnsl-storage-service
+
+![Class Diagram of vinnsl-storage-service](images/uml-class-diagram-vinnsl-storage-service.png){width=15cm}
+
+### vinnsl-worker-service
+
+![Class Diagram of vinnsl-worker-service](images/uml-class-diagram-vinnsl-worker-service.png){width=17cm}
 
 # REST API Documentation
 
