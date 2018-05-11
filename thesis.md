@@ -16,7 +16,7 @@ Finally the microservices are deployed to containers and combined in a cluster.
 
 ##### Non-Objectives: 
 
-The prototype does not fully implement the *ViNNSL 2.0*, as described in \cite{kopica_2015} and provides limited data in-/output. This is described in section TODO.
+The prototype does not fully implement the *ViNNSL* in version 2.0, as described in \cite{kopica_2015} and provides limited data in-/output. Limitations are described in section TODO.
 
 ## Motivation
 
@@ -52,7 +52,7 @@ TODO
 
 # State of the Art
 
-## Container Orchestration
+## Containers
 
 ### Docker Containers
 
@@ -60,7 +60,7 @@ Containers enable software developers to deploy applications that are portable a
 
 Building a Docker container is fast, because images do not include a guest operating system. The container format itself is standardized, which means that developers only have to ensure that their application runs inside the container, which is then bundled into a single unit. The unit can be deployed on any Linux system as well as on various cloud environments and therefore easily be scaled. Not using a full operating system makes containers use less resources than virtual machines, which ensures higher workloads with greater density. \cite{joy2015}
 
-### Microservices
+## Microservices
 
 The micoservice architecture pattern is a variant of a service-oriented architecture (SOA).  An often cited definition originates from Martin Fowler and James Lewis:
 
@@ -70,47 +70,52 @@ Figure \ref{monolithic_vs_microservice} shows the architectural difference betwe
 
 ![Monolithic Architecture vs. Microservice Architecture \label{monolithic_vs_microservice}](images/monolithic_vs_microservice.png){width=15cm}
 
-## Machine Learning
-
-
-
-*Machine learning—the process by which computers can get better at performing tasks through exposure to data, rather than through explicit programming—requires massive computational power, the kind usually found in clusters of energy-guzzling, cloud-based computer servers outfitted with specialized processors. But an emerging trend promises to bring the power of machine learning to mobile devices that may lack or have only intermittent online connectivity. This will give rise to machines that sense, perceive, learn from, and respond to their environment and their users, enabling the emergence of new product categories, reshaping how businesses engage with customers, and transforming how work gets done across industries.(https://www2.deloitte.com/insights/us/en/focus/signals-for-strategists/machine-learning-mobile-applications.html)*  TODO CITATION
-
-### Classification
-
-### Neural Networks
-
-#### Tensorflow
-
-#### DL4J
-
-
-
-## Comparison of Container Orchestration Technologies
+## Container Orchestration Technologies
 
 ### Kubernetes
 
-Kubernetes was developed by Google for administering applications, that are provided in containers, in a cluster of nodes. The services that are responsible for controlling the cluster are called master components \cite{kub_intro}. 
+Kubernetes was developed by Google for administering applications, that are provided in containers, in a cluster of nodes. Services that are responsible for controlling the cluster, are called master components \cite{kub_intro}. 
 
-TODO Kubernetes is a system, developed by Google, for managing containerized applications across a cluster of nodes. The controlling services in a Kubernetes cluster are called the master components and have a number of unique services which are used to manage a cluster's workload and communications across the system \cite{kub_intro}. 
+<!--TODO Kubernetes is a system, developed by Google, for managing containerized applications across a cluster of nodes. The controlling services in a Kubernetes cluster are called the master components and have a number of unique services which are used to manage a cluster's workload and communications across the system \cite{kub_intro}.--> 
 
 #### Master Components
 
+The master consists of the core API server, that provides information about the cluster and workload state and allows to define the desired state \cite{baier-kub}. The master server also takes care of scheduling and scaling workloads, cluster-wide networking and performs health checks \cite{kub_intro}. Workloads are managed in form of so-called pods, which are various containers that conclude the application stacks \cite{baier-kub}.
+
+<!--the master server acts as the primary control plane for Kubernetes clusters. It serves as the main contact point for administrators and users, and also provides many cluster-wide systems for the relatively unsophisticated worker nodes. Overall, the components on the master server work together to accept user requests, determine the best ways to schedule workload containers, authenticate clients and nodes, adjust cluster-wide networking, and manage scaling and health checking responsibilities.These components can be installed on a single machine or distributed across multiple servers. We will take a look at each of the individual components associated with master servers in this section.-->
+
+<!--Essentially, master is the brain of our cluster. Here, we have the core API server, which maintains RESTful web services for querying and defining our desired cluster and workload state. It's important to note that the control pane only accesses the master to initiate changes and not the nodes directly.-->
+<!--Additionally, the master includes the scheduler, which works with the API server-->
+<!--to schedule workloads in the form of pods on the actual minion nodes. These pods include the various containers that make up our application stacks. By default, the basic Kubernetes scheduler spreads pods across the cluster and uses different nodes for matching pod replicas. Kubernetes also allows specifying necessary resources for each container, so scheduling can be altered by these additional factors.-->
+<!--The replication controller works with the API server to ensure that the correct number of pod replicas are running at any given time. This is exemplary of the desired state concept. If our replication controller is defining three replicas and our actual state is two copies of the pod running, then the scheduler will be invoked to add a third pod somewhere on our cluster. The same is true if there are too many pods running in the cluster at any given time. In this way, K8s is always pushing towards that desired state.-->
+
 ##### etcd
 
-etcd is a key-value store, accessible by a HTTP/JSON API,  which can be distributed across multiple nodes and is used by Kubernetes to store configuration data, which needs to be accessible across nodes deployed in the cluster. Is is essential for service discovery and to describe the state of the cluster, among other things. \cite{kub_intro}
+etcd is a key-value store, accessible by a HTTP/JSON API,  which can be distributed across multiple nodes and is used by Kubernetes to store configuration data, which needs to be accessible across nodes deployed in the cluster. It is essential for service discovery and to describe the state of the cluster, among other things. \cite{kub_intro}
 
 etcd can also watch values for changes \cite{baier-kub}.
 
 ##### kube-apiserver
 
+The API server acts as the main management point for the cluster and provides a RESTful interface for users and other services to configure workloads in the cluster. It is a bridge between other master components and is responsible of maintaining health and spreading commands in the cluster. \cite{kub_intro}
+
 ##### kube-scheduler
+
+The scheduler keeps track of available and allocated resources on each specific node in the cluster. It has an overview of the infrastructure environment and needs to distribute workload to an acceptable node without exceeding the available resources. Therefore each workload has to declare its operating requirements. \cite{kub_intro}
 
 ##### kube-controller-manager
 
+The controller manager mainly operates different controllers that constantly check the shared state of the cluster in `etcd` via the apiserver \cite{kub_comp} and if the current state differs towards the desired state it takes compensating measures \cite{kub_intro}. 
+
+For example the node controller's task is to react when nodes go offline or down. The replication controller makes sure that the defined number of desired pods is identical to the number of currently deployed pods in the cluster and scales applications up or down accordingly. The endpoints controller populates the endpoints to services \cite{kub_comp} 
+
 ##### cloud-controller-manager
 
+Kubernetes supports different cloud infrastructure providers. As each cloud providers has different features, apis and capabilities, cloud controller managers act as an abstraction to the generic internal Kubernetes constructs. This has the advantage that the core Kubernetes code is not dependent on cloud-provider-specific code. \cite{kub_comp} 
+
 #### Node Components
+
+
 
 ##### kubelet
 
@@ -129,6 +134,21 @@ Docker
 ### Docker Swarm
 
 https://github.com/GuillaumeRochat/container-orchestration-comparison
+
+
+## Machine Learning
+
+
+
+*Machine learning—the process by which computers can get better at performing tasks through exposure to data, rather than through explicit programming—requires massive computational power, the kind usually found in clusters of energy-guzzling, cloud-based computer servers outfitted with specialized processors. But an emerging trend promises to bring the power of machine learning to mobile devices that may lack or have only intermittent online connectivity. This will give rise to machines that sense, perceive, learn from, and respond to their environment and their users, enabling the emergence of new product categories, reshaping how businesses engage with customers, and transforming how work gets done across industries.(https://www2.deloitte.com/insights/us/en/focus/signals-for-strategists/machine-learning-mobile-applications.html)*  TODO CITATION
+
+### Classification
+
+### Neural Networks
+
+#### Tensorflow
+
+#### DL4J
 
 # Requirements
 
