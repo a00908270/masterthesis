@@ -18,6 +18,32 @@ Finally the microservices are deployed to containers and combined in a cluster.
 
 The prototype does not fully implement the *ViNNSL* in version 2.0, as described in \cite{kopica_2015} and provides limited data in-/output. Limitations are described in section TODO.
 
+## Problem Statement
+
+Getting started with machine learning and in particular with neural networks is not a trivial task. It is a complex field with a high entry barrier and requires most often programming skills and expertise in neural network frameworks. In most cases a complex setup is needed to train and evaluate networks, which is both a processor- and memory-intense job. With cloud computing getting more and more affordable and powerful, it makes sense to shift these tasks into the cloud. There are already existing cloud platforms for machine learning, but to my present research all of them do not fulfil at least one of the following criteria:
+
+* platform is open-source
+* no programming skills required to define and train a neural network model
+* can be deployed on-site and and in the cloud (of your choice)
+* components extensible and replaceable by developers
+* provides a RESTful interface
+
+This thesis showcases an architecture, that tries to achieve all of that.
+
+ <!--TODO why it is important -->
+
+<!--This thesis showcases an architecture, that is open-source and integrates with ViNNSL, a descriptive neural network language that does not require programming skills. It can run locally on every computer or in the cloud. All components are small microservices -- replaceable and extensible. REST services are provided which allows external services to integrate with the platform.-->
+
+
+
+<!--What is the problem?-->
+<!--Who has the problem?-->
+<!--Where does the problem occur?-->
+<!--When does the problem occur?-->
+<!--How often does the problem occur?-->
+<!--What causes the problem?-->
+<!--What does the problem impact?-->
+
 ## Motivation
 
 Machine learning has become a highly discussed topic in information technology in the past years and the trend is further increasing. It has become an essential part of everyday life when using search engines or speech recognition systems, like personal assistants. Self-learning algorithms in applications learn from the input of their users and decide which news an individual should read next, which song to listen to or which social media post should appear first. Messages are being analyzed and possible answers automatically predicted. 
@@ -34,21 +60,13 @@ At the same time more and more companies shift their business logic from a monol
 
 The presented project combines these techniques and demonstrates a prototype that is open-source and is supported by common cloud providers. Developers can integrate their own solutions into the platform or exchange components ad libitum.
 
+It also integrates with ViNNSL, a descriptive language that does not require programming skills to define, train and evaluate neural networks.
+
 ## Structure
 
 TODO
 
 <!--Following the specification of ViNNSL by Kopica \cite{kopica_2015} this thesis provides a basic implementation of the markup language used to define the structure--> 
-
-## Problem Statement
-
-TODO
-
-
-
-* many different platforms
-* complex field, hard to learn
-* complex setup for many environments (design, training, auswertung, storage service, …)
 
 # State of the Art
 
@@ -66,7 +84,7 @@ The micoservice architecture pattern is a variant of a service-oriented architec
 
 > In short, the microservice architectural style is an approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms, often an HTTP resource API. These services are built around business capabilities and independently deployable by fully automated deployment machinery. There is a bare minimum of centralized management of these services, which may be written in different programming languages and use different data storage technologies. \cite{lewis2014microservices}
 
-Figure \ref{monolithic_vs_microservice} shows the architectural difference between the monolithic and microservice architecture. Monolithic applications bundle user interface, data access layer and business logic together a single unit. In the microservice architecture each task has its own service. The user interface puts together information from multiple services.
+Figure \ref{monolithic_vs_microservice} shows the architectural difference between the monolithic and microservice architecture. Monolithic applications bundle user interface, data access layer and business logic together a single unit. In the microservice architecture each task has its own service. The user interface puts information together from multiple services.
 
 ![Monolithic Architecture vs. Microservice Architecture \label{monolithic_vs_microservice}](images/monolithic_vs_microservice.png){width=15cm}
 
@@ -74,20 +92,13 @@ Figure \ref{monolithic_vs_microservice} shows the architectural difference betwe
 
 ### Kubernetes
 
-Kubernetes was developed by Google for administering applications, that are provided in containers, in a cluster of nodes. Services that are responsible for controlling the cluster, are called master components \cite{kub_intro}. 
+Kubernetes is the third container-management system (after Borg and Omega) developed by Google \cite{Burns:2016uq} for administering applications, that are provided in containers, in a cluster of nodes. Services that are responsible for controlling the cluster, are called master components \cite{kub_intro}. Figure \ref{kubernetes_core_architecture} shows the Kubernetes core architecture, which includes the Master server, the nodes and the interaction between the components.
 
-<!--TODO Kubernetes is a system, developed by Google, for managing containerized applications across a cluster of nodes. The controlling services in a Kubernetes cluster are called the master components and have a number of unique services which are used to manage a cluster's workload and communications across the system \cite{kub_intro}.--> 
+![Kubernetes core architecture\label{kubernetes_core_architecture}](images/kubernetes_core_architecture.png){width=15cm}
 
 #### Master Components
 
 The master consists of the core API server, that provides information about the cluster and workload state and allows to define the desired state \cite{baier-kub}. The master server also takes care of scheduling and scaling workloads, cluster-wide networking and performs health checks \cite{kub_intro}. Workloads are managed in form of so-called pods, which are various containers that conclude the application stacks \cite{baier-kub}.
-
-<!--the master server acts as the primary control plane for Kubernetes clusters. It serves as the main contact point for administrators and users, and also provides many cluster-wide systems for the relatively unsophisticated worker nodes. Overall, the components on the master server work together to accept user requests, determine the best ways to schedule workload containers, authenticate clients and nodes, adjust cluster-wide networking, and manage scaling and health checking responsibilities.These components can be installed on a single machine or distributed across multiple servers. We will take a look at each of the individual components associated with master servers in this section.-->
-
-<!--Essentially, master is the brain of our cluster. Here, we have the core API server, which maintains RESTful web services for querying and defining our desired cluster and workload state. It's important to note that the control pane only accesses the master to initiate changes and not the nodes directly.-->
-<!--Additionally, the master includes the scheduler, which works with the API server-->
-<!--to schedule workloads in the form of pods on the actual minion nodes. These pods include the various containers that make up our application stacks. By default, the basic Kubernetes scheduler spreads pods across the cluster and uses different nodes for matching pod replicas. Kubernetes also allows specifying necessary resources for each container, so scheduling can be altered by these additional factors.-->
-<!--The replication controller works with the API server to ensure that the correct number of pod replicas are running at any given time. This is exemplary of the desired state concept. If our replication controller is defining three replicas and our actual state is two copies of the pod running, then the scheduler will be invoked to add a third pod somewhere on our cluster. The same is true if there are too many pods running in the cluster at any given time. In this way, K8s is always pushing towards that desired state.-->
 
 ##### etcd
 
@@ -115,21 +126,35 @@ Kubernetes supports different cloud infrastructure providers. As each cloud prov
 
 #### Node Components
 
-
+Servers that accomplish workloads are called nodes. Each workload is described as one or more containers that have to be deployed. Node components run on every node in the cluster providing the Kubernetes runtime environment \cite{kub_comp}, that establishes networking and communicates with the master components. They also take care of deploying the necessary containers on a node and keep them running \cite{kub_intro}. Kubernetes requires a dedicated subnet for each node server and a supported container runtime \cite{kub_comp}.
 
 ##### kubelet
 
+The kubelet is the primary agent running on each node in the cluster, responsible for running pods \cite{kub_comp}. It communicates with the API server to receive commands invoked by the scheduler. Interaction takes place with the etcd store to read and update configuration and state of the pod.
+
+Pods are specified by the *PodSpec*, which defines the workload and parameters on how to run the containers \cite{kub_intro}. The kubelet process is responsible that the containers described in the specification are running and healthy \cite{kub_comp}. 
+
 ##### kube-proxy
+
+The proxy service is in charge of forwarding requests of defined services to the correct containers. On a basic level, load balancing is also done by the proxy. \cite{baier-kub}
 
 ##### Container Runtime
 
-Docker
+The container runtime is an implementation running containers. Currently Docker, rkt, runc and OpenContainer runtimes are supported. \cite{kub_comp}
+
+##### Pods
+
+A pod is the smallest deployable unit in a cluster consisting of a group of one or more containers, which share network and storage. \cite{kub-pod}
 
 #### Addons
 
-##### DNS
+##### Cluster DNS
+
+Cluster DNS server keeps track of running services in the cluster and updates DNS records accordingly. This allows an easy way of service discovery. Containers include this DNS server in their DNS lookups automatically -- that way a service can resolve another service by its name. \cite{baier-kub}
 
 ##### Dashboard
+
+The dashboard is a web-based user interface that allows to manage Kubernetes clusters and applications running in the cluster \cite{kub_comp}. It also provides access to log messages in each pod.
 
 ### Docker Swarm
 

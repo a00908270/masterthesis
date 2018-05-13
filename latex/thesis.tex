@@ -36,6 +36,37 @@ The prototype does not fully implement the \emph{ViNNSL} in version 2.0,
 as described in \cite{kopica_2015} and provides limited data in-/output.
 Limitations are described in section TODO.
 
+\section{Problem Statement}\label{problem-statement}
+
+Getting started with machine learning and in particular with neural
+networks is not a trivial task. It is a complex field with a high entry
+barrier and requires most often programming skills and expertise in
+neural network frameworks. In most cases a complex setup is needed to
+train and evaluate networks, which is both a processor- and
+memory-intense job. With cloud computing getting more and more
+affordable and powerful, it makes sense to shift these tasks into the
+cloud. There are already existing cloud platforms for machine learning,
+but to my present research all of them do not fulfil at least one of the
+following criteria:
+
+\begin{itemize}
+\tightlist
+\item
+  platform is open-source
+\item
+  no programming skills required to define and train a neural network
+  model
+\item
+  can be deployed on-site and and in the cloud
+\item
+  components extensible and replaceable by developers
+\item
+  provides a RESTful interface
+\end{itemize}
+
+This thesis showcases an architecture, that tries to achieve all of
+that.
+
 \section{Motivation}\label{motivation}
 
 Machine learning has become a highly discussed topic in information
@@ -81,24 +112,13 @@ prototype that is open-source and is supported by common cloud
 providers. Developers can integrate their own solutions into the
 platform or exchange components ad libitum.
 
+It also integrates with ViNNSL, a descriptive language that does not
+require programming skills to define, train and evaluate neural
+networks.
+
 \section{Structure}\label{structure}
 
 TODO
-
-\section{Problem Statement}\label{problem-statement}
-
-TODO
-
-\begin{itemize}
-\tightlist
-\item
-  many different platforms
-\item
-  complex field, hard to learn
-\item
-  complex setup for many environments (design, training, auswertung,
-  storage service, \ldots{})
-\end{itemize}
 
 \chapter{State of the Art}\label{state-of-the-art}
 
@@ -145,8 +165,8 @@ Figure \ref{monolithic_vs_microservice} shows the architectural
 difference between the monolithic and microservice architecture.
 Monolithic applications bundle user interface, data access layer and
 business logic together a single unit. In the microservice architecture
-each task has its own service. The user interface puts together
-information from multiple services.
+each task has its own service. The user interface puts information
+together from multiple services.
 
 \begin{figure}
 \centering
@@ -160,10 +180,21 @@ Technologies}\label{container-orchestration-technologies}
 
 \subsection{Kubernetes}\label{kubernetes}
 
-Kubernetes was developed by Google for administering applications, that
-are provided in containers, in a cluster of nodes. Services that are
-responsible for controlling the cluster, are called master components
-\cite{kub_intro}.
+Kubernetes is the third container-management system (after Borg and
+Omega) developed by Google \cite{Burns:2016uq} for administering
+applications, that are provided in containers, in a cluster of nodes.
+Services that are responsible for controlling the cluster, are called
+master components \cite{kub_intro}. Figure
+\ref{kubernetes_core_architecture} shows the Kubernetes core
+architecture, which includes the Master server, the nodes and the
+interaction between the components.
+
+\begin{figure}
+\centering
+\includegraphics[width=15.00000cm]{images/kubernetes_core_architecture}
+\caption{Kubernetes core
+architecture\label{kubernetes_core_architecture}}
+\end{figure}
 
 \subsubsection{Master Components}\label{master-components}
 
@@ -224,19 +255,61 @@ code is not dependent on cloud-provider-specific code. \cite{kub_comp}
 
 \subsubsection{Node Components}\label{node-components}
 
+Servers that accomplish workloads are called nodes. Each workload is
+described as one or more containers that have to be deployed. Node
+components run on every node in the cluster providing the Kubernetes
+runtime environment \cite{kub_comp}, that establishes networking and
+communicates with the master components. They also take care of
+deploying the necessary containers on a node and keep them running
+\cite{kub_intro}. Kubernetes requires a dedicated subnet for each node
+server and a supported container runtime \cite{kub_comp}.
+
 \paragraph{kubelet}\label{kubelet}
+
+The kubelet is the primary agent running on each node in the cluster,
+responsible for running pods \cite{kub_comp}. It communicates with the
+API server to receive commands invoked by the scheduler. Interaction
+takes place with the etcd store to read and update configuration and
+state of the pod.
+
+Pods are specified by the \emph{PodSpec}, which defines the workload and
+parameters on how to run the containers \cite{kub_intro}. The kubelet
+process is responsible that the containers described in the
+specification are running and healthy \cite{kub_comp}.
 
 \paragraph{kube-proxy}\label{kube-proxy}
 
+The proxy service is in charge of forwarding requests of defined
+services to the correct containers. On a basic level, load balancing is
+also done by the proxy. \cite{baier-kub}
+
 \paragraph{Container Runtime}\label{container-runtime}
 
-Docker
+The container runtime is an implementation running containers. Currently
+Docker, rkt, runc and OpenContainer runtimes are supported.
+\cite{kub_comp}
+
+\paragraph{Pods}\label{pods}
+
+A pod is the smallest deployable unit in a cluster consisting of a group
+of one or more containers, which share network and storage.
+\cite{kub-pod}
 
 \subsubsection{Addons}\label{addons}
 
-\paragraph{DNS}\label{dns}
+\paragraph{Cluster DNS}\label{cluster-dns}
+
+Cluster DNS server keeps track of running services in the cluster and
+updates DNS records accordingly. This allows an easy way of service
+discovery. Containers include this DNS server in their DNS lookups
+automatically -- that way a service can resolve another service by its
+name. \cite{baier-kub}
 
 \paragraph{Dashboard}\label{dashboard}
+
+The dashboard is a web-based user interface that allows to manage
+Kubernetes clusters and applications running in the cluster
+\cite{kub_comp}. It also provides access to log messages in each pod.
 
 \subsection{Docker Swarm}\label{docker-swarm}
 
@@ -435,6 +508,30 @@ Objects}\label{state-of-neural-network-objects}
 
 \section{Class Diagram}\label{class-diagram}
 
+\subsection{vinnsl-service}\label{vinnsl-service}
+
+\begin{figure}
+\centering
+\includegraphics[width=17.00000cm]{images/uml-class-diagram-vinnsl-service}
+\caption{Class Diagram of vinnsl-service}
+\end{figure}
+
+\subsection{vinnsl-storage-service}\label{vinnsl-storage-service}
+
+\begin{figure}
+\centering
+\includegraphics[width=15.00000cm]{images/uml-class-diagram-vinnsl-storage-service}
+\caption{Class Diagram of vinnsl-storage-service}
+\end{figure}
+
+\subsection{vinnsl-worker-service}\label{vinnsl-worker-service}
+
+\begin{figure}
+\centering
+\includegraphics[width=17.00000cm]{images/uml-class-diagram-vinnsl-worker-service}
+\caption{Class Diagram of vinnsl-worker-service}
+\end{figure}
+
 \chapter{REST API Documentation}\label{rest-api-documentation}
 
 \paragraph{Base URL}\label{base-url}
@@ -443,7 +540,7 @@ Objects}\label{state-of-neural-network-objects}
 http[s]://<clusterip>
 \end{verbatim}
 
-\section{vinnsl-service}\label{vinnsl-service}
+\section{vinnsl-service}\label{vinnsl-service-1}
 
 \subsection{Import a new ViNNSL XML
 Defintion}\label{import-a-new-vinnsl-xml-defintion}
@@ -1583,7 +1680,7 @@ HTTP Code & Description & Schema\tabularnewline
   dl-4j-service-controller
 \end{itemize}
 
-\section{vinnsl-storage-service}\label{vinnsl-storage-service}
+\section{vinnsl-storage-service}\label{vinnsl-storage-service-1}
 
 \subsection{Handle File Upload from HTML
 Form}\label{handle-file-upload-from-html-form}
@@ -1967,7 +2064,7 @@ HTTP Code & Description & Schema\tabularnewline
   vinnsl-storage-controller
 \end{itemize}
 
-\section{vinnsl-worker-service}\label{vinnsl-worker-service}
+\section{vinnsl-worker-service}\label{vinnsl-worker-service-1}
 
 \subsection{getWorkingQueue}\label{getworkingqueue}
 
