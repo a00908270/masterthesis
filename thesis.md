@@ -90,6 +90,10 @@ Figure \ref{monolithic_vs_microservice} shows the architectural difference betwe
 
 ## Container Orchestration Technologies
 
+As every single microservice runs as a container, we need a tool to manage, organise and replace these containers. Services should also be able to speak to each other, be restarted if they fail. Services under heavy load should be scaled for better performance. To deal with these challenges container orchestration technologies come into place.  According to a study from 2017 published Portworx Kubernetes is the most frequently used container orchestration tool in organizations, followed by Docker Swarm and Kubernetes \cite{portworx-2017}
+
+This section describes the architecture of the mentioned container orchestration technologies and compares them.
+
 ### Kubernetes
 
 Kubernetes is the third container-management system (after Borg and Omega) developed by Google \cite{Burns:2016uq} for administering applications, that are provided in containers, in a cluster of nodes. Services that are responsible for controlling the cluster, are called master components \cite{kub_intro}. Figure \ref{kubernetes_core_architecture} shows the Kubernetes core architecture, which includes the Master server, the nodes and the interaction between the components.
@@ -158,6 +162,8 @@ The dashboard is a web-based user interface that allows to manage Kubernetes clu
 
 ### Docker Swarm
 
+On October 17, [Docker](https://www.docker.com/) announced that it will integrate [Kubernetes](https://kubernetes.io/) into the Docker platform. Users can chose to use [Kubernetes](https://www.docker.com/kubernetes) and/or [Docker Swarm](https://docs.docker.com/engine/swarm/) for orchestration. 
+
 https://github.com/GuillaumeRochat/container-orchestration-comparison
 
 
@@ -177,22 +183,39 @@ https://github.com/GuillaumeRochat/container-orchestration-comparison
 
 # Requirements
 
+This section defines functional and non-function requirements of the developed prototype. The neural network execution stack focuses on two main target groups: data scientists and developers.  
+
+Data scientists use the provided services in a deployed environment (cloud or own computer) to develop and train their neural networks. The system should be easy to setup and no programming knowledge should be needed to get started.  
+
+Developers can extend the neural network stack with features or use the provided web services to implement their own custom solution. 
+
 ## Functional Requirements
 
-TODO
+Due to the fact that neural network training requires a lot of computing power, the main requirement is to design an architecture that can be executed in the cloud or on-site cluster hardware. 
 
-* NN in Cloud Rechnen
-* Verwendung der verständlichen Beschreibungssprache ViNNSl
-* all Devices, from everywhere
-* berechnetes Netzwerk kann in eig App verwendet werden / oder als Webservice exposed
+To enable developers to extend the application, it is designed as a platform that is open-sourced and documented. An easy setup on a local computer and small micro-services with a clear structure and manageable code base make it easier to get acquainted with the architecture. 
+
+The neural network platform should also offer a way to be extended or used by external applications and services, therefore a documented RESTful webservice is provided, that can be consumed by various clients. 
+
+<!--TODO-->
+
+<!--NN in Cloud Rechnen-->
+
+<!--Verwendung der verständlichen Beschreibungssprache ViNNSl-->
+
+<!--all Devices, from everywhere-->
+
+<!--berechnetes Netzwerk kann in eig App verwendet werden / oder als Webservice exposed-->
 
 ### User Interface
 
+The user interface shall be a web application that gives a quick overview of all neural networks and their training status. The frontend uses the RESTful API as backend source and does not cover the whole function range of the API. 
+
 #### Mockup
 
-TODO
+Figure \ref{vinnsl-ui-mockup} shows a sketch of the user interface. On the left side the user can see a list of all created or imported neural networks. Next to the names of the networks, there is an icon representing the training status. In the detailed view on the right side, the title and id of the network is shown followed by an indicator when training is in progress. The visualisation of a neural network is divided into tabs.
 
-Figure \ref{vinnsl-ui-mockup} shows a sketch of the user interface.
+The tabs "Description", "Definition", "Instance" and "Result" represent the eponymous ViNNSL Description XML file into a graphical tree view. When enough information is provided by ViNNSL XML files, the worker service performs a transformation into the internally used model representation of the DL4J Framework. The DL4J Tab shows the transformed object. In the "Files" tab, imported files of the storage services are listed and can be selected as training- or testset.
 
 ![Mockup: User Interface of Frontend Service\label{vinnsl-ui-mockup}](./images/vinnsl-ui-mockup.png){width=17cm}
 
@@ -200,15 +223,36 @@ Figure \ref{vinnsl-ui-mockup} shows a sketch of the user interface.
 
 ### Quality
 
+The execution stack shall comply with the following quality features:
+
+* Standard RESTful API
+* the user interface works on all common browsers and devices (responsive design)
+* loading time of the user interface should be less than three seconds
+
 ### Technical
 
 ### Software
 
+- Kubernetes
+- Docker
+
 ### Hardware
+
+* Kubernetes compatible hardware or Cloud account (Amazon Web Services, Google Cloud Engine)
 
 ### Documentation
 
+The documentation is provided in Section \ref{rest-api-documentation} or online on SwaggerHub (https://app.swaggerhub.com/apis/a00908270/).
+
+### Source Code
+
+The source code is released on GitHub https://github.com/a00908270
+
 ### Developer Environment
+
+Developers can use any Java Based development environment. 
+
+
 
 # Specification
 
@@ -218,7 +262,7 @@ Figure \ref{img.use_case_nn} shows the UML use case diagram.
 
 ### Use Case Descriptions
 
-TODO (hinzufügen: dev: kann trainiertes netz in eigener app verwenden ,data scientist: trainiertes netzwerk exportieren und developer überreichen)
+<!--TODO (hinzufügen: dev: kann trainiertes netz in eigener app verwenden ,data scientist: trainiertes netzwerk exportieren und developer überreichen)-->
 
 
 

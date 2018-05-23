@@ -57,7 +57,7 @@ following criteria:
   no programming skills required to define and train a neural network
   model
 \item
-  can be deployed on-site and and in the cloud
+  can be deployed on-site and and in the cloud (of your choice)
 \item
   components extensible and replaceable by developers
 \item
@@ -177,6 +177,18 @@ together from multiple services.
 
 \section{Container Orchestration
 Technologies}\label{container-orchestration-technologies}
+
+As every single microservice runs as a container, we need a tool to
+manage, organise and replace these containers. Services should also be
+able to speak to each other, be restarted if they fail. Services under
+heavy load should be scaled for better performance. To deal with these
+challenges container orchestration technologies come into place.
+According to a study from 2017 published Portworx Kubernetes is the most
+frequently used container orchestration tool in organizations, followed
+by Docker Swarm and Kubernetes \cite{portworx-2017}
+
+This section describes the architecture of the mentioned container
+orchestration technologies and compares them.
 
 \subsection{Kubernetes}\label{kubernetes}
 
@@ -313,6 +325,12 @@ Kubernetes clusters and applications running in the cluster
 
 \subsection{Docker Swarm}\label{docker-swarm}
 
+On October 17,~\href{https://www.docker.com/}{Docker}~announced that it
+will integrate~\href{https://kubernetes.io/}{Kubernetes}~into the Docker
+platform. Users can chose to
+use~\href{https://www.docker.com/kubernetes}{Kubernetes}~and/or~\href{https://docs.docker.com/engine/swarm/}{Docker
+Swarm}~for orchestration.~
+
 https://github.com/GuillaumeRochat/container-orchestration-comparison
 
 \section{Machine Learning}\label{machine-learning}
@@ -341,30 +359,57 @@ TODO CITATION
 
 \chapter{Requirements}\label{requirements}
 
+This section defines functional and non-function requirements of the
+developed prototype. The neural network execution stack focuses on two
+main target groups: data scientists and developers.
+
+Data scientists use the provided services in a deployed environment
+(cloud or own computer) to develop and train their neural networks. The
+system should be easy to setup and no programming knowledge should be
+needed to get started.
+
+Developers can extend the neural network stack with features or use the
+provided web services to implement their own custom solution.
+
 \section{Functional Requirements}\label{functional-requirements}
 
-TODO
+Due to the fact that neural network training requires a lot of computing
+power, the main requirement is to design an architecture that can be
+executed in the cloud or on-site cluster hardware.
 
-\begin{itemize}
-\tightlist
-\item
-  NN in Cloud Rechnen
-\item
-  Verwendung der verständlichen Beschreibungssprache ViNNSl
-\item
-  all Devices, from everywhere
-\item
-  berechnetes Netzwerk kann in eig App verwendet werden / oder als
-  Webservice exposed
-\end{itemize}
+To enable developers to extend the application, it is designed as a
+platform that is open-sourced and documented. An easy setup on a local
+computer and small micro-services with a clear structure and manageable
+code base make it easier to get acquainted with the architecture.
+
+The neural network platform should also offer a way to be extended or
+used by external applications and services, therefore a documented
+RESTful webservice is provided, that can be consumed by various clients.
 
 \subsection{User Interface}\label{user-interface}
 
+The user interface shall be a web application that gives a quick
+overview of all neural networks and their training status. The frontend
+uses the RESTful API as backend source and does not cover the whole
+function range of the API.
+
 \subsubsection{Mockup}\label{mockup}
 
-TODO
+Figure \ref{vinnsl-ui-mockup} shows a sketch of the user interface. On
+the left side the user can see a list of all created or imported neural
+networks. Next to the names of the networks, there is an icon
+representing the training status. In the detailed view on the right
+side, the title and id of the network is shown followed by an indicator
+when training is in progress. The visualisation of a neural network is
+divided into tabs.
 
-Figure \ref{vinnsl-ui-mockup} shows a sketch of the user interface.
+The tabs ``Description'', ``Definition'', ``Instance'' and ``Result''
+represent the eponymous ViNNSL Description XML file into a graphical
+tree view. When enough information is provided by ViNNSL XML files, the
+worker service performs a transformation into the internally used model
+representation of the DL4J Framework. The DL4J Tab shows the transformed
+object. In the ``Files'' tab, imported files of the storage services are
+listed and can be selected as training- or testset.
 
 \begin{figure}
 \centering
@@ -377,15 +422,53 @@ Service\label{vinnsl-ui-mockup}}
 
 \subsection{Quality}\label{quality}
 
+The execution stack shall comply with the following quality features:
+
+\begin{itemize}
+\tightlist
+\item
+  Standard RESTful API
+\item
+  the user interface works on all common browsers and devices
+  (responsive design)
+\item
+  loading time of the user interface should be less than three seconds
+\end{itemize}
+
 \subsection{Technical}\label{technical}
 
 \subsection{Software}\label{software}
 
+\begin{itemize}
+\tightlist
+\item
+  Kubernetes
+\item
+  Docker
+\end{itemize}
+
 \subsection{Hardware}\label{hardware}
+
+\begin{itemize}
+\tightlist
+\item
+  Kubernetes compatible hardware or Cloud account (Amazon Web Services,
+  Google Cloud Engine)
+\end{itemize}
 
 \subsection{Documentation}\label{documentation}
 
+The documentation is provided in Section \ref{rest-api-documentation} or
+online on SwaggerHub (https://app.swaggerhub.com/apis/a00908270/).
+
+\subsection{Source Code}\label{source-code}
+
+The source code is released on GitHub https://github.com/a00908270
+
 \subsection{Developer Environment}\label{developer-environment}
+
+Developers can use any Java Based development environment, like eclipse
+or \{\{IntelliJ\}\}.
 
 \chapter{Specification}\label{specification}
 
