@@ -235,6 +235,8 @@ The execution stack shall comply with the following quality features:
 
 - Kubernetes
 - Docker
+- Java Standard Platform
+- Maven Plugin for Java
 
 ### Hardware
 
@@ -242,11 +244,11 @@ The execution stack shall comply with the following quality features:
 
 ### Documentation
 
-The documentation is provided in Section \ref{rest-api-documentation} or online on SwaggerHub (https://app.swaggerhub.com/apis/a00908270/).
+The documentation is provided in Section \ref{rest-api-documentation} or online on SwaggerHub[^7].
 
 ### Source Code
 
-The source code is released on GitHub https://github.com/a00908270
+The source code is released on GitHub [^6].
 
 ### Developer Environment
 
@@ -261,6 +263,82 @@ Developers can use any Java Based development environment.
 Figure \ref{img.use_case_nn} shows the UML use case diagram. 
 
 ### Use Case Descriptions
+
+| Use Case                | Import Neural Network                                        |
+| ----------------------- | ------------------------------------------------------------ |
+| Description             | An existing ViNNSL XML file with a neural network description is imported via the vinnsl web service into the database. |
+| Priority                | primary                                                      |
+| Actors                  | Data Scientist                                               |
+| Preconditions           | ViNNSL neural network XML description file                   |
+| Postconditions          | -                                                            |
+| Normal Course of Events | * The actor sends a POST request to the ViNNSL web service including a XML body<br />* The web service validates and imports the XML file and returns the HTTP status code 201 CREATED |
+| Alternative Courses     | * The post request is sent by an application or other service |
+| Exceptions              | If the validation fails or an error occurs, the web service returns the HTTP status code 500 |
+| Assumptions             | Access to the `vinnsl-service`                               |
+
+| Use Case                | Train Neural Network                                         |
+| ----------------------- | ------------------------------------------------------------ |
+| Description             | An imported neural network is trained by passing the configuration over to the worker service. |
+| Priority                | primary                                                      |
+| Actors                  | Data Scientist                                               |
+| Preconditions           | Imported ViNNSL neural network XML description, definition and instance file |
+| Postconditions          | -                                                            |
+| Normal Course of Events | * The actor sends a POST request to the working service including the identifier of the neural network that should be trained<br />* The webservice validates the request, adds the network into the training queue and returns the HTTP status code 200. |
+| Alternative Courses     | * The post request is sent by an application or other service |
+| Exceptions              | If the validation fails or an error occurs, the webservice returns the HTTP statuscode 500 |
+| Assumptions             | Access to the `vinnsl-nn-worker`                             |
+| Extensions              | * Monitor Training Status <br />* Evaluate Neural Network    |
+
+| Use Case                | Monitor Training Status                                      |
+| ----------------------- | ------------------------------------------------------------ |
+| Description             | The Data Scientist monitors the training status to evaluate the trained network afterwards. |
+| Priority                | secondary                                                    |
+| Actors                  | Data Scientist                                               |
+| Preconditions           | Training of neural network started                           |
+| Postconditions          | -                                                            |
+| Normal Course of Events | * The actor sends a GET request to the status endpoint of the vinnsl service including the identifier of the neural network that is in progress.<br />* The web service validates the request, and returns the training status along the HTTP status code 200. |
+| Alternative Courses     | * The post request is sent by an application or other service |
+| Exceptions              | If the validation fails or an error occurs, the web service returns the HTTP statuscode 500 |
+| Assumptions             | Access to the `vinnsl-service`                               |
+| Extensions              | -                                                            |
+
+| Use Case                | Evaluate Neural Network                                      |
+| ----------------------- | ------------------------------------------------------------ |
+| Description             | The Data Scientist evaluates the accuracy of the network after its training |
+| Priority                | primary                                                      |
+| Actors                  | Data Scientist                                               |
+| Preconditions           | Training of neural network successfully finished             |
+| Postconditions          | -                                                            |
+| Normal Course of Events | * The actor sends a GET request to the status endpoint of the vinnsl service including the identifier of the neural network that is finished.<br />* The web service validates the request, and returns the ViNNSL XML file including the result scheme. |
+| Alternative Courses     | * The post request is sent by an application or other service |
+| Exceptions              | If the validation fails or an error occurs, the webservice returns the HTTP statuscode 500 |
+| Assumptions             | Access to the `vinnsl-service`                               |
+| Extensions              | -                                                            |
+
+| Use Case                | Upload Files                                                 |
+| ----------------------- | ------------------------------------------------------------ |
+| Description             | The Data Scientist uploads files, that are usable as datasets (f.ex. CSV files or pictures) to the storage service |
+| Priority                | primary                                                      |
+| Actors                  | Data Scientist                                               |
+| Preconditions           | -                                                            |
+| Postconditions          | -                                                            |
+| Normal Course of Events | * The actor sends a POST request to the storage service endpoint containing a multipart file.<br />* The web service validates the request, and returns the unique identifier of the file along the HTTP status code 200. |
+| Alternative Courses     | * The post request is sent by an application or other service<br/>* The file is uploaded with the provided HTML upload form provided by the storage service |
+| Exceptions              | If the upload fails or an error occurs, the web service returns the HTTP statuscode 500 |
+| Assumptions             | Access to the `vinnsl-storage-service`                       |
+| Extensions              | -                                                            |
+
+| Use Case                | List Neural Networks                                         |
+| ----------------------- | ------------------------------------------------------------ |
+| Description             | Imported neural networks are listed                          |
+| Priority                | primary                                                      |
+| Actors                  | Data Scientist                                               |
+| Preconditions           | Imported ViNNSL neural network XML description file          |
+| Postconditions          | -                                                            |
+| Normal Course of Events | * The actor sends a GET request to the ViNNSL web service optionally including a neural network identifier<br />* The web service validates and returns the XML file(s). |
+| Alternative Courses     | * The request is sent by an application or other service     |
+| Exceptions              | If the validation fails or an error occurs, the web service returns the HTTP statuscode 500 |
+| Assumptions             | Access to the `vinnsl-service`                               |
 
 <!--TODO (hinzufügen: dev: kann trainiertes netz in eigener app verwenden ,data scientist: trainiertes netzwerk exportieren und developer überreichen)-->
 
@@ -1516,4 +1594,6 @@ TODO
 [^0]: https://kubernetes.io
 [^4]: https://docker.com
 [^5]: Create, Read, Update, Delete
+[^6]: https://github.com/a00908270/
+[^7]: https://app.swaggerhub.com/apis/a00908270/
 
