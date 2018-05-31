@@ -388,9 +388,9 @@ A simple `GET` request to the vinnsl service along with the identifier returns t
 
 ## Data Model Design
 
-All neural network data managed by the `vinnsl-service` is stored in a documented-oriented *MongoDB* database. The saved documents are internally mapped to Java Classes. The main object is `vinnsl`.
+All neural network data managed by the `vinnsl-service` is stored in a documented-oriented database. The saved documents will internally be mapped to Java Classes. The main object is `vinnsl`.
 
-`vinnsl` is the primary object owning the `_id` field that is unique. The `nncloud` property stores the status of the network and the representation of the transformed *Deeplearning4J* network. `description`, `definition`,`instance`, `training` and `result` represent the ViNNSL 2.0 Schema, generated from the provided XML Schema Definition files. See \cite{kopica_2015} to get a listing and description on all provided properties of ViNNSL 2.0. 
+`vinnsl` is the primary object owning the `_id` field that is unique. The `nncloud` property stores the status of the network and the representation of the transformed *Deeplearning4J* network. `description`, `definition`, `instance`,  `training` and `result` represent the ViNNSL 2.0 Schema, generated from the provided XML Schema Definition files. See \cite{kopica_2015} to get a listing and description on all provided properties of ViNNSL 2.0. 
 
 Figure \ref{img.db_schema} shows the data schema.
 
@@ -420,39 +420,49 @@ The Frontend UI is a web application that gives a brief overview of all neural n
 
 ## User Interface Design
 
-Auf Grundlage des ersten Sketches, wurde ein erstes Designmodell entwickelt.
+Based on the mockup in section \ref{mockup}, a user interface design has been created, that will later be implemented as a web application. Buttons to import, delete a neural network and to refresh the user interface have been added to the design. 
 
 Figure \ref{vinnsl-ui-design} shows the user interface design for the frontend web service.
 
-![User Interface Design for vinnsl-nn-ui\label{vinnsl-ui-design}](images/vinnsl-ui-design.png){width=17cm}
+![User Interface Design for vinnsl-nn-ui \label{vinnsl-ui-design}](images/vinnsl-ui-design.png){width=17cm}
 
 ## Service Discovery and Load Balancing
 
+*Service Discovery* is the process of finding out how to connect to a specific service. This applies within the cluster but also from the outside the network. As Kubernetes allows services to be scaled, there is a logic that knows and decides how network traffic is to be routed. This is called *Load Balancing*. Figure \ref{img.service-discovery} shows an overview of the microservices, their endpoint URL and the domain name service. 
+
+### Kubernetes DNS-based Service Discovery
+
+`kube-dns` is the Kubernetes add-on that starts a pod with a DNS service and configures the kubelets to resolve DNS names over this service. Services in a cluster are assigned a DNS A record derived from their service metadata name specified in the *ServiceSpec*. \ref{kub_dns_spec} 
+
+This is an extract of the *ServiceSpec* for the `vinnsl-service` defining the metadata name:
+
+```
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "vinnsl-service",
+    ...
+  }
+}
+```
 
 
-![Service Discovery with kube-dns](images/overview_main_services.png){width=15cm}
+
+(https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
+
+![Service Discovery with kube-dns \label{img.service-discovery}](images/overview_main_services.png){width=15cm}
 
 ## Neural Network Objects
 
 ### State of Neural Network Objects
 
+The state of neural network objects is saved in the `NnCloud` Object. When the object is instantiated the default value is `CREATED`.  When the network is queued, the worker service gathers all the necessary data from the vinnsl and vinnsl storage service and changes the state the `QUEUED`.
+
 <!--\bild{nn-states}{15cm}{State Machine of a Neural Network}{State Machine of a Neural Network}-->
 
 ![State Machine of a Neural Network](images/nn-states.png){width=15cm}
 
-## Class Diagram
-
-### vinnsl-service
-
-![Class Diagram of vinnsl-service](images/uml-class-diagram-vinnsl-service.png){width=17cm}
-
-### vinnsl-storage-service
-
-![Class Diagram of vinnsl-storage-service](images/uml-class-diagram-vinnsl-storage-service.png){width=15cm}
-
-### vinnsl-worker-service
-
-![Class Diagram of vinnsl-worker-service](images/uml-class-diagram-vinnsl-worker-service.png){width=17cm}
 
 # REST API Documentation
 
@@ -1593,6 +1603,20 @@ PUT /worker/queue/{id}
 <!--\bild{vinnsl-nn-ui}{15cm}{User Interface of Prototype}{User Interface of Prototype}-->
 
 ![User Interface of Prototype](images/VINNSL-NN-UI.png){width=15cm}
+
+## Class Diagram
+
+### vinnsl-service
+
+![Class Diagram of vinnsl-service](images/uml-class-diagram-vinnsl-service.png){width=17cm}
+
+### vinnsl-storage-service
+
+![Class Diagram of vinnsl-storage-service](images/uml-class-diagram-vinnsl-storage-service.png){width=15cm}
+
+### vinnsl-worker-service
+
+![Class Diagram of vinnsl-worker-service](images/uml-class-diagram-vinnsl-worker-service.png){width=17cm}
 
 # Use Cases
 
