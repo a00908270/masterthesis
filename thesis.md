@@ -432,9 +432,9 @@ Figure \ref{vinnsl-ui-design} shows the user interface design for the frontend w
 
 ### Kubernetes DNS-based Service Discovery
 
-`kube-dns` is the Kubernetes add-on that starts a pod with a DNS service and configures the kubelets to resolve DNS names over this service. It listens on port 53, the standard DNS port. Services in a cluster are assigned a DNS A record derived from their service metadata name specified in the *ServiceSpec*. \ref{kub-dns-spec} 
+`kube-dns` is the Kubernetes add-on that starts a pod with a DNS service and configures the kubelets to resolve DNS names over this service. It listens on port 53, the standard DNS port. Services in a cluster are assigned a DNS A record derived from their service metadata name specified in the *ServiceSpec*. \cite{kub-dns-spec} 
 
-This is an extract of the *ServiceSpec* for the `vinnsl-service` defining the metadata name:
+The following code snippet is an extract of the *ServiceSpec* for the `vinnsl-service` defining the metadata name:
 
 ```
 {
@@ -483,17 +483,21 @@ In this example the service is reachable at the ip address *10.102.84.122*.
 
 ![Service Discovery with kube-dns \label{img.service-discovery}](images/overview_main_services.png){width=15cm}
 
+#### Load Balancing
+
 
 
 ## Neural Network Objects
 
 ### State of Neural Network Objects
 
-The state of neural network objects is saved in the `NnCloud` Object. When the object is instantiated the default value is `CREATED`.  When the network is queued, the worker service gathers all the necessary data from the vinnsl and vinnsl storage service and changes the state the `QUEUED`.
+The state of neural network objects is saved in the `NnCloud` Object. When the object is instantiated the default value is `CREATED`.  When the network is queued, the worker service gathers all the necessary data from the vinnsl and vinnsl storage service and changes the state the `QUEUED`. During the network training, the worker changes the state to `INPROGRESS`. As soon as the training is finished, the worker service uploads the results and updated network state to the storage service and subsequently changes the state to `FINISHED`. Trained networks can be queued for retraining - in that case the state returns to `QUEUED`.  If errors occur during the training process the state will be set to `ERROR`.
+
+Figure \ref{nn-states} visualizes the state changes in a state machine.
 
 <!--\bild{nn-states}{15cm}{State Machine of a Neural Network}{State Machine of a Neural Network}-->
 
-![State Machine of a Neural Network](images/nn-states.png){width=15cm}
+![State Machine of a Neural Network \label{nn-states}](images/nn-states.png){width=15cm}
 
 
 # REST API Documentation
