@@ -156,9 +156,17 @@ A pod is the smallest deployable unit in a cluster consisting of a group of one 
 
 Cluster DNS server keeps track of running services in the cluster and updates DNS records accordingly. This allows an easy way of service discovery. Containers include this DNS server in their DNS lookups automatically -- that way a service can resolve another service by its name. \cite{baier-kub}
 
+##### Ingress
+
+Ingress handles the traffic from outside the cluster and forwards it to the correct service using the dns service acting as a proxy server. Currently there are two official implementations: `ingress-gce` and `ingress-nginx`. *Ingress* also provides basic load balancing. \cite{kub-ingress}
+
 ##### Dashboard
 
 The dashboard is a web-based user interface that allows to manage Kubernetes clusters and applications running in the cluster \cite{kub_comp}. It also provides access to log messages in each pod.
+
+#### Minikube
+
+Minikube is a tool to run a single-node Kubernetes cluster locally on computers supporting various virtual machine drivers. 
 
 ### Docker Swarm
 
@@ -261,6 +269,8 @@ Developers can use any Java Based development  environment.
 ## Use Case
 
 Figure \ref{img.use_case_nn} shows the UML use case diagram. 
+
+![UML Use Case Diagram \label{img.use_case_nn}](images/use_case_nn.png){width=15cm}
 
 ### Use Case Descriptions
 
@@ -366,10 +376,6 @@ Figure \ref{img.use_case_nn} shows the UML use case diagram.
 
 <!--TODO (hinzufügen: dev: kann trainiertes netz in eigener app verwenden ,data scientist: trainiertes netzwerk exportieren und developer überreichen)-->
 
-
-
-![UML Use Case Diagram \label{img.use_case_nn}](images/use_case_nn.png){width=15cm}
-
 ## Sequence Diagram
 
 Figure \ref{img.training_sequence} shows the sequence diagram of a neural network training process and which microservices are involved in the communication. The *vinnsl service* is the main communication hub that is enables access to the neural network object and all of its data and also provides interfaces to update it. The *vinnsl storage service* most importantly stores necessary binary data used by the neural network objects. On the one hand that are tables and pictures on the other hand the binary (trained) *Deeplearning4J* model. The *vinnsl worker service* has the role of training the neural networks models.
@@ -388,6 +394,8 @@ A simple `GET` request to the vinnsl service along with the identifier returns t
 
 ## Data Model Design
 
+### vinnsl-service
+
 All neural network data managed by the `vinnsl-service` is stored in a documented-oriented database. The saved documents will internally be mapped to Java Classes. The main object is `vinnsl`.
 
 `vinnsl` is the primary object owning the `_id` field that is unique. The `nncloud` property stores the status of the network and the representation of the transformed *Deeplearning4J* network. `description`, `definition`, `instance`,  `training` and `result` represent the ViNNSL 2.0 Schema, generated from the provided XML Schema Definition files. See \cite{kopica_2015} to get a listing and description on all provided properties of ViNNSL 2.0. 
@@ -395,6 +403,34 @@ All neural network data managed by the `vinnsl-service` is stored in a documente
 Figure \ref{img.db_schema} shows the data schema.
 
 ![NoSQL Data Model \label{img.db_schema}](images/db_schema.png){width=15cm}
+
+### storage-service
+
+The `storage-service` stores binary files and their metadata, either directly in the file system or inside a database.  Each file needs to have a unique id, a filename, a content type and an upload date.
+
+| Attribute field | Description                                                  |
+| --------------- | ------------------------------------------------------------ |
+| id              | a unique file id that can be referred to (f.ex in `vinnsl-service`) |
+| filename        | the original filename when uploaded                          |
+| content type    | the MIME type standardized in RFC 6838 (f.ex text/plain)     |
+| upload date     | date and time of original upload                             |
+
+Example of stored file:
+
+```
+{
+    "_id" : ObjectId("5ab4e69c8f136a16bf81f093"),
+    "filename" : "iris.txt",
+    "aliases" : null,
+    "chunkSize" : NumberLong(261120),
+    "uploadDate" : ISODate("2018-03-23T11:35:56.700Z"),
+    "length" : NumberLong(2700),
+    "contentType" : "text/plain",
+    "md5" : "f0e89bd71f7bb9e584e685aeb178a5aa"
+}
+```
+
+
 
 ## Overview Microservices
 
@@ -428,7 +464,7 @@ Figure \ref{vinnsl-ui-design} shows the user interface design for the frontend w
 
 ## Service Discovery and Load Balancing
 
-*Service Discovery* is the process of finding out how to connect to a specific service. This applies within the cluster but also from the outside the network. As Kubernetes allows services to be scaled, there is a logic that knows and decides how network traffic is to be routed. This is called *Load Balancing*. Figure \ref{img.service-discovery} shows an overview of the microservices, their endpoint URL and the domain name service. 
+*Service Discovery* is the process of finding out how to connect to a specific service. This applies within the cluster, which is typically firewalled from the internet. As Kubernetes allows services to be scaled, there is also a logic that knows and decides how network traffic is routed. This is called *Load Balancing*. Figure \ref{img.service-discovery} shows an overview of the microservices, their endpoint URL and the domain name service. External access to specific services is managed by *Ingress*. 
 
 ### Kubernetes DNS-based Service Discovery
 
@@ -468,7 +504,7 @@ Using the Kubernetes DNS service a microservice instance (kubelet) can now looku
 
 ##### Example
 
-For example the tool `nslookup`  can query the DNS service for the IP address of the `vinnsl-service`.
+For example the tool `nslookup`  can query the DNS service for the IP address of the `vinnsl-service` within the cluster.
 
 ```
 / # nslookup vinnsl-service
@@ -483,13 +519,15 @@ In this example the service is reachable at the ip address *10.102.84.122*.
 
 ![Service Discovery with kube-dns \label{img.service-discovery}](images/overview_main_services.png){width=15cm}
 
-#### Load Balancing
+#### External Access and Load Balancing
+
+External Access from outside the cluster to specific services is managed and provided through the *Ingress* API object. The associated implementation is called *Ingress controller* and is obligatory. Currently there are two official implementations: `ingress-gce` and `ingress-nginx`. \cite{kub-ingress}
+
+*Minikube* runs the `ingress-nginx` implementation as default and also provides basic load balancing by configuring a `nginx` web server. Kubernetes configures `nginx` to use the *least-connected* load balancing mechanism, which means that the *next request is assigned to the server with the least number of active connections* \cite{nginx-loadbal}.
 
 
 
-## Neural Network Objects
-
-### State of Neural Network Objects
+## Neural Network Objects State
 
 The state of neural network objects is saved in the `NnCloud` Object. When the object is instantiated the default value is `CREATED`.  When the network is queued, the worker service gathers all the necessary data from the vinnsl and vinnsl storage service and changes the state the `QUEUED`. During the network training, the worker changes the state to `INPROGRESS`. As soon as the training is finished, the worker service uploads the results and updated network state to the storage service and subsequently changes the state to `FINISHED`. Trained networks can be queued for retraining - in that case the state returns to `QUEUED`.  If errors occur during the training process the state will be set to `ERROR`.
 
@@ -500,7 +538,31 @@ Figure \ref{nn-states} visualizes the state changes in a state machine.
 ![State Machine of a Neural Network \label{nn-states}](images/nn-states.png){width=15cm}
 
 
-# REST API Documentation
+
+
+# Prototype Implementation 
+
+## User Interface
+
+<!--\bild{vinnsl-nn-ui}{15cm}{User Interface of Prototype}{User Interface of Prototype}-->
+
+![User Interface of Prototype](images/VINNSL-NN-UI.png){width=15cm}
+
+## Class Diagram
+
+### vinnsl-service
+
+![Class Diagram of vinnsl-service](images/uml-class-diagram-vinnsl-service.png){width=17cm}
+
+### vinnsl-storage-service
+
+![Class Diagram of vinnsl-storage-service](images/uml-class-diagram-vinnsl-storage-service.png){width=15cm}
+
+### vinnsl-worker-service
+
+![Class Diagram of vinnsl-worker-service](images/uml-class-diagram-vinnsl-worker-service.png){width=17cm}
+
+# Prototype API Documentation
 
 ##### Base URL
 
@@ -1631,28 +1693,6 @@ PUT /worker/queue/{id}
 
 - worker-controller
 
-
-# Implementation of a Prototype 
-
-## User Interface
-
-<!--\bild{vinnsl-nn-ui}{15cm}{User Interface of Prototype}{User Interface of Prototype}-->
-
-![User Interface of Prototype](images/VINNSL-NN-UI.png){width=15cm}
-
-## Class Diagram
-
-### vinnsl-service
-
-![Class Diagram of vinnsl-service](images/uml-class-diagram-vinnsl-service.png){width=17cm}
-
-### vinnsl-storage-service
-
-![Class Diagram of vinnsl-storage-service](images/uml-class-diagram-vinnsl-storage-service.png){width=15cm}
-
-### vinnsl-worker-service
-
-![Class Diagram of vinnsl-worker-service](images/uml-class-diagram-vinnsl-worker-service.png){width=17cm}
 
 # Use Cases
 
