@@ -252,7 +252,7 @@ The source code is released on GitHub [^6].
 
 ### Developer Environment
 
-Developers can use any Java Based development environment. 
+Developers can use any Java Based development  environment. 
 
 
 
@@ -432,7 +432,7 @@ Figure \ref{vinnsl-ui-design} shows the user interface design for the frontend w
 
 ### Kubernetes DNS-based Service Discovery
 
-`kube-dns` is the Kubernetes add-on that starts a pod with a DNS service and configures the kubelets to resolve DNS names over this service. Services in a cluster are assigned a DNS A record derived from their service metadata name specified in the *ServiceSpec*. \ref{kub_dns_spec} 
+`kube-dns` is the Kubernetes add-on that starts a pod with a DNS service and configures the kubelets to resolve DNS names over this service. It listens on port 53, the standard DNS port. Services in a cluster are assigned a DNS A record derived from their service metadata name specified in the *ServiceSpec*. \ref{kub-dns-spec} 
 
 This is an extract of the *ServiceSpec* for the `vinnsl-service` defining the metadata name:
 
@@ -447,11 +447,43 @@ This is an extract of the *ServiceSpec* for the `vinnsl-service` defining the me
 }
 ```
 
+#### Structure of the Hostname
 
+The full hostname record is composed of the zone, kind, namespace of the cluster and the metadata name of the service.
 
-(https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
+| Name     | Description                                                  |
+| -------- | ------------------------------------------------------------ |
+| zone     | the cluster domain (default using minikube: *cluster.local*) |
+| kind     | kind of pod (default for services: *svc*)                    |
+| ns       | namespace (default using minikube: *default*)                |
+| hostname | hostname from service metadata name                          |
+
+##### Example
+
+The vinnsl-service running on a local minikube cluster gets the following DNS record name: `vinnsl-service.default.svc.cluster.local `.
+
+#### Service Discovery
+
+Using the Kubernetes DNS service a microservice instance (kubelet) can now lookup other services by using DNS Queries.
+
+##### Example
+
+For example the tool `nslookup`  can query the DNS service for the IP address of the `vinnsl-service`.
+
+```
+/ # nslookup vinnsl-service
+Server:    10.96.0.10
+Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
+Name:      vinnsl-service
+Address 1: 10.102.84.122 vinnsl-service.default.svc.cluster.local
+```
+
+In this example the service is reachable at the ip address *10.102.84.122*.
 
 ![Service Discovery with kube-dns \label{img.service-discovery}](images/overview_main_services.png){width=15cm}
+
+
 
 ## Neural Network Objects
 
