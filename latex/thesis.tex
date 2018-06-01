@@ -108,9 +108,9 @@ code base and enables applications to dynamically adjust computing
 resources on demand \cite{villamizar}.
 
 The presented project combines these techniques and demonstrates a
-prototype that is open-source and is supported by common cloud
-providers. Developers can integrate their own solutions into the
-platform or exchange components ad libitum.
+prototype that is open-source and supported by common cloud providers.
+Developers can integrate their own solutions into the platform or
+exchange components ad libitum.
 
 It also integrates with ViNNSL, a descriptive language that does not
 require programming skills to define, train and evaluate neural
@@ -132,7 +132,7 @@ portable and consistent across different environments and providers
 kernel \cite{bashari}. As an organisation, Docker\footnote{https://docker.com}
 has seen an increase of popularity very quickly, mainly because of its
 advantages, which are speed, portability, scalability, rapid delivery,
-and density \cite{bashari}.
+and density \cite{bashari} compared to other solutions.
 
 Building a Docker container is fast, because images do not include a
 guest operating system. The container format itself is standardized,
@@ -180,12 +180,12 @@ Technologies}\label{container-orchestration-technologies}
 
 As every single microservice runs as a container, we need a tool to
 manage, organise and replace these containers. Services should also be
-able to speak to each other, be restarted if they fail. Services under
+able to speak to each other and restarted if they fail. Services under
 heavy load should be scaled for better performance. To deal with these
 challenges container orchestration technologies come into place.
-According to a study from 2017 published Portworx Kubernetes is the most
-frequently used container orchestration tool in organizations, followed
-by Docker Swarm and Kubernetes \cite{portworx-2017}
+According to a study from 2017 published by Portworx, Kubernetes is the
+most frequently used container orchestration tool in organizations,
+followed by Docker Swarm and Amazon ECS. \cite{portworx-2017}
 
 This section describes the architecture of the mentioned container
 orchestration technologies and compares them.
@@ -334,7 +334,7 @@ Kubernetes clusters and applications running in the cluster
 \subsubsection{Minikube}\label{minikube}
 
 Minikube is a tool to run a single-node Kubernetes cluster locally on
-computers supporting various virtual machine drivers.
+computers supporting various virtual machine drivers. TODO Source
 
 \subsection{Docker Swarm}\label{docker-swarm}
 
@@ -1014,11 +1014,11 @@ Assumptions\strut
 Figure \ref{img.training_sequence} shows the sequence diagram of a
 neural network training process and which microservices are involved in
 the communication. The \emph{vinnsl service} is the main communication
-hub that is enables access to the neural network object and all of its
-data and also provides interfaces to update it. The \emph{vinnsl storage
+hub that enables access to the neural network object and all of its data
+and also provides interfaces to update it. The \emph{vinnsl storage
 service} most importantly stores necessary binary data used by the
-neural network objects. On the one hand that are tables and pictures on
-the other hand the binary (trained) \emph{Deeplearning4J} model. The
+neural network objects. On one hand that are tables and pictures on the
+other hand the binary (trained) \emph{Deeplearning4J} model. The
 \emph{vinnsl worker service} has the role of training the neural
 networks models.
 
@@ -1096,6 +1096,7 @@ filename & the original filename when uploaded\tabularnewline
 content type & the MIME type standardized in RFC 6838 (f.ex
 text/plain)\tabularnewline
 upload date & date and time of original upload\tabularnewline
+metadata & a field for arbitrary additional information\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -1251,7 +1252,7 @@ Name:      vinnsl-service
 Address 1: 10.102.84.122 vinnsl-service.default.svc.cluster.local
 \end{verbatim}
 
-In this example the service is reachable at the ip address
+In this example the service is reachable at the IP address
 \emph{10.102.84.122}.
 
 \begin{figure}
@@ -1271,23 +1272,24 @@ and \texttt{ingress-nginx}. \cite{kub-ingress}
 
 \emph{Minikube} runs the \texttt{ingress-nginx} implementation as
 default and also provides basic load balancing by configuring a
-\texttt{nginx} web server. Kubernetes configures \texttt{nginx} to use
-the \emph{least-connected} load balancing mechanism, which means that
-the \emph{next request is assigned to the server with the least number
-of active connections} \cite{nginx-loadbal}.
+\texttt{nginx} \footnote{http://nginx.org/} web server. Kubernetes
+configures \texttt{nginx} to use the \emph{least-connected} load
+balancing mechanism, which means that the \emph{next request is assigned
+to the server with the least number of active connections}
+\cite{nginx-loadbal}.
 
 \section{Neural Network Objects
 State}\label{neural-network-objects-state}
 
 The state of neural network objects is saved in the \texttt{NnCloud}
-Object. When the object is instantiated the default value is
+object. When the object is instantiated the default value is
 \texttt{CREATED}. When the network is queued, the worker service gathers
 all the necessary data from the vinnsl and vinnsl storage service and
 changes the state the \texttt{QUEUED}. During the network training, the
 worker changes the state to \texttt{INPROGRESS}. As soon as the training
 is finished, the worker service uploads the results and updated network
 state to the storage service and subsequently changes the state to
-\texttt{FINISHED}. Trained networks can be queued for retraining - in
+\texttt{FINISHED}. Trained networks can be queued for retraining: in
 that case the state returns to \texttt{QUEUED}. If errors occur during
 the training process the state will be set to \texttt{ERROR}.
 
@@ -1409,7 +1411,7 @@ https://hub.docker.com/r/a00908270/vinnsl-nn-worker/\strut
 
 The \texttt{vinnsl-nn-ui} is a \emph{single page application} (SPA) that
 displays all neural networks and their details in a responsive frontend.
-Figure \ref{img.vinnsl-nn-ui} shows a screen shot of the user interface.
+Figure \ref{img.vinnsl-nn-ui} shows a screenshot of the user interface.
 
 \begin{figure}
 \centering

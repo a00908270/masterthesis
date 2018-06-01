@@ -58,7 +58,7 @@ Machine learning is not just a business area in the United States, survey result
 
 At the same time more and more companies shift their business logic from a monolithic design to microservices. Each service is dedicated to a single task that can be developed, deployed, replaced and scaled independently.  Test results have shown that not only this architecture can help reduce infrastructure costs \cite{villamizar2}\cite{villamizar}, but also reduces complexity of the code base and enables applications to dynamically adjust computing resources on demand \cite{villamizar}.
 
-The presented project combines these techniques and demonstrates a prototype that is open-source and is supported by common cloud providers. Developers can integrate their own solutions into the platform or exchange components ad libitum.
+The presented project combines these techniques and demonstrates a prototype that is open-source and supported by common cloud providers. Developers can integrate their own solutions into the platform or exchange components ad libitum.
 
 It also integrates with ViNNSL, a descriptive language that does not require programming skills to define, train and evaluate neural networks.
 
@@ -74,7 +74,7 @@ TODO
 
 ### Docker Containers
 
-Containers enable software developers to deploy applications that are portable and consistent across different environments and providers \cite{baier-kub} by running isolated on top of the operating system's kernel \cite{bashari}. As an organisation, Docker[^4] has seen an increase of popularity very quickly, mainly because of its advantages, which are speed, portability, scalability, rapid delivery, and density \cite{bashari}.
+Containers enable software developers to deploy applications that are portable and consistent across different environments and providers \cite{baier-kub} by running isolated on top of the operating system's kernel \cite{bashari}. As an organisation, Docker[^4] has seen an increase of popularity very quickly, mainly because of its advantages, which are speed, portability, scalability, rapid delivery, and density \cite{bashari} compared to other solutions.
 
 Building a Docker container is fast, because images do not include a guest operating system. The container format itself is standardized, which means that developers only have to ensure that their application runs inside the container, which is then bundled into a single unit. The unit can be deployed on any Linux system as well as on various cloud environments and therefore easily be scaled. Not using a full operating system makes containers use less resources than virtual machines, which ensures higher workloads with greater density. \cite{joy2015}
 
@@ -90,7 +90,7 @@ Figure \ref{monolithic_vs_microservice} shows the architectural difference betwe
 
 ## Container Orchestration Technologies
 
-As every single microservice runs as a container, we need a tool to manage, organise and replace these containers. Services should also be able to speak to each other, be restarted if they fail. Services under heavy load should be scaled for better performance. To deal with these challenges container orchestration technologies come into place.  According to a study from 2017 published Portworx Kubernetes is the most frequently used container orchestration tool in organizations, followed by Docker Swarm and Kubernetes \cite{portworx-2017}
+As every single microservice runs as a container, we need a tool to manage, organise and replace these containers. Services should also be able to speak to each other and restarted if they fail. Services under heavy load should be scaled for better performance. To deal with these challenges container orchestration technologies come into place.  According to a study from 2017 published by Portworx, Kubernetes is the most frequently used container orchestration tool in organizations, followed by Docker Swarm and Amazon ECS. \cite{portworx-2017}
 
 This section describes the architecture of the mentioned container orchestration technologies and compares them.
 
@@ -166,7 +166,7 @@ The dashboard is a web-based user interface that allows to manage Kubernetes clu
 
 #### Minikube
 
-Minikube is a tool to run a single-node Kubernetes cluster locally on computers supporting various virtual machine drivers. 
+Minikube is a tool to run a single-node Kubernetes cluster locally on computers supporting various virtual machine drivers. TODO Source
 
 ### Docker Swarm
 
@@ -378,7 +378,7 @@ Figure \ref{img.use_case_nn} shows the UML use case diagram.
 
 ## Sequence Diagram
 
-Figure \ref{img.training_sequence} shows the sequence diagram of a neural network training process and which microservices are involved in the communication. The *vinnsl service* is the main communication hub that is enables access to the neural network object and all of its data and also provides interfaces to update it. The *vinnsl storage service* most importantly stores necessary binary data used by the neural network objects. On the one hand that are tables and pictures on the other hand the binary (trained) *Deeplearning4J* model. The *vinnsl worker service* has the role of training the neural networks models.
+Figure \ref{img.training_sequence} shows the sequence diagram of a neural network training process and which microservices are involved in the communication. The *vinnsl service* is the main communication hub that enables access to the neural network object and all of its data and also provides interfaces to update it. The *vinnsl storage service* most importantly stores necessary binary data used by the neural network objects. On one hand that are tables and pictures on the other hand the binary (trained) *Deeplearning4J* model. The *vinnsl worker service* has the role of training the neural networks models.
 
 ### Sequence of Training
 
@@ -414,6 +414,7 @@ The `storage-service` stores binary files and their metadata, either directly in
 | filename        | the original filename when uploaded                          |
 | content type    | the MIME type standardized in RFC 6838 (f.ex text/plain)     |
 | upload date     | date and time of original upload                             |
+| metadata        | a field for arbitrary additional information                 |
 
 Example of stored file:
 
@@ -515,7 +516,7 @@ Name:      vinnsl-service
 Address 1: 10.102.84.122 vinnsl-service.default.svc.cluster.local
 ```
 
-In this example the service is reachable at the ip address *10.102.84.122*.
+In this example the service is reachable at the IP address *10.102.84.122*.
 
 ![Service Discovery with kube-dns \label{img.service-discovery}](images/overview_main_services.png){width=15cm}
 
@@ -523,13 +524,15 @@ In this example the service is reachable at the ip address *10.102.84.122*.
 
 External Access from outside the cluster to specific services is managed and provided through the *Ingress* API object. The associated implementation is called *Ingress controller* and is obligatory. Currently there are two official implementations: `ingress-gce` and `ingress-nginx`. \cite{kub-ingress}
 
-*Minikube* runs the `ingress-nginx` implementation as default and also provides basic load balancing by configuring a `nginx` web server. Kubernetes configures `nginx` to use the *least-connected* load balancing mechanism, which means that the *next request is assigned to the server with the least number of active connections* \cite{nginx-loadbal}.
+*Minikube* runs the `ingress-nginx` implementation as default and also provides basic load balancing by configuring a `nginx` [^8] web server. Kubernetes configures `nginx` to use the *least-connected* load balancing mechanism, which means that the *next request is assigned to the server with the least number of active connections* \cite{nginx-loadbal}.
+
+[^8]: http://nginx.org/
 
 
 
 ## Neural Network Objects State
 
-The state of neural network objects is saved in the `NnCloud` Object. When the object is instantiated the default value is `CREATED`.  When the network is queued, the worker service gathers all the necessary data from the vinnsl and vinnsl storage service and changes the state the `QUEUED`. During the network training, the worker changes the state to `INPROGRESS`. As soon as the training is finished, the worker service uploads the results and updated network state to the storage service and subsequently changes the state to `FINISHED`. Trained networks can be queued for retraining - in that case the state returns to `QUEUED`.  If errors occur during the training process the state will be set to `ERROR`.
+The state of neural network objects is saved in the `NnCloud` object. When the object is instantiated the default value is `CREATED`.  When the network is queued, the worker service gathers all the necessary data from the vinnsl and vinnsl storage service and changes the state the `QUEUED`. During the network training, the worker changes the state to `INPROGRESS`. As soon as the training is finished, the worker service uploads the results and updated network state to the storage service and subsequently changes the state to `FINISHED`. Trained networks can be queued for retraining: in that case the state returns to `QUEUED`.  If errors occur during the training process the state will be set to `ERROR`.
 
 Figure \ref{nn-states} visualizes the state changes in a state machine.
 
@@ -542,6 +545,8 @@ Figure \ref{nn-states} visualizes the state changes in a state machine.
 # Prototype Implementation 
 
 Following the specification, this section showcases an implementation of a prototype using microservices glued together by *Kubernetes*. This represents the execution stack for neural networks. Backend components are realized with *Java* and the *Spring Boot* framework and expose a RESTful API. The processing and training of neural networks is done by the *Deeplearning4J* framework. Database and file storage are powered by *MongoDB*. The frontend service is implemented using *Vue.js* and the *Bootstrap* UI framework, visualizing and consuming backend services.
+
+
 
 ## Source Code
 
@@ -575,7 +580,7 @@ Docker Contrainers ready for deployment in a *Kubernetes* cluster are released o
 
 ### vinnsl-nn-ui (Frontend UI)
 
-The `vinnsl-nn-ui` is a *single page application*  (SPA) that displays all neural networks and their details in a responsive frontend. Figure \ref{img.vinnsl-nn-ui} shows a screen shot of the user interface.
+The `vinnsl-nn-ui` is a *single page application*  (SPA) that displays all neural networks and their details in a responsive frontend. Figure \ref{img.vinnsl-nn-ui} shows a screenshot of the user interface. 
 
 <!--\bild{vinnsl-nn-ui}{15cm}{User Interface of Prototype}{User Interface of Prototype} \label{vinnsl-nn-ui}-->
 
