@@ -40,7 +40,7 @@ Limitations are described in section TODO.
 
 Getting started with machine learning and in particular with neural
 networks is not a trivial task. It is a complex field with a high entry
-barrier and requires most often programming skills and expertise in
+barrier and most often requires programming skills and expertise in
 neural network frameworks. In most cases a complex setup is needed to
 train and evaluate networks, which is both a processor- and
 memory-intense job. With cloud computing getting more and more
@@ -205,7 +205,7 @@ interaction between the components.
 \centering
 \includegraphics[width=15.00000cm]{images/kubernetes_core_architecture}
 \caption{Kubernetes core
-architecture\label{kubernetes_core_architecture}}
+architecture\label{kubernetes_core_architecture} TODO Source!}
 \end{figure}
 
 \subsubsection{Master Components}\label{master-components}
@@ -317,11 +317,24 @@ discovery. Containers include this DNS server in their DNS lookups
 automatically -- that way a service can resolve another service by its
 name. \cite{baier-kub}
 
+\paragraph{Ingress}\label{ingress}
+
+Ingress handles the traffic from outside the cluster and forwards it to
+the correct service using the dns service acting as a proxy server.
+Currently there are two official implementations: \texttt{ingress-gce}
+and \texttt{ingress-nginx}. \emph{Ingress} also provides basic load
+balancing. \cite{kub-ingress}
+
 \paragraph{Dashboard}\label{dashboard}
 
 The dashboard is a web-based user interface that allows to manage
 Kubernetes clusters and applications running in the cluster
 \cite{kub_comp}. It also provides access to log messages in each pod.
+
+\subsubsection{Minikube}\label{minikube}
+
+Minikube is a tool to run a single-node Kubernetes cluster locally on
+computers supporting various virtual machine drivers.
 
 \subsection{Docker Swarm}\label{docker-swarm}
 
@@ -445,6 +458,10 @@ The execution stack shall comply with the following quality features:
   Kubernetes
 \item
   Docker
+\item
+  Java Standard Platform
+\item
+  Maven Plugin for Java
 \end{itemize}
 
 \subsection{Hardware}\label{hardware}
@@ -458,17 +475,16 @@ The execution stack shall comply with the following quality features:
 
 \subsection{Documentation}\label{documentation}
 
-The documentation is provided in Section \ref{rest-api-documentation} or
-online on SwaggerHub (https://app.swaggerhub.com/apis/a00908270/).
+The documentation is provided in Section
+\ref{prototype-api-documentation} or online on SwaggerHub\footnote{https://app.swaggerhub.com/apis/a00908270/}.
 
 \subsection{Source Code}\label{source-code}
 
-The source code is released on GitHub https://github.com/a00908270
+The source code is released on GitHub \footnote{https://github.com/a00908270/}.
 
 \subsection{Developer Environment}\label{developer-environment}
 
-Developers can use any Java Based development environment, like eclipse
-or \{\{IntelliJ\}\}.
+Developers can use any Java Based development environment.
 
 \chapter{Specification}\label{specification}
 
@@ -476,25 +492,561 @@ or \{\{IntelliJ\}\}.
 
 Figure \ref{img.use_case_nn} shows the UML use case diagram.
 
-\subsection{Use Case Descriptions}\label{use-case-descriptions}
-
-TODO (hinzufügen: dev: kann trainiertes netz in eigener app verwenden
-,data scientist: trainiertes netzwerk exportieren und developer
-überreichen)
-
 \begin{figure}
 \centering
 \includegraphics[width=15.00000cm]{images/use_case_nn}
 \caption{UML Use Case Diagram \label{img.use_case_nn}}
 \end{figure}
 
+\subsection{Use Case Descriptions}\label{use-case-descriptions}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.27\columnwidth}\raggedright\strut
+\textbf{Use Case}\strut
+\end{minipage} & \begin{minipage}[b]{0.68\columnwidth}\raggedright\strut
+\textbf{Import Neural Network}\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Description\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+An existing ViNNSL XML file with a neural network description is
+imported via the vinnsl web service into the database.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Priority\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+primary\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Actors\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Data Scientist\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Preconditions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+ViNNSL neural network XML description file\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Postconditions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Normal Course of Events\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+* The actor sends a POST request to the ViNNSL web service including a
+XML body* The web service validates and imports the XML file and returns
+the HTTP status code 201 CREATED\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Alternative Courses\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+* The post request is sent by an application or other service\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Exceptions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+If the validation fails or an error occurs, the web service returns the
+HTTP status code 500\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Assumptions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Access to the \texttt{vinnsl-service}\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.27\columnwidth}\raggedright\strut
+\textbf{Use Case}\strut
+\end{minipage} & \begin{minipage}[b]{0.68\columnwidth}\raggedright\strut
+\textbf{Train Neural Network}\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Description\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+An imported neural network is trained by passing the configuration over
+to the worker service.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Priority\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+primary\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Actors\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Data Scientist\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Preconditions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Imported ViNNSL neural network XML description, definition and instance
+file\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Postconditions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Normal Course of Events\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+* The actor sends a POST request to the working service including the
+identifier of the neural network that should be trained* The webservice
+validates the request, adds the network into the training queue and
+returns the HTTP status code 200.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Alternative Courses\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+* The post request is sent by an application or other service\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Exceptions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+If the validation fails or an error occurs, the webservice returns the
+HTTP statuscode 500\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Assumptions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Access to the \texttt{vinnsl-nn-worker}\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Extensions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+* Monitor Training Status * Evaluate Neural Network\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.27\columnwidth}\raggedright\strut
+\textbf{Use Case}\strut
+\end{minipage} & \begin{minipage}[b]{0.68\columnwidth}\raggedright\strut
+\textbf{Monitor Training Status}\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Description\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+The Data Scientist monitors the training status to evaluate the trained
+network afterwards.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Priority\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+secondary\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Actors\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Data Scientist\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Preconditions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Training of neural network started\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Postconditions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Normal Course of Events\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+* The actor sends a GET request to the status endpoint of the vinnsl
+service including the identifier of the neural network that is in
+progress.* The web service validates the request, and returns the
+training status along the HTTP status code 200.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Alternative Courses\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+* The post request is sent by an application or other service\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Exceptions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+If the validation fails or an error occurs, the web service returns the
+HTTP statuscode 500\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Assumptions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Access to the \texttt{vinnsl-service}\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Extensions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.27\columnwidth}\raggedright\strut
+\textbf{Use Case}\strut
+\end{minipage} & \begin{minipage}[b]{0.68\columnwidth}\raggedright\strut
+\textbf{Evaluate Neural Network}\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Description\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+The Data Scientist evaluates the accuracy of the network after its
+training\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Priority\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+primary\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Actors\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Data Scientist\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Preconditions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Training of neural network successfully finished\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Postconditions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Normal Course of Events\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+* The actor sends a GET request to the status endpoint of the vinnsl
+service including the identifier of the neural network that is
+finished.* The web service validates the request, and returns the ViNNSL
+XML file including the result scheme.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Alternative Courses\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+* The post request is sent by an application or other service\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Exceptions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+If the validation fails or an error occurs, the webservice returns the
+HTTP statuscode 500\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Assumptions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Access to the \texttt{vinnsl-service}\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Extensions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.27\columnwidth}\raggedright\strut
+\textbf{Use Case}\strut
+\end{minipage} & \begin{minipage}[b]{0.68\columnwidth}\raggedright\strut
+Upload Files\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Description\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+The Data Scientist uploads files, that are usable as datasets (f.ex. CSV
+files or pictures) to the storage service\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Priority\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+primary\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Actors\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Data Scientist\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Preconditions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Postconditions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Normal Course of Events\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+* The actor sends a POST request to the storage service endpoint
+containing a multipart file.* The web service validates the request, and
+returns the unique identifier of the file along the HTTP status code
+200.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Alternative Courses\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+* The post request is sent by an application or other service* The file
+is uploaded with the provided HTML upload form provided by the storage
+service\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Exceptions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+If the upload fails or an error occurs, the web service returns the HTTP
+statuscode 500\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Assumptions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Access to the \texttt{vinnsl-storage-service}\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Extensions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.27\columnwidth}\raggedright\strut
+\textbf{Use Case}\strut
+\end{minipage} & \begin{minipage}[b]{0.68\columnwidth}\raggedright\strut
+\textbf{List Neural Networks}\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Description\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Imported neural networks are listed\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Priority\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+primary\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Actors\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Data Scientist\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Preconditions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Imported ViNNSL neural network XML description file\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Postconditions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Normal Course of Events\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+* The actor sends a GET request to the ViNNSL web service optionally
+including a neural network identifier* The web service validates and
+returns the XML file(s).\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Alternative Courses\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+The request is sent by an application or other service\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Exceptions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+If the validation fails or an error occurs, the web service returns the
+HTTP statuscode 500\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Assumptions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Access to the \texttt{vinnsl-service}\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.27\columnwidth}\raggedright\strut
+\textbf{Use Case}\strut
+\end{minipage} & \begin{minipage}[b]{0.68\columnwidth}\raggedright\strut
+\textbf{Extend Service}\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Description\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+An existing micro service can be extended by developers\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Priority\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+secondary\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Actors\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Developer\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Preconditions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+source code and developer environment present\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Postconditions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Normal Course of Events\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+* The developer downloads the source code and extends functionality of a
+micro service* The modified service is deployed into kubernetes\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Alternative Courses\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Exceptions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Assumptions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.27\columnwidth}\raggedright\strut
+\textbf{Use Case}\strut
+\end{minipage} & \begin{minipage}[b]{0.68\columnwidth}\raggedright\strut
+\textbf{Replace Service}\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Description\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+An existing micro service can be replaced by developers\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Priority\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+secondary\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Actors\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+Developer\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Preconditions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+source code and developer environment present\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Postconditions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Normal Course of Events\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+* The developer writes a new implementation of an existing service
+respecting the API definition (see API Docuentation)* The service is
+deployed into kubernetes\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Alternative Courses\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Exceptions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\raggedright\strut
+Assumptions\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+---\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
 \section{Sequence Diagram}\label{sequence-diagram}
+
+Figure \ref{img.training_sequence} shows the sequence diagram of a
+neural network training process and which microservices are involved in
+the communication. The \emph{vinnsl service} is the main communication
+hub that is enables access to the neural network object and all of its
+data and also provides interfaces to update it. The \emph{vinnsl storage
+service} most importantly stores necessary binary data used by the
+neural network objects. On the one hand that are tables and pictures on
+the other hand the binary (trained) \emph{Deeplearning4J} model. The
+\emph{vinnsl worker service} has the role of training the neural
+networks models.
 
 \subsection{Sequence of Training}\label{sequence-of-training}
 
-TODO
+New neural networks are created by sending a \texttt{POST} request
+including a XML ViNNSL network description in the request body. The
+\emph{vinnsl service} creates a new neural network based on the
+definition and answers with the HTTP status code 201 (CREATED). The
+location header points to the URL where the created network can be
+retrieved. The URL contains the unique identifier. Using this identifier
+the next step is to add the ViNNSL definition XML file to the network.
+This is done via a \texttt{POST} request appending the id and the
+\texttt{/definition} endpoint. The XML file is placed in the request
+body. Resources that are required for the training (like the training
+set) need to be uploaded to the storage service, which returns a unique
+file id. Before the training can start, the training set needs to be
+linked to the neural network. This is possible with the
+\texttt{/addfile} endpoint.
 
-Figure \ref{img.training_sequence} shows the sequence diagram.
+Next the network is marked for training by calling the worker service
+with its identifier. The worker service confirms that the training is
+queued. As soon as the training is finished, the worker service updates
+the neural network object with the result schema and uploads the trained
+binary model to the storage service for retraining.
+
+A simple \texttt{GET} request to the vinnsl service along with the
+identifier returns the current trained neural network model.
 
 \begin{figure}
 \centering
@@ -504,7 +1056,20 @@ Figure \ref{img.training_sequence} shows the sequence diagram.
 
 \section{Data Model Design}\label{data-model-design}
 
-TODO
+\subsection{vinnsl-service}\label{vinnsl-service}
+
+All neural network data managed by the \texttt{vinnsl-service} is stored
+in a documented-oriented database. The saved documents will internally
+be mapped to Java Classes. The main object is \texttt{vinnsl}.
+
+\texttt{vinnsl} is the primary object owning the \texttt{\_id} field
+that is unique. The \texttt{nncloud} property stores the status of the
+network and the representation of the transformed \emph{Deeplearning4J}
+network. \texttt{description}, \texttt{definition}, \texttt{instance},
+\texttt{training} and \texttt{result} represent the ViNNSL 2.0 Schema,
+generated from the provided XML Schema Definition files. See
+\cite{kopica_2015} to get a listing and description on all provided
+properties of ViNNSL 2.0.
 
 Figure \ref{img.db_schema} shows the data schema.
 
@@ -513,6 +1078,41 @@ Figure \ref{img.db_schema} shows the data schema.
 \includegraphics[width=15.00000cm]{images/db_schema}
 \caption{NoSQL Data Model \label{img.db_schema}}
 \end{figure}
+
+\subsection{storage-service}\label{storage-service}
+
+The \texttt{storage-service} stores binary files and their metadata,
+either directly in the file system or inside a database. Each file needs
+to have a unique id, a filename, a content type and an upload date.
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Attribute field & Description\tabularnewline
+\midrule
+\endhead
+id & a unique file id that can be referred to (f.ex in
+\texttt{vinnsl-service})\tabularnewline
+filename & the original filename when uploaded\tabularnewline
+content type & the MIME type standardized in RFC 6838 (f.ex
+text/plain)\tabularnewline
+upload date & date and time of original upload\tabularnewline
+\bottomrule
+\end{longtable}
+
+Example of stored file:
+
+\begin{verbatim}
+{
+    "_id" : ObjectId("5ab4e69c8f136a16bf81f093"),
+    "filename" : "iris.txt",
+    "aliases" : null,
+    "chunkSize" : NumberLong(261120),
+    "uploadDate" : ISODate("2018-03-23T11:35:56.700Z"),
+    "length" : NumberLong(2700),
+    "contentType" : "text/plain",
+    "md5" : "f0e89bd71f7bb9e584e685aeb178a5aa"
+}
+\end{verbatim}
 
 \section{Overview Microservices}\label{overview-microservices}
 
@@ -557,8 +1157,10 @@ neural network models, their training status and linked files.
 
 \section{User Interface Design}\label{user-interface-design}
 
-Auf Grundlage des ersten Sketches, wurde ein erstes Designmodell
-entwickelt.
+Based on the mockup in section \ref{mockup}, a user interface design has
+been created, that will later be implemented as a web application.
+Buttons to import, delete a neural network and to refresh the user
+interface have been added to the design.
 
 Figure \ref{vinnsl-ui-design} shows the user interface design for the
 frontend web service.
@@ -566,32 +1168,263 @@ frontend web service.
 \begin{figure}
 \centering
 \includegraphics[width=17.00000cm]{images/vinnsl-ui-design}
-\caption{User Interface Design for vinnsl-nn-ui\label{vinnsl-ui-design}}
+\caption{User Interface Design for vinnsl-nn-ui
+\label{vinnsl-ui-design}}
 \end{figure}
 
 \section{Service Discovery and Load
 Balancing}\label{service-discovery-and-load-balancing}
 
+\emph{Service Discovery} is the process of finding out how to connect to
+a specific service. This applies within the cluster, which is typically
+firewalled from the internet. As Kubernetes allows services to be
+scaled, there is also a logic that knows and decides how network traffic
+is routed. This is called \emph{Load Balancing}. Figure
+\ref{img.service-discovery} shows an overview of the microservices,
+their endpoint URL and the domain name service. External access to
+specific services is managed by \emph{Ingress}.
+
+\subsection{Kubernetes DNS-based Service
+Discovery}\label{kubernetes-dns-based-service-discovery}
+
+\texttt{kube-dns} is the Kubernetes add-on that starts a pod with a DNS
+service and configures the kubelets to resolve DNS names over this
+service. It listens on port 53, the standard DNS port. Services in a
+cluster are assigned a DNS A record derived from their service metadata
+name specified in the \emph{ServiceSpec}. \cite{kub-dns-spec}
+
+The following code snippet is an extract of the \emph{ServiceSpec} for
+the \texttt{vinnsl-service} defining the metadata name:
+
+\begin{verbatim}
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "vinnsl-service",
+    ...
+  }
+}
+\end{verbatim}
+
+\subsubsection{Structure of the
+Hostname}\label{structure-of-the-hostname}
+
+The full hostname record is composed of the zone, kind, namespace of the
+cluster and the metadata name of the service.
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Name & Description\tabularnewline
+\midrule
+\endhead
+zone & the cluster domain (default using minikube:
+\emph{cluster.local})\tabularnewline
+kind & kind of pod (default for services: \emph{svc})\tabularnewline
+ns & namespace (default using minikube: \emph{default})\tabularnewline
+hostname & hostname from service metadata name\tabularnewline
+\bottomrule
+\end{longtable}
+
+\paragraph{Example}\label{example}
+
+The vinnsl-service running on a local minikube cluster gets the
+following DNS record name:
+\texttt{vinnsl-service.default.svc.cluster.local}.
+
+\subsubsection{Service Discovery}\label{service-discovery}
+
+Using the Kubernetes DNS service a microservice instance (kubelet) can
+now lookup other services by using DNS Queries.
+
+\paragraph{Example}\label{example-1}
+
+For example the tool \texttt{nslookup} can query the DNS service for the
+IP address of the \texttt{vinnsl-service} within the cluster.
+
+\begin{verbatim}
+/ # nslookup vinnsl-service
+Server:    10.96.0.10
+Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
+Name:      vinnsl-service
+Address 1: 10.102.84.122 vinnsl-service.default.svc.cluster.local
+\end{verbatim}
+
+In this example the service is reachable at the ip address
+\emph{10.102.84.122}.
+
 \begin{figure}
 \centering
 \includegraphics[width=15.00000cm]{images/overview_main_services}
-\caption{Service Discovery with kube-dns}
+\caption{Service Discovery with kube-dns \label{img.service-discovery}}
 \end{figure}
 
-\section{Neural Network Objects}\label{neural-network-objects}
+\subsubsection{External Access and Load
+Balancing}\label{external-access-and-load-balancing}
 
-\subsection{State of Neural Network
-Objects}\label{state-of-neural-network-objects}
+External Access from outside the cluster to specific services is managed
+and provided through the \emph{Ingress} API object. The associated
+implementation is called \emph{Ingress controller} and is obligatory.
+Currently there are two official implementations: \texttt{ingress-gce}
+and \texttt{ingress-nginx}. \cite{kub-ingress}
+
+\emph{Minikube} runs the \texttt{ingress-nginx} implementation as
+default and also provides basic load balancing by configuring a
+\texttt{nginx} web server. Kubernetes configures \texttt{nginx} to use
+the \emph{least-connected} load balancing mechanism, which means that
+the \emph{next request is assigned to the server with the least number
+of active connections} \cite{nginx-loadbal}.
+
+\section{Neural Network Objects
+State}\label{neural-network-objects-state}
+
+The state of neural network objects is saved in the \texttt{NnCloud}
+Object. When the object is instantiated the default value is
+\texttt{CREATED}. When the network is queued, the worker service gathers
+all the necessary data from the vinnsl and vinnsl storage service and
+changes the state the \texttt{QUEUED}. During the network training, the
+worker changes the state to \texttt{INPROGRESS}. As soon as the training
+is finished, the worker service uploads the results and updated network
+state to the storage service and subsequently changes the state to
+\texttt{FINISHED}. Trained networks can be queued for retraining - in
+that case the state returns to \texttt{QUEUED}. If errors occur during
+the training process the state will be set to \texttt{ERROR}.
+
+Figure \ref{nn-states} visualizes the state changes in a state machine.
 
 \begin{figure}
 \centering
 \includegraphics[width=15.00000cm]{images/nn-states}
-\caption{State Machine of a Neural Network}
+\caption{State Machine of a Neural Network \label{nn-states}}
 \end{figure}
+
+\chapter{Prototype Implementation}\label{prototype-implementation}
+
+Following the specification, this section showcases an implementation of
+a prototype using microservices glued together by \emph{Kubernetes}.
+This represents the execution stack for neural networks. Backend
+components are realized with \emph{Java} and the \emph{Spring Boot}
+framework and expose a RESTful API. The processing and training of
+neural networks is done by the \emph{Deeplearning4J} framework. Database
+and file storage are powered by \emph{MongoDB}. The frontend service is
+implemented using \emph{Vue.js} and the \emph{Bootstrap} UI framework,
+visualizing and consuming backend services.
+
+\section{Source Code}\label{source-code-1}
+
+The source code of the implemented microservices is released on
+\emph{GitHub}. The following table gives an overview of available
+services and their corresponding repository.
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.29\columnwidth}\raggedright\strut
+Name\strut
+\end{minipage} & \begin{minipage}[b]{0.65\columnwidth}\raggedright\strut
+Repository Link\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
+vinnsl-service\strut
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright\strut
+https://github.com/a00908270/vinnsl-service\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
+vinnsl-nn-ui\strut
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright\strut
+https://github.com/a00908270/vinnsl-nn-ui\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
+vinnsl-storage-service\strut
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright\strut
+https://github.com/a00908270/vinnsl-storage-service\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.29\columnwidth}\raggedright\strut
+vinnsl-nn-worker\strut
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright\strut
+https://github.com/a00908270/vinnsl-nn-worker\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+The \emph{ViNNSL} XSD schema specified in \cite{kopica_2015} including
+(generated) examples is released on GitHub with permission from
+Dipl.-Ing. Thomas Kopica. JAXB class generation of the XML files is
+already included in the release with the intention of making it easier
+to include \emph{ViNNSL} into new services.
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Name & Repository Link\tabularnewline
+\midrule
+\endhead
+vinnsl-schema &
+https://github.com/a00908270/vinnsl-schema\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Releases}\label{releases}
+
+Docker Contrainers ready for deployment in a \emph{Kubernetes} cluster
+are released on \emph{DockerHub}. The following table references the
+released repositories.
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.26\columnwidth}\raggedright\strut
+Name\strut
+\end{minipage} & \begin{minipage}[b]{0.68\columnwidth}\raggedright\strut
+Repository Link\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.26\columnwidth}\raggedright\strut
+vinnsl-service\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+https://hub.docker.com/r/a00908270/vinnsl-service/\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.26\columnwidth}\raggedright\strut
+vinnsl-nn-ui\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+https://hub.docker.com/r/a00908270/vinnsl-nn-ui/\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.26\columnwidth}\raggedright\strut
+vinnsl-storage-service\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+https://hub.docker.com/r/a00908270/vinnsl-storage-service/\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.26\columnwidth}\raggedright\strut
+vinnsl-nn-worker\strut
+\end{minipage} & \begin{minipage}[t]{0.68\columnwidth}\raggedright\strut
+https://hub.docker.com/r/a00908270/vinnsl-nn-worker/\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{User Interface}\label{user-interface-1}
+
+\subsection{vinnsl-nn-ui (Frontend UI)}\label{vinnsl-nn-ui-frontend-ui}
+
+The \texttt{vinnsl-nn-ui} is a \emph{single page application} (SPA) that
+displays all neural networks and their details in a responsive frontend.
+Figure \ref{img.vinnsl-nn-ui} shows a screen shot of the user interface.
+
+\begin{figure}
+\centering
+\includegraphics[width=15.00000cm]{images/VINNSL-NN-UI}
+\caption{User Interface of Prototype \label{img.vinnsl-nn-ui}}
+\end{figure}
+
+\section{Security}\label{security}
+
+Ingress supports HTTPS encrypted connections. Authentication or
+restrictions are not implemented in the prototype.
 
 \section{Class Diagram}\label{class-diagram}
 
-\subsection{vinnsl-service}\label{vinnsl-service}
+\subsection{vinnsl-service}\label{vinnsl-service-1}
 
 \begin{figure}
 \centering
@@ -615,7 +1448,7 @@ Objects}\label{state-of-neural-network-objects}
 \caption{Class Diagram of vinnsl-worker-service}
 \end{figure}
 
-\chapter{REST API Documentation}\label{rest-api-documentation}
+\chapter{Prototype API Documentation}\label{prototype-api-documentation}
 
 \paragraph{Base URL}\label{base-url}
 
@@ -623,7 +1456,7 @@ Objects}\label{state-of-neural-network-objects}
 http[s]://<clusterip>
 \end{verbatim}
 
-\section{vinnsl-service}\label{vinnsl-service-1}
+\section{vinnsl-service}\label{vinnsl-service-2}
 
 \subsection{Import a new ViNNSL XML
 Defintion}\label{import-a-new-vinnsl-xml-defintion}
@@ -2242,17 +3075,6 @@ array\tabularnewline
 \item
   worker-controller
 \end{itemize}
-
-\chapter{Implementation of a
-Prototype}\label{implementation-of-a-prototype}
-
-\section{User Interface}\label{user-interface-1}
-
-\begin{figure}
-\centering
-\includegraphics[width=15.00000cm]{images/VINNSL-NN-UI}
-\caption{User Interface of Prototype}
-\end{figure}
 
 \chapter{Use Cases}\label{use-cases}
 

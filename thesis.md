@@ -20,7 +20,7 @@ The prototype does not fully implement the *ViNNSL* in version 2.0, as described
 
 ## Problem Statement
 
-Getting started with machine learning and in particular with neural networks is not a trivial task. It is a complex field with a high entry barrier and requires most often programming skills and expertise in neural network frameworks. In most cases a complex setup is needed to train and evaluate networks, which is both a processor- and memory-intense job. With cloud computing getting more and more affordable and powerful, it makes sense to shift these tasks into the cloud. There are already existing cloud platforms for machine learning, but to my present research all of them do not fulfil at least one of the following criteria:
+Getting started with machine learning and in particular with neural networks is not a trivial task. It is a complex field with a high entry barrier and most often requires programming skills and expertise in neural network frameworks. In most cases a complex setup is needed to train and evaluate networks, which is both a processor- and memory-intense job. With cloud computing getting more and more affordable and powerful, it makes sense to shift these tasks into the cloud. There are already existing cloud platforms for machine learning, but to my present research all of them do not fulfil at least one of the following criteria:
 
 * platform is open-source
 * no programming skills required to define and train a neural network model
@@ -98,7 +98,7 @@ This section describes the architecture of the mentioned container orchestration
 
 Kubernetes is the third container-management system (after Borg and Omega) developed by Google \cite{Burns:2016uq} for administering applications, that are provided in containers, in a cluster of nodes. Services that are responsible for controlling the cluster, are called master components \cite{kub_intro}. Figure \ref{kubernetes_core_architecture} shows the Kubernetes core architecture, which includes the Master server, the nodes and the interaction between the components.
 
-![Kubernetes core architecture\label{kubernetes_core_architecture}](images/kubernetes_core_architecture.png){width=15cm}
+![Kubernetes core architecture\label{kubernetes_core_architecture} TODO Source!](images/kubernetes_core_architecture.png){width=15cm}
 
 #### Master Components
 
@@ -252,7 +252,7 @@ The execution stack shall comply with the following quality features:
 
 ### Documentation
 
-The documentation is provided in Section \ref{rest-api-documentation} or online on SwaggerHub[^7].
+The documentation is provided in Section \ref{prototype-api-documentation} or online on SwaggerHub[^7].
 
 ### Source Code
 
@@ -539,14 +539,53 @@ Figure \ref{nn-states} visualizes the state changes in a state machine.
 
 
 
-
 # Prototype Implementation 
+
+Following the specification, this section showcases an implementation of a prototype using microservices glued together by *Kubernetes*. This represents the execution stack for neural networks. Backend components are realized with *Java* and the *Spring Boot* framework and expose a RESTful API. The processing and training of neural networks is done by the *Deeplearning4J* framework. Database and file storage are powered by *MongoDB*. The frontend service is implemented using *Vue.js* and the *Bootstrap* UI framework, visualizing and consuming backend services.
+
+## Source Code
+
+The source code of the implemented microservices is released on *GitHub*. The following table gives an overview of available services and their corresponding repository.
+
+| Name                   | Repository Link                                     |
+| ---------------------- | --------------------------------------------------- |
+| vinnsl-service         | https://github.com/a00908270/vinnsl-service         |
+| vinnsl-nn-ui           | https://github.com/a00908270/vinnsl-nn-ui           |
+| vinnsl-storage-service | https://github.com/a00908270/vinnsl-storage-service |
+| vinnsl-nn-worker       | https://github.com/a00908270/vinnsl-nn-worker       |
+
+The *ViNNSL* XSD schema specified in \cite{kopica_2015} including (generated) examples is released on GitHub with permission from Dipl.-Ing. Thomas Kopica. JAXB class generation of the XML files is already included in the release with the intention of making it easier to include *ViNNSL* into new services.
+
+| Name          | Repository Link                            |
+| ------------- | ------------------------------------------ |
+| vinnsl-schema | https://github.com/a00908270/vinnsl-schema |
+
+## Releases
+
+Docker Contrainers ready for deployment in a *Kubernetes* cluster are released on *DockerHub*. The following table references the released repositories.
+
+| Name                   | Repository Link                                            |
+| ---------------------- | ---------------------------------------------------------- |
+| vinnsl-service         | https://hub.docker.com/r/a00908270/vinnsl-service/         |
+| vinnsl-nn-ui           | https://hub.docker.com/r/a00908270/vinnsl-nn-ui/           |
+| vinnsl-storage-service | https://hub.docker.com/r/a00908270/vinnsl-storage-service/ |
+| vinnsl-nn-worker       | https://hub.docker.com/r/a00908270/vinnsl-nn-worker/       |
 
 ## User Interface
 
-<!--\bild{vinnsl-nn-ui}{15cm}{User Interface of Prototype}{User Interface of Prototype}-->
+### vinnsl-nn-ui (Frontend UI)
 
-![User Interface of Prototype](images/VINNSL-NN-UI.png){width=15cm}
+The `vinnsl-nn-ui` is a *single page application*  (SPA) that displays all neural networks and their details in a responsive frontend. Figure \ref{img.vinnsl-nn-ui} shows a screen shot of the user interface.
+
+<!--\bild{vinnsl-nn-ui}{15cm}{User Interface of Prototype}{User Interface of Prototype} \label{vinnsl-nn-ui}-->
+
+![User Interface of Prototype \label{img.vinnsl-nn-ui}](images/VINNSL-NN-UI.png){width=15cm}
+
+## Security
+
+Ingress supports HTTPS encrypted connections. Authentication or restrictions are not implemented in the prototype.
+
+
 
 ## Class Diagram
 
