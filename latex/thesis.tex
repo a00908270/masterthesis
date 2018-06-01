@@ -368,11 +368,11 @@ TODO CITATION
 
 \subsubsection{Tensorflow}\label{tensorflow}
 
-\subsubsection{DL4J}\label{dl4j}
+\subsubsection{Deeplearning4J}\label{deeplearning4j}
 
 \chapter{Requirements}\label{requirements}
 
-This section defines functional and non-function requirements of the
+This section defines functional and non-functional requirements for the
 developed prototype. The neural network execution stack focuses on two
 main target groups: data scientists and developers.
 
@@ -420,9 +420,10 @@ The tabs ``Description'', ``Definition'', ``Instance'' and ``Result''
 represent the eponymous ViNNSL Description XML file into a graphical
 tree view. When enough information is provided by ViNNSL XML files, the
 worker service performs a transformation into the internally used model
-representation of the DL4J Framework. The DL4J Tab shows the transformed
-object. In the ``Files'' tab, imported files of the storage services are
-listed and can be selected as training- or testset.
+representation of the \emph{Deeplearning4J} Framework. The
+\emph{Deeplearning4J} Tab shows the transformed object. In the ``Files''
+tab, imported files of the storage services are listed and can be
+selected as training- or testset.
 
 \begin{figure}
 \centering
@@ -1140,9 +1141,10 @@ which runs a MongoDB database to store the objects.
 (vinnsl-nn-worker)}\label{worker-service-vinnsl-nn-worker}
 
 The \texttt{vinnsl-nn-worker} implements a queue management for neural
-network training and transforms ViNNSL neural network models into DL4J
-models. It provides a wrapper of the DL4J platform, that handles the
-training or evaluation of the network.
+network training and transforms ViNNSL neural network models into
+\emph{Deeplearning4J} models. It provides a wrapper of the
+\emph{Deeplearning4J} platform, that handles the training or evaluation
+of the network.
 
 \subsection{Storage Service
 (vinnsl-storage-service)}\label{storage-service-vinnsl-storage-service}
@@ -1310,8 +1312,8 @@ components are realized with \emph{Java} and the \emph{Spring Boot}
 framework and expose a RESTful API. The processing and training of
 neural networks is done by the \emph{Deeplearning4J} framework. Database
 and file storage are powered by \emph{MongoDB}. The frontend service is
-implemented using \emph{Vue.js} and the \emph{Bootstrap} UI framework,
-visualizing and consuming backend services.
+implemented using \emph{Vue.js} and the \emph{Twitter Bootstrap} UI
+framework, visualizing and consuming backend services.
 
 \section{Source Code}\label{source-code-1}
 
@@ -1405,12 +1407,17 @@ https://hub.docker.com/r/a00908270/vinnsl-nn-worker/\strut
 \bottomrule
 \end{longtable}
 
+\section{Security}\label{security}
+
+\emph{Ingress} supports HTTPS encrypted connections. Authentication or
+restrictions are not implemented in the prototype.
+
 \section{User Interface}\label{user-interface-1}
 
 \subsection{vinnsl-nn-ui (Frontend UI)}\label{vinnsl-nn-ui-frontend-ui}
 
-The \texttt{vinnsl-nn-ui} is a \emph{single page application} (SPA) that
-displays all neural networks and their details in a responsive frontend.
+The \texttt{vinnsl-nn-ui} is a single page application (SPA) that
+displays all neural networks and their details in a web based frontend.
 Figure \ref{img.vinnsl-nn-ui} shows a screenshot of the user interface.
 
 \begin{figure}
@@ -1419,10 +1426,16 @@ Figure \ref{img.vinnsl-nn-ui} shows a screenshot of the user interface.
 \caption{User Interface of Prototype \label{img.vinnsl-nn-ui}}
 \end{figure}
 
-\section{Security}\label{security}
+\subsubsection{Architecture}\label{architecture}
 
-Ingress supports HTTPS encrypted connections. Authentication or
-restrictions are not implemented in the prototype.
+The web application is a Javascript based frontend using the
+\emph{Vue.js} and \emph{Twitter Bootstrap} framework. The single main
+controller called \texttt{VinnslUI} provides methods to fetch a list of
+neural networks and their status. Additionally it queries for available
+files from the storage service and enables to connect them to a neural
+network.
+
+\subsubsection{}\label{section}
 
 \section{Class Diagram}\label{class-diagram}
 
@@ -1448,6 +1461,24 @@ restrictions are not implemented in the prototype.
 \centering
 \includegraphics[width=17.00000cm]{images/uml-class-diagram-vinnsl-worker-service}
 \caption{Class Diagram of vinnsl-worker-service}
+\end{figure}
+
+\subsection{vinnsl-nn-ui}\label{vinnsl-nn-ui}
+
+The frontend service consists of one single controller named
+\texttt{VinnslUI}. The \texttt{getStatus()} method retrieves all and
+neural network ids and their status. This is cached in
+\texttt{vinnslList} . When selecting a neural network from the list, the
+neural network object is loaded by executing \texttt{getDetailsById()}.
+The response is stored in \texttt{currentVinnslItem}.
+
+Figure \ref{vinnsl-nn-ui_class} gives an overview of the used methods
+and stored variables.
+
+\begin{figure}
+\centering
+\includegraphics[width=7.00000cm]{images/vinnsl-nn-ui_class}
+\caption{VinnslUI Vue Class \label{vinnsl-nn-ui_class}}
 \end{figure}
 
 \chapter{Prototype API Documentation}\label{prototype-api-documentation}

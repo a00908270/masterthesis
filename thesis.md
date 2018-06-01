@@ -187,11 +187,11 @@ https://github.com/GuillaumeRochat/container-orchestration-comparison
 
 #### Tensorflow
 
-#### DL4J
+#### Deeplearning4J
 
 # Requirements
 
-This section defines functional and non-function requirements of the developed prototype. The neural network execution stack focuses on two main target groups: data scientists and developers.  
+This section defines functional and non-functional requirements for the developed prototype. The neural network execution stack focuses on two main target groups: data scientists and developers.  
 
 Data scientists use the provided services in a deployed environment (cloud or own computer) to develop and train their neural networks. The system should be easy to setup and no programming knowledge should be needed to get started.  
 
@@ -223,7 +223,7 @@ The user interface shall be a web application that gives a quick overview of all
 
 Figure \ref{vinnsl-ui-mockup} shows a sketch of the user interface. On the left side the user can see a list of all created or imported neural networks. Next to the names of the networks, there is an icon representing the training status. In the detailed view on the right side, the title and id of the network is shown followed by an indicator when training is in progress. The visualisation of a neural network is divided into tabs.
 
-The tabs "Description", "Definition", "Instance" and "Result" represent the eponymous ViNNSL Description XML file into a graphical tree view. When enough information is provided by ViNNSL XML files, the worker service performs a transformation into the internally used model representation of the DL4J Framework. The DL4J Tab shows the transformed object. In the "Files" tab, imported files of the storage services are listed and can be selected as training- or testset.
+The tabs "Description", "Definition", "Instance" and "Result" represent the eponymous ViNNSL Description XML file into a graphical tree view. When enough information is provided by ViNNSL XML files, the worker service performs a transformation into the internally used model representation of the *Deeplearning4J* Framework. The *Deeplearning4J* Tab shows the transformed object. In the "Files" tab, imported files of the storage services are listed and can be selected as training- or testset.
 
 ![Mockup: User Interface of Frontend Service\label{vinnsl-ui-mockup}](./images/vinnsl-ui-mockup.png){width=17cm}
 
@@ -445,7 +445,7 @@ The `vinnsl-service` depends on the `vinnsl-db` service, which runs a MongoDB da
 
 ### Worker Service (vinnsl-nn-worker)
 
-The `vinnsl-nn-worker` implements a queue management for neural network training and transforms ViNNSL neural network models into DL4J models. It provides a wrapper of the DL4J platform, that handles the training or evaluation of the network.
+The `vinnsl-nn-worker` implements a queue management for neural network training and transforms ViNNSL neural network models into *Deeplearning4J* models. It provides a wrapper of the *Deeplearning4J* platform, that handles the training or evaluation of the network.
 
 ### Storage Service (vinnsl-storage-service)
 
@@ -544,7 +544,7 @@ Figure \ref{nn-states} visualizes the state changes in a state machine.
 
 # Prototype Implementation 
 
-Following the specification, this section showcases an implementation of a prototype using microservices glued together by *Kubernetes*. This represents the execution stack for neural networks. Backend components are realized with *Java* and the *Spring Boot* framework and expose a RESTful API. The processing and training of neural networks is done by the *Deeplearning4J* framework. Database and file storage are powered by *MongoDB*. The frontend service is implemented using *Vue.js* and the *Bootstrap* UI framework, visualizing and consuming backend services.
+Following the specification, this section showcases an implementation of a prototype using microservices glued together by *Kubernetes*. This represents the execution stack for neural networks. Backend components are realized with *Java* and the *Spring Boot* framework and expose a RESTful API. The processing and training of neural networks is done by the *Deeplearning4J* framework. Database and file storage are powered by *MongoDB*. The frontend service is implemented using *Vue.js* and the *Twitter Bootstrap* UI framework, visualizing and consuming backend services.
 
 
 
@@ -576,21 +576,31 @@ Docker Contrainers ready for deployment in a *Kubernetes* cluster are released o
 | vinnsl-storage-service | https://hub.docker.com/r/a00908270/vinnsl-storage-service/ |
 | vinnsl-nn-worker       | https://hub.docker.com/r/a00908270/vinnsl-nn-worker/       |
 
+## Security
+
+*Ingress* supports HTTPS encrypted connections. Authentication or restrictions are not implemented in the prototype.
+
 ## User Interface
 
 ### vinnsl-nn-ui (Frontend UI)
 
-The `vinnsl-nn-ui` is a *single page application*  (SPA) that displays all neural networks and their details in a responsive frontend. Figure \ref{img.vinnsl-nn-ui} shows a screenshot of the user interface. 
-
-<!--\bild{vinnsl-nn-ui}{15cm}{User Interface of Prototype}{User Interface of Prototype} \label{vinnsl-nn-ui}-->
+The `vinnsl-nn-ui` is a single page application (SPA) that displays all neural networks and their details in a web based frontend. Figure \ref{img.vinnsl-nn-ui} shows a screenshot of the user interface. 
 
 ![User Interface of Prototype \label{img.vinnsl-nn-ui}](images/VINNSL-NN-UI.png){width=15cm}
 
-## Security
+#### Architecture
 
-Ingress supports HTTPS encrypted connections. Authentication or restrictions are not implemented in the prototype.
+The web application is a Javascript based frontend using the *Vue.js* and *Twitter Bootstrap* framework. The single main controller called `VinnslUI` provides methods to fetch a list of neural networks and their status.  Additionally it queries for available files from the storage service and enables to connect them to a neural network. 
+
+ 
 
 
+
+<!--http://yuml.me/diagram/nofunky/class/edit/%2F%2F Cool Class Diagram, [VinnslUi|vinnslList:Object;currentVinnslItem:Object;|getStatus();getDetailsById(id);deleteById(id);getFiles();applyFile(id fileID);]-->
+
+<!--\bild{vinnsl-nn-ui}{15cm}{User Interface of Prototype}{User Interface of Prototype} \label{vinnsl-nn-ui}-->
+
+#### 
 
 ## Class Diagram
 
@@ -605,6 +615,16 @@ Ingress supports HTTPS encrypted connections. Authentication or restrictions are
 ### vinnsl-worker-service
 
 ![Class Diagram of vinnsl-worker-service](images/uml-class-diagram-vinnsl-worker-service.png){width=17cm}
+
+### vinnsl-nn-ui
+
+The frontend service consists of one single controller named `VinnslUI`. The `getStatus()` method retrieves all and neural network ids and their status. This is cached in `vinnslList` . When selecting a neural network from the list, the neural network object is loaded by executing `getDetailsById()`. The response is stored in `currentVinnslItem`.
+
+Figure \ref{vinnsl-nn-ui_class} gives an overview of the used methods and stored variables. 
+
+![VinnslUI Vue Class \label{vinnsl-nn-ui_class}](images/vinnsl-nn-ui_class.png){width=7cm}
+
+
 
 # Prototype API Documentation
 
