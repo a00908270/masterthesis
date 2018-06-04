@@ -576,6 +576,50 @@ Docker Contrainers ready for deployment in a *Kubernetes* cluster are released o
 | vinnsl-storage-service | https://hub.docker.com/r/a00908270/vinnsl-storage-service/ |
 | vinnsl-nn-worker       | https://hub.docker.com/r/a00908270/vinnsl-nn-worker/       |
 
+## Framework Dependencies
+
+All services are written in *Java* and build using the *Apache Maven* build automation and dependency management tool.
+
+### Spring
+
+#### Spring Boot
+
+*Spring Boot* is an extension to the framework that allows *Java* applications to run stand-alone by embedding a web server directly into the application. \cite{spring-boot}
+
+#### Spring Data MongoDB
+
+*Spring Data* provides an abstracted database access layer to MongoDB in form of a POJO (Plain Old Java Object). \cite{spring-data}
+
+##### Used in following services:
+
+vinnsl-service, vinnsl-nn-ui, vinnsl-storage-service, vinnsl-nn-worker
+
+### Swagger
+
+TODO
+
+##### Used in following services:
+
+vinnsl-service, vinnsl-nn-ui, vinnsl-storage-service, vinnsl-nn-worker
+
+### Fabric8
+
+TODO
+
+##### Used in following services:
+
+vinnsl-service, vinnsl-nn-ui, vinnsl-storage-service, vinnsl-nn-worker
+
+### Deeplearning4J
+
+Detailed information about Deeplearning4J can be found in Section \ref{deeplearning4j}.
+
+TODO
+
+##### Used in following services:
+
+vinnsl-nn-worker
+
 ## Security
 
 *Ingress* supports HTTPS encrypted connections. Authentication or restrictions are not implemented in the prototype.
