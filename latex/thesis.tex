@@ -346,6 +346,8 @@ Swarm}~for orchestration.~
 
 https://github.com/GuillaumeRochat/container-orchestration-comparison
 
+\subsection{Comparison}\label{comparison}
+
 \section{Machine Learning}\label{machine-learning}
 
 \emph{Machine learning---the process by which computers can get better
@@ -1414,11 +1416,27 @@ Maven} build automation and dependency management tool.
 
 \subsection{Spring}\label{spring}
 
+\emph{Spring} is a \emph{Java} framework consisting of many modules,
+most importantly this project uses its feature so set up
+\texttt{RestController} instances that listen on specified endpoints.
+
+\paragraph{Used in following
+services:}\label{used-in-following-services}
+
+\texttt{vinnsl-service}, \texttt{vinnsl-nn-ui},
+\texttt{vinnsl-storage-service}, \texttt{vinnsl-nn-worker}
+
 \subsubsection{Spring Boot}\label{spring-boot}
 
 \emph{Spring Boot} is an extension to the framework that allows
 \emph{Java} applications to run stand-alone by embedding a web server
 directly into the application. \cite{spring-boot}
+
+\paragraph{Used in following
+services:}\label{used-in-following-services-1}
+
+\texttt{vinnsl-service}, \texttt{vinnsl-nn-ui},
+\texttt{vinnsl-storage-service}, \texttt{vinnsl-nn-worker}
 
 \subsubsection{Spring Data MongoDB}\label{spring-data-mongodb}
 
@@ -1426,39 +1444,46 @@ directly into the application. \cite{spring-boot}
 MongoDB in form of a POJO (Plain Old Java Object). \cite{spring-data}
 
 \paragraph{Used in following
-services:}\label{used-in-following-services}
+services:}\label{used-in-following-services-2}
 
-vinnsl-service, vinnsl-nn-ui, vinnsl-storage-service, vinnsl-nn-worker
+\texttt{vinnsl-service}, \texttt{vinnsl-storage-service}
 
 \subsection{Swagger}\label{swagger}
 
-TODO
-
-\paragraph{Used in following
-services:}\label{used-in-following-services-1}
-
-vinnsl-service, vinnsl-nn-ui, vinnsl-storage-service, vinnsl-nn-worker
-
-\subsection{Fabric8}\label{fabric8}
-
-TODO
-
-\paragraph{Used in following
-services:}\label{used-in-following-services-2}
-
-vinnsl-service, vinnsl-nn-ui, vinnsl-storage-service, vinnsl-nn-worker
-
-\subsection{Deeplearning4J}\label{deeplearning4j-1}
-
-Detailed information about Deeplearning4J can be found in Section
-\ref{deeplearning4j}.
-
-TODO
+\emph{Swagger} is used to generate a live documentation of all web
+service endpoints in this project and allows to try out requests
+directly in the user interface.
 
 \paragraph{Used in following
 services:}\label{used-in-following-services-3}
 
-vinnsl-nn-worker
+\texttt{vinnsl-service}, \texttt{vinnsl-storage-service},
+\texttt{vinnsl-nn-worker}
+
+\subsection{Fabric8}\label{fabric8}
+
+\emph{Fabric8} packs the generated executables from the build process
+into a \emph{Docker} container that can run in a \emph{Kubernetes}
+cluster. The process is described in detail in section TODO
+
+\paragraph{Used in following
+services:}\label{used-in-following-services-4}
+
+\texttt{vinnsl-service}, \texttt{vinnsl-nn-ui},
+\texttt{vinnsl-storage-service}, \texttt{vinnsl-nn-worker}
+
+\subsection{Deeplearning4J}\label{deeplearning4j-1}
+
+\emph{Deeplearning4J} is used by the worker service to train and
+evaluate neural networks.
+
+A detailed introduction to Deeplearning4J can be found in Section
+\ref{deeplearning4j}.
+
+\paragraph{Used in following
+services:}\label{used-in-following-services-5}
+
+\texttt{vinnsl-nn-worker}
 
 \section{Security}\label{security}
 

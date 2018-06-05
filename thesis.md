@@ -174,6 +174,9 @@ On October 17, [Docker](https://www.docker.com/) announced that it will integr
 
 https://github.com/GuillaumeRochat/container-orchestration-comparison
 
+### Comparison
+
+
 
 ## Machine Learning
 
@@ -582,9 +585,19 @@ All services are written in *Java* and build using the *Apache Maven* build auto
 
 ### Spring
 
+*Spring* is a *Java* framework consisting of many modules, most importantly this project uses its feature so set up `RestController` instances that listen on specified endpoints.
+
+##### Used in following services:
+
+`vinnsl-service`, ` vinnsl-nn-ui`, ` vinnsl-storage-service`,  `vinnsl-nn-worker`
+
 #### Spring Boot
 
-*Spring Boot* is an extension to the framework that allows *Java* applications to run stand-alone by embedding a web server directly into the application. \cite{spring-boot}
+*Spring Boot* is an extension to the framework that allows *Java* applications to run stand-alone by embedding a web server directly into the application. \cite{spring-boot} 
+
+##### Used in following services:
+
+`vinnsl-service`, `vinnsl-nn-ui`, `vinnsl-storage-service`, `vinnsl-nn-worker`
 
 #### Spring Data MongoDB
 
@@ -592,33 +605,33 @@ All services are written in *Java* and build using the *Apache Maven* build auto
 
 ##### Used in following services:
 
-vinnsl-service, vinnsl-nn-ui, vinnsl-storage-service, vinnsl-nn-worker
+`vinnsl-service`, `vinnsl-storage-service`
 
 ### Swagger
 
-TODO
+*Swagger* is used to generate a live documentation of all web service endpoints in this project and allows to try out requests directly in the user interface.
 
 ##### Used in following services:
 
-vinnsl-service, vinnsl-nn-ui, vinnsl-storage-service, vinnsl-nn-worker
+`vinnsl-service`, `vinnsl-storage-service`,  `vinnsl-nn-worker`
 
 ### Fabric8
 
-TODO
+*Fabric8* packs the generated executables from the build process into a *Docker* container that can run in a *Kubernetes* cluster. The process is described in detail in section TODO
 
 ##### Used in following services:
 
-vinnsl-service, vinnsl-nn-ui, vinnsl-storage-service, vinnsl-nn-worker
+`vinnsl-service`, `vinnsl-nn-ui`, `vinnsl-storage-service`, `vinnsl-nn-worker`
 
 ### Deeplearning4J
 
-Detailed information about Deeplearning4J can be found in Section \ref{deeplearning4j}.
+*Deeplearning4J* is used by the worker service to train and evaluate neural networks.
 
-TODO
+A detailed introduction to Deeplearning4J can be found in Section \ref{deeplearning4j}.
 
 ##### Used in following services:
 
-vinnsl-nn-worker
+`vinnsl-nn-worker`
 
 ## Security
 
