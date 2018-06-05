@@ -1814,14 +1814,229 @@ PUT /worker/queue/{id}
 
 - worker-controller
 
-
 # Use Cases
 
-1) iris classification
+As demonstration of the implemented prototype this thesis features two use cases with practical relevance.
 
-2) MNIST?
+## Iris Classification Example
 
-3) hosted trained network
+Ronald A. Fisher published 1936 in his paper *The use of multiple measurements in taxonomic problems*  \cite{fisher} a dataset that is known as the *Iris flower data set*.
+
+The data set \cite{fisher} features 50 examples of three Iris species: Iris setosa, Iris virginica and Iris versicolor. A table lists four measured features from each sample: the length and the width of the sepals and petals.  
+
+This use case shall showcase the use of the implemented prototype to create a neural network, train and  evaluate it, using this dataset.
+
+### Prerequisites
+
+* Minikube installed and running
+* Services from the Neural Network Execution Stack deployed in cluster
+* Hostname `cluster.local` resolves to Minikube instance
+
+### Create the neural network
+
+#### Request
+
+```
+POST https://cluster.local/vinnsl
+```
+
+BODY
+
+```
+<vinnsl>
+  <description>
+    <identifier><!-- will be generated --></identifier>
+    <metadata>
+      <paradigm>classification</paradigm>
+      <name>Backpropagation Classification</name>
+      <description>Iris Classification Example</description>
+      <version>
+        <major>1</major>
+        <minor>0</minor>
+      </version>
+    </metadata>
+    <creator>
+      <name>Ronald Fisher</name>
+      <contact>ronald.fisher@institution.com</contact>
+    </creator>
+    <problemDomain>
+      <propagationType type="feedforward">
+        <learningType>supervised</learningType>
+      </propagationType>
+      <applicationField>Classification</applicationField>
+      <networkType>Backpropagation</networkType>
+      <problemType>Classifiers</problemType>
+    </problemDomain>
+    <endpoints>
+      <train>true</train>
+      <retrain>true</retrain>
+      <evaluate>true</evaluate>
+    </endpoints>
+    <structure>
+	   <input>
+	    <ID>Input1</ID>
+	    <size>
+	    	<min>4</min>
+	    	<max>4</max>
+	    </size>
+	   </input>
+	   <hidden>
+	    <ID>Hidden1</ID>
+	    <size>
+	    	<min>3</min>
+	    	<max>3</max>
+	    </size>
+	   </hidden>
+	   <hidden>
+	    <ID>Hidden2</ID>
+	    <size>
+	    	<min>3</min>
+	    	<max>3</max>
+	    </size>
+	   </hidden>
+	   <output>
+	    <ID>Output1</ID>
+	    <size>
+	    	<min>3</min>
+	    	<max>3</max>
+	    </size>
+	   </output>
+	 </structure>
+	 <parameters>
+	 	<!--<valueparameter>learningrate</valueparameter>
+	 	<valueparameter>biasInput</valueparameter>
+	 	<valueparameter>biasHidden</valueparameter>
+	 	<valueparameter>momentum</valueparameter>
+	 	<comboparameter>ativationfunction</valueparameter>
+	 	<valueparameter>threshold</valueparameter>-->
+	 </parameters>
+	 <data>
+	 	<description>iris txt file with 3 classifications, 4 input vars</description>
+	 	<tabledescription>no input as table possible</tabledescription>
+	 	<filedescription>CSV file</filedescription>
+	 </data>
+  </description>
+</vinnsl>
+```
+
+#### Response
+
+```
+201 CREATED 
+```
+
+### Add ViNNSL Description to the neural network
+
+#### Request
+
+```
+POST https://cluster.local/vinnsl/{id}/definition
+```
+
+BODY
+
+```
+<definition>
+<identifier><!-- will be generated --></identifier>
+<metadata>
+  <paradigm>classification</paradigm>
+  <name>Backpropagation Classification</name>
+  <description>Iris Classification Example</description>
+  <version>
+    <major>1</major>
+    <minor>0</minor>
+  </version>
+</metadata>
+<creator>
+  <name>Ronald Fisher</name>
+  <contact>ronald.fisher@institution.com</contact>
+</creator>
+<problemDomain>
+  <propagationType type="feedforward">
+    <learningType>supervised</learningType>
+  </propagationType>
+  <applicationField>Classification</applicationField>
+  <networkType>Backpropagation</networkType>
+  <problemType>Classifiers</problemType>
+</problemDomain>
+<endpoints>
+  <train>true</train>
+</endpoints>
+<executionEnvironment>
+	<serial>true</serial>
+</executionEnvironment>
+<structure>
+   <input>
+    <ID>Input1</ID>
+    <size>4</size>
+   </input>
+   <hidden>
+    <ID>Hidden1</ID>
+    <size>3</size>
+   </hidden>
+   <hidden>
+    <ID>Hidden2</ID>
+    <size>3</size>
+   </hidden>
+   <output>
+    <ID>Output1</ID>
+    <size>3</size>
+   </output>
+   <connections>
+   	<!--<fullconnected>
+   		<fromblock>Input1</fromblock>
+   		<toblock>Hidden1</toblock>
+   		<fromblock>Hidden1</fromblock>
+   		<toblock>Output1</toblock>
+   	</fullconnected>-->
+   </connections>
+ </structure>
+ <resultSchema>
+ 	<instance>true</instance>
+ 	<training>true</training>
+ </resultSchema>
+ <parameters>
+ 	<valueparameter name="learningrate">0.1</valueparameter>
+	<comboparameter name="activationfunction">tanh</comboparameter>
+	<valueparameter name="iterations">500</valueparameter>
+	<valueparameter name="seed">6</valueparameter>
+ </parameters>
+ <data>
+ 	<description>iris txt file with 3 classifications, 4 input vars</description>
+	<dataSchemaID>name/iris.txt</dataSchemaID>
+ </data>
+</definition>
+```
+
+#### Response
+
+```
+200 OK
+```
+
+### Queue Network for Training
+
+#### Request
+
+```
+POST https://cluster.local/worker/queue/{id}
+```
+
+#### Response
+
+```
+200 OK
+```
+
+### Evaluate
+
+TODO
+
+<!--mnist?-->
+
+## Hosted trained network
+
+TODO
 
 # Future Work
 
@@ -1840,6 +2055,18 @@ TODO
 # Dedication 
 
 # Appendices
+
+## Deploy Neural Network Execution Stack
+
+### Local Machine
+
+TODO
+
+### Cloud Instance 
+
+TODO
+
+
 
 [^1]: https://cloud.google.com/kubernetes-engine
 [^2]: https://aws.amazon.com/eks
