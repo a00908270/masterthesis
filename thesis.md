@@ -1826,9 +1826,28 @@ The data set \cite{fisher} features 50 examples of three Iris species: Iris seto
 
 This use case shall showcase the use of the implemented prototype to create a neural network, train and  evaluate it, using this dataset.
 
+### Dataset
+
+The dataset exists in the UCI Machine Learning Repository \cite{uci-iris} as a *CSV*  (comma separated value) file[^8] which will be used for training.  The first example has a sepal length/width of 5.1cm/3.5cm, a petal length/width of 1.4cm/0.2cm and is an Iris setosa. 
+
+The first lines of the dataset explain the structure of the dataset. The columns are formatted for better readability. The species column is an enumerated value.
+
+| Index | Iris species    |
+| ----- | --------------- |
+| 0     | Iris setosa     |
+| 1     | Iris virginica  |
+| 2     | Iris versicolor |
+
+```
+Sepal length, Sepal width, Petal length, Peta width, Iris species
+5.1         , 3.5        , 1.4         , 0.2       , 0
+4.9         , 3.0        , 1.4         , 0.2       , 0
+<more lines>
+```
+
 ### Prerequisites
 
-* Minikube installed and running
+* Kubernetes Cluster running
 * Services from the Neural Network Execution Stack deployed in cluster
 * Hostname `cluster.local` resolves to Minikube instance
 
@@ -1925,7 +1944,17 @@ BODY
 201 CREATED 
 ```
 
-### Add ViNNSL Description to the neural network
+Aside from the HTTP Status Code, we also get HTTP headers in the response. The one needed for further requests is named `location`. The value of this field is the URL of the network that was created and can be used to get and update fields on the dataset.
+
+In this example the following value is returned:
+
+| Header Name | Header Value                                          |
+| ----------- | ----------------------------------------------------- |
+| location    | https://cluster.local/vinnsl/5b1811a046e0fb0001fa28cc |
+
+The id of the new dataset is 5b1811a046e0fb0001fa28cc. In the following requests the id is shortened as `{id}`. 
+
+### Add ViNNSL Definition to the neural network
 
 #### Request
 
@@ -2014,6 +2043,14 @@ BODY
 200 OK
 ```
 
+
+
+Figure \ref{usecase_1_datastructure} shows a graphical visualisation of the neural network data structure after adding the description and definition in *ViNNSL* XML. It is noticeable that *description* and *definition* have been transformed into objects. The status is initialized with the value `CREATED`.
+
+
+
+![Neural Network Datastructure visualized in the Robo3T[^9] application \label{usecase_1_datastructure}](images/usecase_1_datastructure.png){width=15cm}
+
 ### Queue Network for Training
 
 #### Request
@@ -2076,4 +2113,6 @@ TODO
 [^5]: Create, Read, Update, Delete
 [^6]: https://github.com/a00908270/
 [^7]: https://app.swaggerhub.com/apis/a00908270/
+[^8]: https://archive.ics.uci.edu/ml/datasets/iris
+[^9]: https://www.robomongo.org/
 

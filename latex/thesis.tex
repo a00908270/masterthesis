@@ -1276,11 +1276,11 @@ and \texttt{ingress-nginx}. \cite{kub-ingress}
 
 \emph{Minikube} runs the \texttt{ingress-nginx} implementation as
 default and also provides basic load balancing by configuring a
-\texttt{nginx} \footnote{http://nginx.org/} web server. Kubernetes
-configures \texttt{nginx} to use the \emph{least-connected} load
-balancing mechanism, which means that the \emph{next request is assigned
-to the server with the least number of active connections}
-\cite{nginx-loadbal}.
+\texttt{nginx} \footnote{https://archive.ics.uci.edu/ml/datasets/iris}
+web server. Kubernetes configures \texttt{nginx} to use the
+\emph{least-connected} load balancing mechanism, which means that the
+\emph{next request is assigned to the server with the least number of
+active connections} \cite{nginx-loadbal}.
 
 \section{Neural Network Objects
 State}\label{neural-network-objects-state}
@@ -3206,12 +3206,42 @@ sepals and petals.
 This use case shall showcase the use of the implemented prototype to
 create a neural network, train and evaluate it, using this dataset.
 
+\subsection{Dataset}\label{dataset}
+
+The dataset exists in the UCI Machine Learning Repository
+\cite{uci-iris} as a \emph{CSV} (comma separated value) file\footnote{https://archive.ics.uci.edu/ml/datasets/iris}
+which will be used for training. The first example has a sepal
+length/width of 5.1cm/3.5cm, a petal length/width of 1.4cm/0.2cm and is
+an Iris setosa.
+
+The first lines of the dataset explain the structure of the dataset. The
+columns are formatted for better readability. The species column is an
+enumerated value.
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Index & Iris species\tabularnewline
+\midrule
+\endhead
+0 & Iris setosa\tabularnewline
+1 & Iris virginica\tabularnewline
+2 & Iris versicolor\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{verbatim}
+Sepal length, Sepal width, Petal length, Peta width, Iris species
+5.1         , 3.5        , 1.4         , 0.2       , 0
+4.9         , 3.0        , 1.4         , 0.2       , 0
+<more lines>
+\end{verbatim}
+
 \subsection{Prerequisites}\label{prerequisites}
 
 \begin{itemize}
 \tightlist
 \item
-  Minikube installed and running
+  Kubernetes Cluster running
 \item
   Services from the Neural Network Execution Stack deployed in cluster
 \item
@@ -3311,8 +3341,29 @@ BODY
 201 CREATED 
 \end{verbatim}
 
-\subsection{Add ViNNSL Description to the neural
-network}\label{add-vinnsl-description-to-the-neural-network}
+Aside from the HTTP Status Code, we also get HTTP headers in the
+response. The one needed for further requests is named
+\texttt{location}. The value of this field is the URL of the network
+that was created and can be used to get and update fields on the
+dataset.
+
+In this example the following value is returned:
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Header Name & Header Value\tabularnewline
+\midrule
+\endhead
+location &
+https://cluster.local/vinnsl/5b1811a046e0fb0001fa28cc\tabularnewline
+\bottomrule
+\end{longtable}
+
+The id of the new dataset is 5b1811a046e0fb0001fa28cc. In the following
+requests the id is shortened as \texttt{\{id\}}.
+
+\subsection{Add ViNNSL Definition to the neural
+network}\label{add-vinnsl-definition-to-the-neural-network}
 
 \subsubsection{Request}\label{request-1}
 
@@ -3400,6 +3451,19 @@ BODY
 \begin{verbatim}
 200 OK
 \end{verbatim}
+
+Figure \ref{usecase_1_datastructure} shows the data structure of the
+neural network after adding the definition.
+
+\begin{figure}
+\centering
+\includegraphics[width=15.00000cm]{images/usecase_1_datastructure}
+\caption[Neural Network Datastructure visualized in the Robo3T
+application \label{usecase_1_datastructure}]{Neural Network
+Datastructure visualized in the Robo3T\footnotemark{} application
+\label{usecase_1_datastructure}}
+\end{figure}
+\footnotetext{https://www.robomongo.org/}
 
 \subsection{Queue Network for
 Training}\label{queue-network-for-training}
