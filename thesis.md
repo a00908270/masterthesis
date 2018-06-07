@@ -2049,7 +2049,7 @@ Figure \ref{usecase_1_datastructure} shows a graphical visualisation of the neur
 
 
 
-![Neural Network Datastructure visualized in the Robo3T[^9] application \label{usecase_1_datastructure}](images/usecase_1_datastructure.png){width=15cm}
+![Neural Network Datastructure visualized in the Robo3T[^9] application \label{usecase_1_datastructure}](images/usecase_1_datastructure.png){width=12cm}
 
 ### Queue Network for Training
 
@@ -2065,9 +2065,53 @@ POST https://cluster.local/worker/queue/{id}
 200 OK
 ```
 
-### Evaluate
+![ViNNSL NN UI shows training in progress \label{usecase_1_ui-training}](images/usecase_1_ui-training.png)
 
-TODO
+
+
+### Training
+
+During the training it is possible to open the graphical user interface called *DL4J Training UI* in a browser, that is provided with the *Deeplearning4J* package, to see the learning progress of the neural network.  
+
+```
+https://cluster.local/train/overview
+```
+Figure \ref{usecase_1_ui-training_dl4j} shows the network training of the Iris Classification.
+
+![*DL4J Training UI* shows training progress of Iris Classification network \label{usecase_1_ui-training_dl4j}](images/usecase_1_ui-training_dl4j.png){width=15cm}
+
+### Testing
+
+Testing takes place automatically after training and evaluates the accuracy of the trained neural network. By default 90 percent of the dataset is used for training and 10 percent for testing.
+
+### Evaluate Result
+
+As soon as the training and testing process is finished a file with the testing report is ready on the storage server. Figure \ref{usecase_1_datastructure_finished} clarifies the updated data structure of the neural network object. A result file with id `5b19972052faff0001cb6bbf` was uploaded to the storage service, the status changed to `FINISHED` and the transformed *Deeplearning4J* model representation is updated in the field *dl4jNetwork*.
+
+![Neural Network Datastructure of the fninished network visualized in the Robo3T[^9] application \label{usecase_1_datastructure_finished}](images/usecase_1_datastructure_finished.png){width=12cm}
+
+In the ViNNSL NN UI the result file can be viewed by switching to the *Data* tab and selecting *See File* under the headline *Result Data*.
+
+```
+...
+
+Examples labeled as 0 classified by model as 0: 19 times
+Examples labeled as 1 classified by model as 1: 17 times
+Examples labeled as 1 classified by model as 2: 2 times
+Examples labeled as 2 classified by model as 2: 15 times
+
+
+==========================Scores===========================================
+ # of classes:    3
+ Accuracy:        0.9623
+ Precision:       0.9608
+ Recall:          0.9649
+ F1 Score:        0.9606
+Precision, recall & F1: macro-averaged (equally weighted avg. of 3 classes)
+===========================================================================
+```
+
+By examining the result file it can be noticed that the accuracy of the network was 96 percent. All *Iris setosa* from the testset were recognized correctly, two *Iris virginica*  were incorrectly recognized as *Iris versicolor*.
 
 <!--mnist?-->
 

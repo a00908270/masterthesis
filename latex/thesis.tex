@@ -3452,12 +3452,15 @@ BODY
 200 OK
 \end{verbatim}
 
-Figure \ref{usecase_1_datastructure} shows the data structure of the
-neural network after adding the definition.
+Figure \ref{usecase_1_datastructure} shows a graphical visualisation of
+the neural network data structure after adding the description and
+definition in \emph{ViNNSL} XML. It is noticeable that
+\emph{description} and \emph{definition} have been transformed into
+objects. The status is initialized with the value \texttt{CREATED}.
 
 \begin{figure}
 \centering
-\includegraphics[width=15.00000cm]{images/usecase_1_datastructure}
+\includegraphics[width=12.00000cm]{images/usecase_1_datastructure}
 \caption[Neural Network Datastructure visualized in the Robo3T
 application \label{usecase_1_datastructure}]{Neural Network
 Datastructure visualized in the Robo3T\footnotemark{} application
@@ -3480,9 +3483,89 @@ POST https://cluster.local/worker/queue/{id}
 200 OK
 \end{verbatim}
 
-\subsection{Evaluate}\label{evaluate}
+\begin{figure}
+\centering
+\includegraphics{images/usecase_1_ui-training}
+\caption{ViNNSL NN UI shows training in progress
+\label{usecase_1_ui-training}}
+\end{figure}
 
-TODO
+\subsection{Training}\label{training}
+
+During the training it is possible to open the graphical user interface
+called \emph{DL4J Training UI} in a browser, that is provided with the
+\emph{Deeplearning4J} package, to see the learning progress of the
+neural network.
+
+\begin{verbatim}
+https://cluster.local/train/overview
+\end{verbatim}
+
+Figure \ref{usecase_1_ui-training_dl4j} shows the network training of
+the Iris Classification.
+
+\begin{figure}
+\centering
+\includegraphics[width=15.00000cm]{images/usecase_1_ui-training_dl4j}
+\caption{\emph{DL4J Training UI} shows training progress of Iris
+Classification network \label{usecase_1_ui-training_dl4j}}
+\end{figure}
+
+\subsection{Testing}\label{testing}
+
+Testing takes place automatically after training and evaluates the
+accuracy of the trained neural network. By default 90 percent of the
+dataset is used for training and 10 percent for testing.
+
+\subsection{Evaluate Result}\label{evaluate-result}
+
+As soon as the training and testing process is finished a file with the
+testing report is ready on the storage server. Figure
+\ref{usecase_1_datastructure_finished} clarifies the updated data
+structure of the neural network object. A result file with id
+\texttt{5b19972052faff0001cb6bbf} was uploaded to the storage service,
+the status changed to \texttt{FINISHED} and the transformed
+\emph{Deeplearning4J} model representation is updated in the field
+\emph{dl4jNetwork}.
+
+\begin{figure}
+\centering
+\includegraphics[width=12.00000cm]{images/usecase_1_datastructure_finished}
+\caption[Neural Network Datastructure of the fninished network
+visualized in the Robo3T application
+\label{usecase_1_datastructure_finished}]{Neural Network Datastructure
+of the fninished network visualized in the Robo3T\footnotemark{}
+application \label{usecase_1_datastructure_finished}}
+\end{figure}
+\footnotetext{https://www.robomongo.org/}
+
+In the ViNNSL NN UI the result file can be viewed by switching to the
+\emph{Data} tab and selecting \emph{See File} under the headline
+\emph{Result Data}.
+
+\begin{verbatim}
+...
+
+Examples labeled as 0 classified by model as 0: 19 times
+Examples labeled as 1 classified by model as 1: 17 times
+Examples labeled as 1 classified by model as 2: 2 times
+Examples labeled as 2 classified by model as 2: 15 times
+
+
+==========================Scores===========================================
+ # of classes:    3
+ Accuracy:        0.9623
+ Precision:       0.9608
+ Recall:          0.9649
+ F1 Score:        0.9606
+Precision, recall & F1: macro-averaged (equally weighted avg. of 3 classes)
+===========================================================================
+\end{verbatim}
+
+By examining the result file it can be noticed that the accuracy of the
+network was 96 percent. All \emph{Iris setosa} from the testset were
+recognized correctly, two \emph{Iris virginica} were incorrectly
+recognized as \emph{Iris versicolor}.
 
 \section{Hosted trained network}\label{hosted-trained-network}
 
