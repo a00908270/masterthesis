@@ -3365,6 +3365,15 @@ requests the id is shortened as \texttt{\{id\}}.
 \subsection{Add ViNNSL Definition to the neural
 network}\label{add-vinnsl-definition-to-the-neural-network}
 
+The ViNNSL definition XML contains metadata like name and description of
+the network as well as the stucture of the neural network model. There
+is one input and one output layer defined. In between there are two
+hidden layers. It is also possible to specify additional parameters.
+
+The activation function is set to Tangens hyperbolicus, the learning
+rate is 0.1 and the training is limited to 500 iterations. A seed, set
+to 6, allows reproducable training score.
+
 \subsubsection{Request}\label{request-1}
 
 \begin{verbatim}
@@ -3501,8 +3510,28 @@ neural network.
 https://cluster.local/train/overview
 \end{verbatim}
 
+\subsubsection{DL4J Training UI}\label{dl4j-training-ui}
+
 Figure \ref{usecase_1_ui-training_dl4j} shows the network training of
-the Iris Classification.
+the Iris Classification. The overview tab provides general information
+about network and training.
+
+\begin{itemize}
+\tightlist
+\item
+  Top left: score vs iteration chart - this is the value of the loss
+  function on the current minibatch
+\item
+  Top right: model and training information
+\item
+  Bottom left: Ratio of parameters to updates (by layer) for all network
+  weights vs.~iteration
+\item
+  Bottom right: Standard deviations (vs.~time) of: activations,
+  gradients and updates
+\end{itemize}
+
+\cite{dl4j-traininui}
 
 \begin{figure}
 \centering
@@ -3511,11 +3540,29 @@ the Iris Classification.
 Classification network \label{usecase_1_ui-training_dl4j}}
 \end{figure}
 
+The second tab provides information about the neural network layers of
+the model. Information includes:
+
+\begin{itemize}
+\tightlist
+\item
+  Table of layer information
+\item
+  Layer activations (mean and mean +/- 2 standard deviations) over time
+\item
+  Histograms of parameters and updates, for each parameter type
+\item
+  Learning rate vs.~time (note this will be flat, unless learning rate
+  schedules are used)
+\end{itemize}
+
+\cite{dl4j-traininui}
+
 \subsection{Testing}\label{testing}
 
 Testing takes place automatically after training and evaluates the
-accuracy of the trained neural network. By default 90 percent of the
-dataset is used for training and 10 percent for testing.
+accuracy of the trained neural network. In this case 65 percent of the
+dataset is used for training and 35 percent for testing.
 
 \subsection{Evaluate Result}\label{evaluate-result}
 
@@ -3563,9 +3610,9 @@ Precision, recall & F1: macro-averaged (equally weighted avg. of 3 classes)
 \end{verbatim}
 
 By examining the result file it can be noticed that the accuracy of the
-network was 96 percent. All \emph{Iris setosa} from the testset were
-recognized correctly, two \emph{Iris virginica} were incorrectly
-recognized as \emph{Iris versicolor}.
+network was 96 percent. All \emph{Iris setosa} and \emph{Iris
+versicolor} from the testset were recognized correctly, two \emph{Iris
+virginica} were incorrectly recognized as \emph{Iris versicolor}.
 
 \section{Hosted trained network}\label{hosted-trained-network}
 

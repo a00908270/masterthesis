@@ -1956,6 +1956,10 @@ The id of the new dataset is 5b1811a046e0fb0001fa28cc. In the following requests
 
 ### Add ViNNSL Definition to the neural network
 
+The ViNNSL definition XML contains metadata like name and description of the network as well as the stucture of the neural network model. There is one input and one output layer defined. In between there are two hidden layers. It is also possible to specify additional parameters.
+
+The activation function is set to Tangens hyperbolicus, the learning rate is 0.1 and the training is limited to 500 iterations. A seed, set to 6, allows reproducable training score.
+
 #### Request
 
 ```
@@ -2076,13 +2080,31 @@ During the training it is possible to open the graphical user interface called *
 ```
 https://cluster.local/train/overview
 ```
-Figure \ref{usecase_1_ui-training_dl4j} shows the network training of the Iris Classification.
+#### DL4J Training UI
+
+Figure \ref{usecase_1_ui-training_dl4j} shows the network training of the Iris Classification. The overview tab provides general information about network and training. 
+
+- Top left: score vs iteration chart - this is the value of the loss function on the current minibatch
+- Top right: model and training information
+- Bottom left: Ratio of parameters to updates (by layer) for all network weights vs. iteration
+- Bottom right: Standard deviations (vs. time) of: activations, gradients and updates 
+
+\cite{dl4j-traininui}
 
 ![*DL4J Training UI* shows training progress of Iris Classification network \label{usecase_1_ui-training_dl4j}](images/usecase_1_ui-training_dl4j.png){width=15cm}
 
+The second tab provides information about the neural network layers of the model. Information includes:
+
+- Table of layer information
+- Layer activations (mean and mean +/- 2 standard deviations) over time
+- Histograms of parameters and updates, for each parameter type
+- Learning rate vs. time (note this will be flat, unless learning rate schedules are used)
+
+\cite{dl4j-traininui}
+
 ### Testing
 
-Testing takes place automatically after training and evaluates the accuracy of the trained neural network. By default 90 percent of the dataset is used for training and 10 percent for testing.
+Testing takes place automatically after training and evaluates the accuracy of the trained neural network. In this case 65 percent of the dataset is used for training and 35 percent for testing.
 
 ### Evaluate Result
 
@@ -2111,7 +2133,7 @@ Precision, recall & F1: macro-averaged (equally weighted avg. of 3 classes)
 ===========================================================================
 ```
 
-By examining the result file it can be noticed that the accuracy of the network was 96 percent. All *Iris setosa* from the testset were recognized correctly, two *Iris virginica*  were incorrectly recognized as *Iris versicolor*.
+By examining the result file it can be noticed that the accuracy of the network was 96 percent. All *Iris setosa* and *Iris versicolor* from the testset were recognized correctly, two *Iris virginica* were incorrectly recognized as *Iris versicolor*. 
 
 <!--mnist?-->
 
