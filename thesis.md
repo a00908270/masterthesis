@@ -1922,12 +1922,12 @@ BODY
 	   </output>
 	 </structure>
 	 <parameters>
-	 	<!--<valueparameter>learningrate</valueparameter>
+	 	<valueparameter>learningrate</valueparameter>
 	 	<valueparameter>biasInput</valueparameter>
 	 	<valueparameter>biasHidden</valueparameter>
 	 	<valueparameter>momentum</valueparameter>
 	 	<comboparameter>ativationfunction</valueparameter>
-	 	<valueparameter>threshold</valueparameter>-->
+	 	<valueparameter>threshold</valueparameter>
 	 </parameters>
 	 <data>
 	 	<description>iris txt file with 3 classifications, 4 input vars</description>
@@ -2016,12 +2016,12 @@ BODY
     <size>3</size>
    </output>
    <connections>
-   	<!--<fullconnected>
+   	<fullconnected>
    		<fromblock>Input1</fromblock>
    		<toblock>Hidden1</toblock>
    		<fromblock>Hidden1</fromblock>
    		<toblock>Output1</toblock>
-   	</fullconnected>-->
+   	</fullconnected>
    </connections>
  </structure>
  <resultSchema>
@@ -2084,10 +2084,10 @@ https://cluster.local/train/overview
 
 Figure \ref{usecase_1_ui-training_dl4j} shows the network training of the Iris Classification. The overview tab provides general information about network and training. 
 
-- Top left: score vs iteration chart - this is the value of the loss function on the current minibatch
+- Top left: score vs iteration chart - value of the loss function 
 - Top right: model and training information
 - Bottom left: Ratio of parameters to updates (by layer) for all network weights vs. iteration
-- Bottom right: Standard deviations (vs. time) of: activations, gradients and updates 
+- Bottom right: Standard deviations (vs. time) of: updates, gradients and activations
 
 \cite{dl4j-traininui}
 
@@ -2096,9 +2096,9 @@ Figure \ref{usecase_1_ui-training_dl4j} shows the network training of the Iris C
 The second tab provides information about the neural network layers of the model. Information includes:
 
 - Table of layer information
-- Layer activations (mean and mean +/- 2 standard deviations) over time
-- Histograms of parameters and updates, for each parameter type
-- Learning rate vs. time (note this will be flat, unless learning rate schedules are used)
+- Layer activations over time
+- Histograms of parameters and updates
+- Learning rate vs. time
 
 \cite{dl4j-traininui}
 
@@ -2143,6 +2143,26 @@ TODO
 
 # Future Work
 
+## ViNNSL Compatibility
+
+ViNNSL Compatibility is limited in the current prototype and could be fully implemented to be fully compatible with other systems. See section TODO for current limitations.
+
+## Neural Network Backends
+
+Presently the *Deeplearning4J* platform undertakes the task of network training. ViNNSL XML files are transformed into a *Deeplearning4J* model before training. With manageable development effort the API could be extended to support direct import of *Deeplearning4J* models. Furthermore the Framework provides  support for Keras[^10], a python framework that is fitted to run on top of TensorFlow, Microsoft Cognitive Toolkit and Theano \cite{dl4j-keras} \cite{keras}. By extending the API to enable an import of these frameworks, demand from other target audiences could be covered.
+
+## Graphical Neural Network Designer
+
+The *ViNNSL* XML scheme could be used to design and validate *ViNNSL* networks in a graphical editor presenting a drag&drop interface. Another possible function could be an integration of the neural network stack directly into the visual designer to import and train networks into the cluster without leaving the application.
+
+## Deploy trained Models as Web Service
+
+After the training of a neural network model is finished, a useful functionality would be to expose the evaluation as a web service. Client applications could run their requests against the trained models instead of on-device recognition.
+
+## Integrate into other Platforms
+
+
+
 TODO
 
 * more function  
@@ -2181,4 +2201,5 @@ TODO
 [^7]: https://app.swaggerhub.com/apis/a00908270/
 [^8]: https://archive.ics.uci.edu/ml/datasets/iris
 [^9]: https://www.robomongo.org/
+[^10]: https://keras.io
 
