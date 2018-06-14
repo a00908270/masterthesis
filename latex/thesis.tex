@@ -118,7 +118,41 @@ networks.
 
 \section{Structure}\label{structure}
 
-TODO
+This thesis gives an introduction and comparison to state of the art
+technologies that support the microservice architecture pattern using
+container and container orchestration tools. This is followed by the
+acquaintance of Machine Learning (ML) and commonly used ML Frameworks.
+Featuring all these introduced technologies, requirements are defined
+for the implementation of a prototype. Main sections of this thesis are
+the specification, implementation and documentation of the prototype
+following common practices. To demonstrate the operational purposes of
+the prototype, two use cases are presented.
+
+Future work mentions ideas on how the prototype can be extended and
+integrated into other systems and the conclusion summarizes the
+motivation and archivements of the implemented neural network execution
+stack.
+
+\section{Related Work}\label{related-work}
+
+\subsection{ViNNSL}\label{vinnsl}
+
+The Vienna Neural Network Specification Language (\emph{ViNNSL}) is a
+domain specific language developed by the \emph{University of Vienna} to
+describe neural network objects and designed as a communication
+framework in service-oriented architectures. It is based on XML and
+provides the schemas that allow the creation, training, evaluation of
+artificial neural networks. \cite{beran_2008}
+
+\subsection{N2Sky}\label{n2sky}
+
+\emph{N2Sky} is a cloud-based platform developed by the \emph{University
+of Vienna} that follows the Neural Networks as a Service paradigm and
+provides an implementation example of \emph{ViNNSL}. It is designed as
+virtual collaboration platform allowing to exchange neural network
+knowledge with a neural network community. The service delivers an
+interface to create and train neural network objects and subsequently
+share them with the community. \cite{schikuta_2013}\cite{n2sky-2}
 
 \chapter{State of the Art}\label{state-of-the-art}
 
@@ -3618,11 +3652,30 @@ TODO
 
 \chapter{Future Work}\label{future-work}
 
+The flexibility of the presented neural network stack opens up many
+opportunities for future work and integration into already existing
+frameworks and applications. This section points out a few ideas.
+
 \section{ViNNSL Compatibility}\label{vinnsl-compatibility}
 
 ViNNSL Compatibility is limited in the current prototype and could be
 fully implemented to be fully compatible with other systems. See section
 TODO for current limitations.
+
+\section{Integration in N2Sky}\label{integration-in-n2sky}
+
+\emph{N2Sky} features a graphical editor to design the neural network
+structure and training of the model, as seen in Figure \ref{n2sky_eval}.
+\emph{N2Sky} also uses the \emph{ViNNSL} language to model neural
+networks and could enable to run the training process in the neural
+network stack by using the provided API.
+
+\begin{figure}
+\centering
+\includegraphics[width=12.00000cm]{images/n2sky_eval}
+\caption{N2Sky Neural network evaluation process \cite{n2sky-2}
+\label{n2sky_eval}}
+\end{figure}
 
 \section{Neural Network Backends}\label{neural-network-backends}
 
@@ -3781,7 +3834,7 @@ Kubernetes cluster in the Google Kubernetes Engine.
 \begin{verbatim}
 gcloud beta container --project "nn-cloud-201314" clusters create "cluster-1" 
 --zone "us-central1-a" --username "admin" --cluster-version "1.8.8-gke.0" 
---machine-type "n1-standard-1" --image-type "COS" --disk-size "100" --scopes 
+--machine-type "n1-standard-1" --image-type "COS" --disk-size "15" --scopes 
 "https://www.googleapis.com/auth/compute",
 "https://www.googleapis.com/auth/devstorage.read_only",
 "https://www.googleapis.com/auth/logging.write",

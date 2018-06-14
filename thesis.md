@@ -64,9 +64,21 @@ It also integrates with ViNNSL, a descriptive language that does not require pro
 
 ## Structure
 
-TODO
+This thesis gives an introduction and comparison to state of the art technologies that support the microservice architecture pattern using container and container orchestration tools. This is followed by the acquaintance of Machine Learning (ML) and commonly used ML Frameworks. Featuring all these introduced technologies, requirements are defined for the implementation of a prototype. Main sections of this thesis are the specification, implementation and documentation of the prototype following common practices.  To demonstrate the operational purposes of the prototype, two use cases are presented. 
+
+Future work mentions ideas on how the prototype can be extended and integrated into other systems and the conclusion summarizes the motivation and archivements of the implemented neural network execution stack.
 
 <!--Following the specification of ViNNSL by Kopica \cite{kopica_2015} this thesis provides a basic implementation of the markup language used to define the structure--> 
+
+## Related Work
+
+### ViNNSL
+
+The Vienna Neural Network Specification Language (*ViNNSL*) is a domain specific language developed by the *University of Vienna* to describe neural network objects and designed as a communication framework in service-oriented architectures. It is based on XML and provides the schemas that allow the creation, training, evaluation of artificial neural networks. \cite{beran_2008} 
+
+### N2Sky
+
+*N2Sky* is a cloud-based platform developed by the *University of Vienna* that follows the Neural Networks as a Service paradigm and provides an implementation example of *ViNNSL*. It is designed as virtual collaboration platform allowing to exchange neural network knowledge with a neural network community. The service delivers an interface to create and train neural network objects and subsequently share them with the community. \cite{schikuta_2013}\cite{n2sky-2}
 
 # State of the Art
 
@@ -2143,9 +2155,17 @@ TODO
 
 # Future Work
 
+The flexibility of the presented neural network stack opens up many opportunities for future work and integration into already existing frameworks and applications. This section points out a few ideas.
+
 ## ViNNSL Compatibility
 
 ViNNSL Compatibility is limited in the current prototype and could be fully implemented to be fully compatible with other systems. See section TODO for current limitations.
+
+## Integration in N2Sky
+
+*N2Sky* features a graphical editor to design the neural network structure and training of the model, as seen in Figure \ref{n2sky_eval}. *N2Sky* also uses the *ViNNSL* language to model neural networks and could enable to run the training process in the neural network stack by using the provided API.
+
+![N2Sky Neural network evaluation process \cite{n2sky-2} \label{n2sky_eval}](images/n2sky_eval.png){width=12cm}
 
 ## Neural Network Backends
 
