@@ -2157,19 +2157,21 @@ The *ViNNSL* XML scheme could be used to design and validate *ViNNSL* networks i
 
 ## Deploy trained Models as Web Service
 
-After the training of a neural network model is finished, a useful functionality would be to expose the evaluation as a web service. Client applications could run their requests against the trained models instead of on-device recognition.
+After the training of a neural network model is finished, a useful functionality would be to expose the result for further predictions as a web service. Client applications could run their requests against the trained models to receive model predictions.
 
 ## Integrate into other Platforms
 
+There are neural network platforms on the market that could be integrated. According to a Gartner report from February 2018, *KNIME* is currently leading in the category "Data Science and Machine Learning Platforms" \cite{gartner}. 
 
+### KNIME
 
-TODO
+*KNIME Analytics Platform*[^11] is open-source at its core[^12] and already features a *Deeplearning4J* integration[^13]. Figure \ref{knime} shows a screenshot of the application designing a Multi Layer Perceptron network and exporting it to a *Deeplearning4J* model. As the application is open-source and extensible, an option to export and train models using the presented execution stack could be added.
 
-* more function  
-* backend für tensorflow
-* grafischer NN designer
-* trainierte netzwerke als webservice veröffentlichen
-* integration in knime platform
+![Screenshot of *KNIME Analytics Platform* using *Deeplearning4J* Integration \label{knime}](images/knime.png){width=17cm}
+
+## Full featured Web Application
+
+The graphical interface of the prototype provides a quick overview over neural networks and their status, but does not cover all features specified in the RESTful API. It could be extended to behave like a fully featured web application that can be used as an alternative to the API. It could also provide a functionality to integrate plugins into the user interface.
 
 # Conclusions 
 
@@ -2183,11 +2185,118 @@ TODO
 
 ### Local Machine
 
-TODO
+##### Prerequisites
 
-### Cloud Instance 
+* Install `kubectl` tool from: https://kubernetes.io/docs/tasks/tools/install-kubectl
+* Install `minikube` tool from: https://github.com/kubernetes/minikube/releases
+* git tool installed
 
-TODO
+##### Run minikube
+
+`minikube start`
+
+Starts the minikube cluster
+
+##### Setting up
+
+Clone the repository
+
+```
+git clone https://github.com/a00908270/vinnsl-nn-cloud.git
+cd kubernetes_config/
+```
+
+##### Run Services in Cluster
+
+```
+# MongoDB for vinnsl-service
+kubectl --context $CONTEXT create -f mongo.yaml 
+# Vinnsl Service
+kubectl --context $CONTEXT create -f vinnsl-service.yaml
+# MongoDB for vinnsl-storage-service
+kubectl --context $CONTEXT create -f mongo-storage-service.yaml
+# Vinnsl Storage Service
+kubectl --context $CONTEXT create -f vinnsl-storage-service.yaml
+# Vinnsl NN Worker Service
+kubectl --context $CONTEXT create -f vinnsl-nn-worker.yaml
+# Vinnsl Frontend UI Webapp
+kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
+```
+
+##### Enable and Set Up Ingress
+
+Sets up a proxy to make services available at the endpoint specified in the API Specification.
+
+```
+kubectl --context $CONTEXT apply -f ingress.yaml
+```
+
+### Google Cloud Instance 
+
+This section describes how to deploy the execution stack into a Kubernetes cluster in the Google Kubernetes Engine.
+
+##### Prerequisites
+
+* Google Account with activated billing or credits
+* `kubectl` tool on local machine installed: (<https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl>)
+
+- gcloud SDK locally installed (<https://cloud.google.com/sdk/downloads>)
+
+##### Create Cluster
+
+```
+gcloud beta container --project "nn-cloud-201314" clusters create "cluster-1" 
+--zone "us-central1-a" --username "admin" --cluster-version "1.8.8-gke.0" 
+--machine-type "n1-standard-1" --image-type "COS" --disk-size "15" --scopes 
+"https://www.googleapis.com/auth/compute",
+"https://www.googleapis.com/auth/devstorage.read_only",
+"https://www.googleapis.com/auth/logging.write",
+"https://www.googleapis.com/auth/monitoring",
+"https://www.googleapis.com/auth/servicecontrol",
+"https://www.googleapis.com/auth/service.management.readonly",
+"https://www.googleapis.com/auth/trace.append" 
+--num-nodes "4" --network "default" --enable-cloud-logging 
+--enable-cloud-monitoring --subnetwork "default" --addons 
+HorizontalPodAutoscaling,HttpLoadBalancing,KubernetesDashboard
+```
+
+##### Clone the repository
+
+Clone the `vinnsl-nn-cloud` project and swtich into the google-cloud folder.
+
+```
+git clone https://github.com/a00908270/vinnsl-nn-cloud.git
+cd kubernetes_config/google-cloud/
+```
+
+##### Run Services in Cluster
+
+```
+# MongoDB for vinnsl-service
+kubectl --context $CONTEXT create -f mongo_small.yaml 
+# Vinnsl Service
+kubectl --context $CONTEXT create -f vinnsl-service.yaml
+# MongoDB for vinnsl-storage-service
+kubectl --context $CONTEXT create -f mongo-storage-service_small.yaml
+# Vinnsl Storage Service
+kubectl --context $CONTEXT create -f vinnsl-storage-service.yaml
+# Vinnsl NN Worker Service
+kubectl --context $CONTEXT create -f vinnsl-nn-worker.yaml
+# Vinnsl Frontend UI Webapp
+kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
+```
+
+##### Enable and Set Up Ingress
+
+Sets up a proxy to make services available at the endpoint specified in the API Specification.
+
+```
+kubectl --context $CONTEXT apply -f ingress.yaml
+```
+
+## 
+
+ 
 
 
 
@@ -2200,6 +2309,9 @@ TODO
 [^6]: https://github.com/a00908270/
 [^7]: https://app.swaggerhub.com/apis/a00908270/
 [^8]: https://archive.ics.uci.edu/ml/datasets/iris
-[^9]: https://www.robomongo.org/
+[^9]: https://www.robomongo.org
 [^10]: https://keras.io
+[^11]: https://www.knime.com
+[^12]: https://github.com/knime/knime-core
+[^13]: https://github.com/knime/knime-dl4j
 

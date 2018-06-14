@@ -3475,7 +3475,7 @@ application \label{usecase_1_datastructure}]{Neural Network
 Datastructure visualized in the Robo3T\footnotemark{} application
 \label{usecase_1_datastructure}}
 \end{figure}
-\footnotetext{https://www.robomongo.org/}
+\footnotetext{https://www.robomongo.org}
 
 \subsection{Queue Network for
 Training}\label{queue-network-for-training}
@@ -3582,7 +3582,7 @@ visualized in the Robo3T application
 of the fninished network visualized in the Robo3T\footnotemark{}
 application \label{usecase_1_datastructure_finished}}
 \end{figure}
-\footnotetext{https://www.robomongo.org/}
+\footnotetext{https://www.robomongo.org}
 
 In the ViNNSL NN UI the result file can be viewed by switching to the
 \emph{Data} tab and selecting \emph{See File} under the headline
@@ -3650,28 +3650,45 @@ train networks into the cluster without leaving the application.
 Service}\label{deploy-trained-models-as-web-service}
 
 After the training of a neural network model is finished, a useful
-functionality would be to expose the evaluation as a web service. Client
-applications could run their requests against the trained models instead
-of on-device recognition.
+functionality would be to expose the result for further predictions as a
+web service. Client applications could run their requests against the
+trained models to receive model predictions.
 
 \section{Integrate into other
 Platforms}\label{integrate-into-other-platforms}
 
-TODO
+There are neural network platforms on the market that could be
+integrated. According to a Gartner report from February 2018,
+\emph{KNIME} is currently leading in the category ``Data Science and
+Machine Learning Platforms'' \cite{gartner}.
 
-\begin{itemize}
-\tightlist
-\item
-  more function\\
-\item
-  backend für tensorflow
-\item
-  grafischer NN designer
-\item
-  trainierte netzwerke als webservice veröffentlichen
-\item
-  integration in knime platform
-\end{itemize}
+\subsection{KNIME}\label{knime}
+
+\emph{KNIME Analytics Platform}\footnote{https://www.knime.com} is
+open-source at its core\footnote{https://github.com/knime/knime-core}
+and already features a \emph{Deeplearning4J} integration\footnote{https://github.com/knime/knime-dl4j}.
+Figure \ref{knime} shows a screenshot of the application designing a
+Multi Layer Perceptron network and exporting it to a
+\emph{Deeplearning4J} model. As the application is open-source and
+extensible, an option to export and train models using the presented
+execution stack could be added.
+
+\begin{figure}
+\centering
+\includegraphics[width=17.00000cm]{images/knime}
+\caption{Screenshot of \emph{KNIME Analytics Platform} using
+\emph{Deeplearning4J} Integration \label{knime}}
+\end{figure}
+
+\section{Full featured Web
+Application}\label{full-featured-web-application}
+
+The graphical interface of the prototype provides a quick overview over
+neural networks and their status, but does not cover all features
+specified in the RESTful API. It could be extended to behave like a
+fully featured web application that can be used as an alternative to the
+API. It could also provide a functionality to integrate plugins into the
+user interface.
 
 \chapter{Conclusions}\label{conclusions}
 
@@ -3686,8 +3703,131 @@ Stack}\label{deploy-neural-network-execution-stack}
 
 \subsection{Local Machine}\label{local-machine}
 
-TODO
+\paragraph{Prerequisites}\label{prerequisites-1}
 
-\subsection{Cloud Instance}\label{cloud-instance}
+\begin{itemize}
+\tightlist
+\item
+  Install \texttt{kubectl} tool from:
+  https://kubernetes.io/docs/tasks/tools/install-kubectl
+\item
+  Install \texttt{minikube} tool from:
+  https://github.com/kubernetes/minikube/releases
+\item
+  git tool installed
+\end{itemize}
 
-TODO
+\paragraph{Run minikube}\label{run-minikube}
+
+\texttt{minikube\ start}
+
+Starts the minikube cluster
+
+\paragraph{Setting up}\label{setting-up}
+
+Clone the repository
+
+\begin{verbatim}
+git clone https://github.com/a00908270/vinnsl-nn-cloud.git
+cd kubernetes_config/
+\end{verbatim}
+
+\paragraph{Run Services in Cluster}\label{run-services-in-cluster}
+
+\begin{verbatim}
+# MongoDB for vinnsl-service
+kubectl --context $CONTEXT create -f mongo.yaml 
+# Vinnsl Service
+kubectl --context $CONTEXT create -f vinnsl-service.yaml
+# MongoDB for vinnsl-storage-service
+kubectl --context $CONTEXT create -f mongo-storage-service.yaml
+# Vinnsl Storage Service
+kubectl --context $CONTEXT create -f vinnsl-storage-service.yaml
+# Vinnsl NN Worker Service
+kubectl --context $CONTEXT create -f vinnsl-nn-worker.yaml
+# Vinnsl Frontend UI Webapp
+kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
+\end{verbatim}
+
+\paragraph{Enable and Set Up Ingress}\label{enable-and-set-up-ingress}
+
+Sets up a proxy to make services available at the endpoint specified in
+the API Specification.
+
+\begin{verbatim}
+kubectl --context $CONTEXT apply -f ingress.yaml
+\end{verbatim}
+
+\subsection{Google Cloud Instance}\label{google-cloud-instance}
+
+This section describes how to deploy the execution stack into a
+Kubernetes cluster in the Google Kubernetes Engine.
+
+\paragraph{Prerequisites}\label{prerequisites-2}
+
+\begin{itemize}
+\item
+  Google Account with activated billing or credits
+\item
+  \texttt{kubectl} tool on local machine installed:
+  (\url{https://kubernetes.io/docs/tasks/tools/install-kubectl/\#install-kubectl})
+\item
+  gcloud SDK locally installed
+  (\url{https://cloud.google.com/sdk/downloads})
+\end{itemize}
+
+\paragraph{Create Cluster}\label{create-cluster}
+
+\begin{verbatim}
+gcloud beta container --project "nn-cloud-201314" clusters create "cluster-1" 
+--zone "us-central1-a" --username "admin" --cluster-version "1.8.8-gke.0" 
+--machine-type "n1-standard-1" --image-type "COS" --disk-size "100" --scopes 
+"https://www.googleapis.com/auth/compute",
+"https://www.googleapis.com/auth/devstorage.read_only",
+"https://www.googleapis.com/auth/logging.write",
+"https://www.googleapis.com/auth/monitoring",
+"https://www.googleapis.com/auth/servicecontrol",
+"https://www.googleapis.com/auth/service.management.readonly",
+"https://www.googleapis.com/auth/trace.append" 
+--num-nodes "4" --network "default" --enable-cloud-logging 
+--enable-cloud-monitoring --subnetwork "default" --addons 
+HorizontalPodAutoscaling,HttpLoadBalancing,KubernetesDashboard
+\end{verbatim}
+
+\paragraph{Clone the repository}\label{clone-the-repository}
+
+Clone the \texttt{vinnsl-nn-cloud} project and swtich into the
+google-cloud folder.
+
+\begin{verbatim}
+git clone https://github.com/a00908270/vinnsl-nn-cloud.git
+cd kubernetes_config/google-cloud/
+\end{verbatim}
+
+\paragraph{Run Services in Cluster}\label{run-services-in-cluster-1}
+
+\begin{verbatim}
+# MongoDB for vinnsl-service
+kubectl --context $CONTEXT create -f mongo_small.yaml 
+# Vinnsl Service
+kubectl --context $CONTEXT create -f vinnsl-service.yaml
+# MongoDB for vinnsl-storage-service
+kubectl --context $CONTEXT create -f mongo-storage-service_small.yaml
+# Vinnsl Storage Service
+kubectl --context $CONTEXT create -f vinnsl-storage-service.yaml
+# Vinnsl NN Worker Service
+kubectl --context $CONTEXT create -f vinnsl-nn-worker.yaml
+# Vinnsl Frontend UI Webapp
+kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
+\end{verbatim}
+
+\paragraph{Enable and Set Up Ingress}\label{enable-and-set-up-ingress-1}
+
+Sets up a proxy to make services available at the endpoint specified in
+the API Specification.
+
+\begin{verbatim}
+kubectl --context $CONTEXT apply -f ingress.yaml
+\end{verbatim}
+
+\section{}\label{section-1}
