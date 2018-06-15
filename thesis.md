@@ -198,7 +198,7 @@ https://github.com/GuillaumeRochat/container-orchestration-comparison
 
 ### Classification
 
-### Neural Networks
+### Neural Network Frameworks
 
 #### Tensorflow
 
@@ -661,7 +661,28 @@ The `vinnsl-nn-ui` is a single page application (SPA) that displays all neural n
 
 The web application is a Javascript based frontend using the *Vue.js* and *Twitter Bootstrap* framework. The single main controller called `VinnslUI` provides methods to fetch a list of neural networks and their status.  Additionally it queries for available files from the storage service and enables to connect them to a neural network. 
 
- 
+## Endpoints
+
+The following table gives an overview of the provided RESTful endpoints provided by different services. They are made available via *Ingress* outside the *Kubernetes* cluster.
+
+| Service Name           | Exposed Endpoints             |
+| ---------------------- | ----------------------------- |
+| vinnsl-service         | `/vinnsl`, `/status`, `/dl4j` |
+| vinnsl-nn-ui           | `/`                           |
+| vinnsl-storage-service | `/storage`                    |
+| vinnsl-nn-worker       | `/worker`                     |
+
+### Additional Endpoints
+
+Additional Endpoints are used internally and not directly exposed outside the *Kubernetes* cluster. They can be reached by using port forwarding to directly access the service in the cluster. 
+
+##### /health
+
+The health endpoints returns the status of the application. `UP` if the application is running as expected, `DOWN` if parts of the application fail (like lost connection to the database). *Kubernetes* and *Ingress* use this endpoint to detect disturbances in the application. 
+
+##### /swagger
+
+The API provided by the services is documented and *Swagger* provides a web interface to the documentation. 
 
 
 
@@ -671,27 +692,103 @@ The web application is a Javascript based frontend using the *Vue.js* and *Twitt
 
 #### 
 
-## Class Diagram
+## Class Diagrams
+
+This section features class diagrams of the provided RESTful services. All of them, as mentioned, are based on Java *Spring Boot* and use the *Spring Boot Data* layer if connecting to a database. 
 
 ### vinnsl-service
 
-![Class Diagram of vinnsl-service](images/uml-class-diagram-vinnsl-service.png){width=17cm}
+The *vinnsl service* is the main communication hub that enables access to the neural network objects and all of its data and provides interfaces to update it. The service connects to a *MongoDB* database where all its persisted data is stored via the *Spring Data* template. Fig. \ref{class_vinnsl-service} shows the class diagram of the *vinnsl service*.
+
+#### VinnslServiceApplication
+
+`VinnslServiceApplication` is the main class that initializes the *Spring Boot* configuration and *MongoDB* repository.
+
+#### VinnslServiceController
+
+`VinnslServiceController` is a *Spring* `RestController` implementing all Mappings for the endpoint `/vinnsl`. All required dependencies on *MongoDB* and are injected by Spring Boot. 
+
+#### NnStatusController
+
+`NnStatusController` provides methods to get the current training status of all or an individual neural network(s). Methods are exposed at the `/status` endpoint. Other services, like the *vinnsl worker service* can also update the status.
+
+#### Dl4JServiceController
+
+`Dl4JServiceController` is a controller that allows manipulation of the *Deeplearning4J* property of a neural network using the `/dl4j` endpoint.
+
+#### Vinnsl
+
+The *vinnsl* class is a *POJO*[^po] representation of the *ViNNSL* XML structure and used across different services. 
+
+
+
+[^po]: Plain Old Java Object
+
+#### NnCloud
+
+The `NnCloud` class is an extension to `Vinnsl` used to store the status and the *Deeplearning4J* representation of a neural network.
+
+
+
+
+
+![Class Diagram of vinnsl-service \label{class_vinnsl-service}](images/uml-class-diagram-vinnsl-service.png){width=17cm}
 
 ### vinnsl-storage-service
 
-![Class Diagram of vinnsl-storage-service](images/uml-class-diagram-vinnsl-storage-service.png){width=15cm}
+The *vinnsl storage service* is a web service for storing and retrieving files in a *MongoDB* database. *GridFS*, which enables to store large data is activated. Figure \ref{class_vinnsl-storage-service} shows the class diagram.
+
+#### VinnslStorageApplication
+
+`VinnslStorageApplication` is the main class that initializes the *Spring Boot* configuration and *MongoDB* repository.
+
+#### VinnslStorageController
+
+`VinnslStorageController` makes retrieving and uploading files available via the `/storage` endpoint.
+
+For one there is an HTML form that enables a `Multipart` file upload from a browser, which is handled by the `handleFileUpload()` method. Secondly instead of directly uploading a file, a *URL* can be given as parameter via the `handleRestFileUploadFromUrl`. The storage service takes care of downloading and storing the file. The controller uses the *GridFS* template as an abstraction to the *MongoDB* database. 
+
+
+
+![Class Diagram of vinnsl-storage-service \label{class_vinnsl-storage-service}](images/uml-class-diagram-vinnsl-storage-service.png){width=15cm}
 
 ### vinnsl-worker-service
 
-![Class Diagram of vinnsl-worker-service](images/uml-class-diagram-vinnsl-worker-service.png){width=17cm}
+The *vinnsl worker service* is the component used for training and evaluating neural networks using the *Deeplearning4J* framework. Figure \ref{class_vinnsl-worker-service} shows the class diagram.
+
+#### MappingUtil / VinnslDL4JMapperImpl
+
+The classes `MappingUtil` and `VinnslDL4JMapperImpl` are responsible for mapping a *Vinnsl* to a *DeepLearning4J* network that can be trained.
+
+The Mappings are done in inner classes of the `MappingUtil`. `VinnslDL4JMapperImpl` initialized the necessary objects and calls the right methods to perform the mapping.
+
+#### Worker Controller
+
+`WorkerController` is a `RestController` that exposes the `/worker/queue` endpoint and can be used to schedule neural networks for training.
+
+#### WorkerQueue
+
+`WorkerQueue` is the data structure that stores the identifiers of the queued networks in memory.
+
+#### Worker
+
+The *worker* class checks the `WorkerQueue` periodically and if not empty polls the first element. It fetches the associated *Vinnsl* network from the *vinnsl-service* and hands it over to the *Dl4JNetworkTrainer*. The service further sets the training status to `INPROGRESS`.  
+
+#### Dl4JNetworkTrainer
+
+The training is initiated by the `Worker` class. The *network trainer* fetches and parses the training data if necessary (for example *comma separed value* files) and initializes the `MappingUtil`. The transformed *Deeplearning4J* model contains the neural network structure and parameters required for training and it attached to the *ViNNSL* model.
+
+Next the *Deeplearning4J* `UI Server` is initialized, which visualizes the training process. Test and training data is split and the training is started. After the training process is finished, the result is uploaded to the storage service.  
+
+![Class Diagram of vinnsl-worker-service \label{class_vinnsl-worker-service}](images/uml-class-diagram-vinnsl-worker-service.png){width=17cm}
 
 ### vinnsl-nn-ui
 
-The frontend service consists of one single controller named `VinnslUI`. The `getStatus()` method retrieves all and neural network ids and their status. This is cached in `vinnslList` . When selecting a neural network from the list, the neural network object is loaded by executing `getDetailsById()`. The response is stored in `currentVinnslItem`.
+The frontend service consists of one single controller named `VinnslUI`. The `getStatus()` method retrieves all and neural network ids and their status. This is stored in `vinnslList`. When selecting a neural network from the list, the neural network object is loaded by executing `getDetailsById()`. The response is stored in `currentVinnslItem`.
 
 Figure \ref{vinnsl-nn-ui_class} gives an overview of the used methods and stored variables. 
 
-![VinnslUI Vue Class \label{vinnsl-nn-ui_class}](images/vinnsl-nn-ui_class.png){width=7cm}
+![VinnslUI Vue Class \label{vinnsl-nn-ui_class}](images/vinnsl-nn-ui_class.png){width=6cm}
 
 
 

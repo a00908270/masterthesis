@@ -400,7 +400,7 @@ TODO CITATION
 
 \subsection{Classification}\label{classification}
 
-\subsection{Neural Networks}\label{neural-networks}
+\subsection{Neural Network Frameworks}\label{neural-network-frameworks}
 
 \subsubsection{Tensorflow}\label{tensorflow}
 
@@ -1547,40 +1547,199 @@ neural networks and their status. Additionally it queries for available
 files from the storage service and enables to connect them to a neural
 network.
 
+\section{Endpoints}\label{endpoints}
+
+The following table gives an overview of the provided RESTful endpoints
+provided by different services. They are made available via
+\emph{Ingress} outside the \emph{Kubernetes} cluster.
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Service Name & Exposed Endpoints\tabularnewline
+\midrule
+\endhead
+vinnsl-service & \texttt{/vinnsl}, \texttt{/status},
+\texttt{/dl4j}\tabularnewline
+vinnsl-nn-ui & \texttt{/}\tabularnewline
+vinnsl-storage-service & \texttt{/storage}\tabularnewline
+vinnsl-nn-worker & \texttt{/worker}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsection{Additional Endpoints}\label{additional-endpoints}
+
+Additional Endpoints are used internally and not directly exposed
+outside the \emph{Kubernetes} cluster. They can be reached by using port
+forwarding to directly access the service in the cluster.
+
+\paragraph{/health}\label{health}
+
+The health endpoints returns the status of the application. \texttt{UP}
+if the application is running as expected, \texttt{DOWN} if parts of the
+application fails (like lost connection to the database).
+\emph{Kubernetes} and \emph{Ingress} use this endpoint to detect
+disturbances in the application.
+
+\paragraph{/swagger}\label{swagger-1}
+
+The API provided by the services is documented and \emph{Swagger}
+provides a web interface to the documentation.
+
 \subsubsection{}\label{section}
 
-\section{Class Diagram}\label{class-diagram}
+\section{Class Diagrams}\label{class-diagrams}
+
+This section features class diagrams of the provided RESTful services.
+All of them, as mentioned, are based on Java \emph{Spring Boot} and use
+the \emph{Spring Boot Data} layer if connecting to a database.
 
 \subsection{vinnsl-service}\label{vinnsl-service-1}
+
+The \emph{vinnsl service} is the main communication hub that enables
+access to the neural network objects and all of its data and provides
+interfaces to update it. The service connects to a \emph{MongoDB}
+database where all its persisted data is stored via the \emph{Spring
+Data} template. Fig. \ref{class_vinnsl-service} shows the class diagram
+of the \emph{vinnsl service}.
+
+\subsubsection{VinnslServiceApplication}\label{vinnslserviceapplication}
+
+\texttt{VinnslServiceApplication} is the main class that initializes the
+\emph{Spring Boot} configuration and \emph{MongoDB} repository.
+
+\subsubsection{VinnslServiceController}\label{vinnslservicecontroller}
+
+\texttt{VinnslServiceController} is a \emph{Spring}
+\texttt{RestController} implementing all Mappings for the endpoint
+\texttt{/vinnsl}. All required dependencies on \emph{MongoDB} and are
+injected by Spring Boot.
+
+\subsubsection{NnStatusController}\label{nnstatuscontroller}
+
+\texttt{NnStatusController} provides methods to get the current training
+status of all or an individual neural network(s). Methods are exposed at
+the \texttt{/status} endpoint. Other services, like the \emph{vinnsl
+worker service} can also update the status.
+
+\subsubsection{Dl4JServiceController}\label{dl4jservicecontroller}
+
+\texttt{Dl4JServiceController} is a controller that allows manipulation
+of the \emph{Deeplearning4J} property of a neural network using the
+\texttt{/dl4j} endpoint.
+
+\subsubsection{Vinnsl}\label{vinnsl-1}
+
+The \emph{vinnsl} class is a \emph{POJO}\footnote{Plain Old Java Object}
+representation of the \emph{ViNNSL} XML structure and used across
+different services.
+
+\subsubsection{NnCloud}\label{nncloud}
+
+The \texttt{NnCloud} class is an extension to \texttt{Vinnsl} used to
+store the status and the \emph{Deeplearning4J} representation of a
+neural network.
 
 \begin{figure}
 \centering
 \includegraphics[width=17.00000cm]{images/uml-class-diagram-vinnsl-service}
-\caption{Class Diagram of vinnsl-service}
+\caption{Class Diagram of vinnsl-service \label{class_vinnsl-service}}
 \end{figure}
 
 \subsection{vinnsl-storage-service}\label{vinnsl-storage-service}
 
+The \emph{vinnsl storage service} is a web service for storing and
+retrieving files in a \emph{MongoDB} database. \emph{GridFS}, which
+enables to store large data is activated. Figure
+\ref{class_vinnsl-storage-service} shows the class diagram.
+
+\subsubsection{VinnslStorageApplication}\label{vinnslstorageapplication}
+
+\texttt{VinnslStorageApplication} is the main class that initializes the
+\emph{Spring Boot} configuration and \emph{MongoDB} repository.
+
+\subsubsection{VinnslStorageController}\label{vinnslstoragecontroller}
+
+\texttt{VinnslStorageController} makes retrieving and uploading files
+available via the \texttt{/storage} endpoint.
+
+For one there is an HTML form that enables a \texttt{Multipart} file
+upload from a browser, which is handled by the
+\texttt{handleFileUpload()} method. Secondly instead of directly
+uploading a file, a \emph{URL} can be given as parameter via the
+\texttt{handleRestFileUploadFromUrl}. The storage service takes care of
+downloading and storing the file. The controller uses the \emph{GridFS}
+template as an abstraction to the \emph{MongoDB} database.
+
 \begin{figure}
 \centering
 \includegraphics[width=15.00000cm]{images/uml-class-diagram-vinnsl-storage-service}
-\caption{Class Diagram of vinnsl-storage-service}
+\caption{Class Diagram of vinnsl-storage-service
+\label{class_vinnsl-storage-service}}
 \end{figure}
 
 \subsection{vinnsl-worker-service}\label{vinnsl-worker-service}
 
+The \emph{vinnsl worker service} is the component used for training and
+evaluating neural networks using the \emph{Deeplearning4J} framework.
+Figure \ref{class_vinnsl-worker-service} shows the class diagram.
+
+\subsubsection{MappingUtil /
+VinnslDL4JMapperImpl}\label{mappingutil-vinnsldl4jmapperimpl}
+
+The classes \texttt{MappingUtil} and \texttt{VinnslDL4JMapperImpl} are
+responsible for mapping a \emph{Vinnsl} to a \emph{DeepLearning4J}
+network that can be trained.
+
+The Mappings are done in inner classes of the \texttt{MappingUtil}.
+\texttt{VinnslDL4JMapperImpl} initialized the necessary objects and
+calls the right methods to perform the mapping.
+
+\subsubsection{Worker Controller}\label{worker-controller}
+
+\texttt{WorkerController} is a \texttt{RestController} that exposes the
+\texttt{/worker/queue} endpoint and can be used to schedule neural
+networks for training.
+
+\subsubsection{WorkerQueue}\label{workerqueue}
+
+\texttt{WorkerQueue} is the data structure that stores the identifiers
+of the queued networks in memory.
+
+\subsubsection{Worker}\label{worker}
+
+The \emph{worker} class checks the \texttt{WorkerQueue} periodically and
+if not empty polls the first element. It fetches the associated
+\emph{Vinnsl} network from the \emph{vinnsl-service} and hands it over
+to the \emph{Dl4JNetworkTrainer}. The service further sets the training
+status to \texttt{INPROGRESS}.
+
+\subsubsection{Dl4JNetworkTrainer}\label{dl4jnetworktrainer}
+
+The training is initiated by the \texttt{Worker} class. The
+\emph{network trainer} fetches and parses the training data if necessary
+(for example \emph{comma separed value} files) and initializes the
+\texttt{MappingUtil}. The transformed \emph{Deeplearning4J} model
+contains the neural network structure and parameters required for
+training and it attached to the \emph{ViNNSL} model.
+
+Next the \emph{Deeplearning4J} \texttt{UI\ Server} is initialized, which
+visualizes the training process. Test and training data is split and the
+training is started. After the training process is finished, the result
+is uploaded to the storage service.
+
 \begin{figure}
 \centering
 \includegraphics[width=17.00000cm]{images/uml-class-diagram-vinnsl-worker-service}
-\caption{Class Diagram of vinnsl-worker-service}
+\caption{Class Diagram of vinnsl-worker-service
+\label{class_vinnsl-worker-service}}
 \end{figure}
 
 \subsection{vinnsl-nn-ui}\label{vinnsl-nn-ui}
 
 The frontend service consists of one single controller named
 \texttt{VinnslUI}. The \texttt{getStatus()} method retrieves all and
-neural network ids and their status. This is cached in
-\texttt{vinnslList} . When selecting a neural network from the list, the
+neural network ids and their status. This is stored in
+\texttt{vinnslList}. When selecting a neural network from the list, the
 neural network object is loaded by executing \texttt{getDetailsById()}.
 The response is stored in \texttt{currentVinnslItem}.
 
@@ -1589,7 +1748,7 @@ and stored variables.
 
 \begin{figure}
 \centering
-\includegraphics[width=7.00000cm]{images/vinnsl-nn-ui_class}
+\includegraphics[width=6.00000cm]{images/vinnsl-nn-ui_class}
 \caption{VinnslUI Vue Class \label{vinnsl-nn-ui_class}}
 \end{figure}
 
