@@ -110,7 +110,7 @@ This section describes the architecture of the mentioned container orchestration
 
 Kubernetes is the third container-management system (after Borg and Omega) developed by Google \cite{Burns:2016uq} for administering applications, that are provided in containers, in a cluster of nodes. Services that are responsible for controlling the cluster, are called master components \cite{kub_intro}. Figure \ref{kubernetes_core_architecture} shows the Kubernetes core architecture, which includes the Master server, the nodes and the interaction between the components.
 
-![Kubernetes core architecture\label{kubernetes_core_architecture} TODO Source!](images/kubernetes_core_architecture.png){width=15cm}
+![Kubernetes core architecture\label{kubernetes_core_architecture} \cite{baier-kub}](images/kubernetes_core_architecture.png){width=15cm}
 
 #### Master Components
 
@@ -174,17 +174,43 @@ Ingress handles the traffic from outside the cluster and forwards it to the corr
 
 ##### Dashboard
 
-The dashboard is a web-based user interface that allows to manage Kubernetes clusters and applications running in the cluster \cite{kub_comp}. It also provides access to log messages in each pod.
+The dashboard is a web-based user interface that allows to manage *Kubernetes* clusters and applications running in the cluster \cite{kub_comp}. It also provides access to log messages in each pod.
 
 #### Minikube
 
-Minikube is a tool to run a single-node Kubernetes cluster locally on computers supporting various virtual machine drivers. TODO Source
+*Minikube* is a tool to run a single-node Kubernetes cluster locally on computers supporting various virtual machine drivers. TODO Source
 
-### Docker Swarm
+### Docker Swarm Mode
 
-On October 17, [Docker](https://www.docker.com/) announced that it will integrate [Kubernetes](https://kubernetes.io/) into the Docker platform. Users can chose to use [Kubernetes](https://www.docker.com/kubernetes) and/or [Docker Swarm](https://docs.docker.com/engine/swarm/) for orchestration. 
+*Docker Swarm Mode* is the successor of *Docker Swarm* and implements a cluster management and orchestration tooling directly built into *Docker*[^doc] . 
+
+#### Component
+
+*Docker* hosts can run in swarm mode, a *swarm* consists of one or mode hosts that act as managers and workers. Hosts can be managers, which means delegators of work, or workers, that run services, or both. \cite{dock-swarm}
+
+##### Service
+A service has attributes attached to it, that define its optimal state. These include number of replicas, storage and network resources, like exposed ports to the outside.  You can change the attributes while runtime, without restarting a service. \cite{dock-swarm}
+
+##### Task 
+
+A task is a the running container itself which is assigned to the service. It is managed by the *swarm manager*. \cite{dock-swarm}
+
+##### Nodes
+
+A node is a *Docker* instance that is a participant in the the *swarm*. Nodes are typically typically distributed across multiple physical machines (in the cloud), but can also run on a single computer. \cite{dock-swarm}
+
+##### Manager Nodes
+
+Manager nodes are responsible for deploying applications and dispatching tasks to worker nodes. Secondly one elected leader manager node supervises functions to maintain the desired state of the swarm (defined by the service). \cite{dock-swarm}
+
+
+
+On October 17, 2017 at the conference *DockerCon*[^doccon], *Docker* announced that it would integrate *Kubernetes* into the *Docker* platform. 
 
 https://github.com/GuillaumeRochat/container-orchestration-comparison
+
+[^doc]: https://docker.com
+[^doccon]: https://europe-2017.dockercon.com/
 
 ### Comparison
 
@@ -2291,6 +2317,8 @@ There are neural network platforms on the market that could be integrated. Accor
 The graphical interface of the prototype provides a quick overview over neural networks and their status, but does not cover all features specified in the RESTful API. It could be extended to behave like a fully featured web application that can be used as an alternative to the API. It could also provide a functionality to integrate plugins into the user interface.
 
 # Conclusions 
+
+
 
 # Acknowledgments 
 

@@ -239,7 +239,7 @@ interaction between the components.
 \centering
 \includegraphics[width=15.00000cm]{images/kubernetes_core_architecture}
 \caption{Kubernetes core
-architecture\label{kubernetes_core_architecture} TODO Source!}
+architecture\label{kubernetes_core_architecture} \cite{baier-kub}}
 \end{figure}
 
 \subsubsection{Master Components}\label{master-components}
@@ -362,21 +362,57 @@ balancing. \cite{kub-ingress}
 \paragraph{Dashboard}\label{dashboard}
 
 The dashboard is a web-based user interface that allows to manage
-Kubernetes clusters and applications running in the cluster
+\emph{Kubernetes} clusters and applications running in the cluster
 \cite{kub_comp}. It also provides access to log messages in each pod.
 
 \subsubsection{Minikube}\label{minikube}
 
-Minikube is a tool to run a single-node Kubernetes cluster locally on
-computers supporting various virtual machine drivers. TODO Source
+\emph{Minikube} is a tool to run a single-node Kubernetes cluster
+locally on computers supporting various virtual machine drivers. TODO
+Source
 
-\subsection{Docker Swarm}\label{docker-swarm}
+\subsection{Docker Swarm Mode}\label{docker-swarm-mode}
 
-On October 17,~\href{https://www.docker.com/}{Docker}~announced that it
-will integrate~\href{https://kubernetes.io/}{Kubernetes}~into the Docker
-platform. Users can chose to
-use~\href{https://www.docker.com/kubernetes}{Kubernetes}~and/or~\href{https://docs.docker.com/engine/swarm/}{Docker
-Swarm}~for orchestration.~
+\emph{Docker Swarm Mode} is the successor of \emph{Docker Swarm} and
+implements a cluster management and orchestration tooling directly built
+into \emph{Docker}\footnote{https://docker.com} .
+
+\subsubsection{Component}\label{component}
+
+\emph{Docker} hosts can run in swarm mode, a \emph{swarm} consists of
+one or mode hosts that act as managers and workers. Hosts can be
+managers, which means delegators of work, or workers, that run services,
+or both. \cite{dock-swarm}
+
+\paragraph{Service}\label{service}
+
+A service has attributes attached to it, that define its optimal state.
+These include number of replicas, storage and network resources, like
+exposed ports to the outside. You can change the attributes while
+runtime, without restarting a service. \cite{dock-swarm}
+
+\paragraph{Task}\label{task}
+
+A task is a the running container itself which is assigned to the
+service. It is managed by the \emph{swarm manager}. \cite{dock-swarm}
+
+\paragraph{Nodes}\label{nodes}
+
+A node is a \emph{Docker} instance that is a participant in the the
+\emph{swarm}. Nodes are typically typically distributed across multiple
+physical machines (in the cloud), but can also run on a single computer.
+\cite{dock-swarm}
+
+\paragraph{Manager Nodes}\label{manager-nodes}
+
+Manager nodes are responsible for deploying applications and dispatching
+tasks to worker nodes. Secondly one elected leader manager node
+supervises functions to maintain the desired state of the swarm (defined
+by the service). \cite{dock-swarm}
+
+On October 17, 2017 at the conference \emph{DockerCon}\footnote{https://europe-2017.dockercon.com/},
+\emph{Docker} announced that it would integrate \emph{Kubernetes} into
+the \emph{Docker} platform.
 
 https://github.com/GuillaumeRochat/container-orchestration-comparison
 
@@ -1576,7 +1612,7 @@ forwarding to directly access the service in the cluster.
 
 The health endpoints returns the status of the application. \texttt{UP}
 if the application is running as expected, \texttt{DOWN} if parts of the
-application fails (like lost connection to the database).
+application fail (like lost connection to the database).
 \emph{Kubernetes} and \emph{Ingress} use this endpoint to detect
 disturbances in the application.
 
