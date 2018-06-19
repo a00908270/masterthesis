@@ -476,7 +476,9 @@ Example of stored file:
 
 ## Overview Microservices
 
-The neural network cloud execution stack consists of four main services that expose a RESTful API to users and two supporting services in charge of persisting data. Figure \ref{img.overview_main_services} shows an overview of these services.
+The neural network cloud execution stack consists of four main services that expose a RESTful API to users and two supporting services in charge of persisting data. Figure \ref{img.overview_nn_architecture} displays an overview of the service architecture, including the exposed endpoints and storage backends.
+
+![Architectural Overview of the Neural Network Stack\label{img.overview_nn_architecture}](images/overview_nn_architecture.png){width=16.5cm}
 
 ### Vinnsl Service (vinnsl-service)
 
