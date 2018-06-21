@@ -184,16 +184,24 @@ The dashboard is a web-based user interface that allows to manage *Kubernetes* c
 
 *Docker Swarm Mode* is the successor of *Docker Swarm* and implements a cluster management and orchestration tooling directly built into *Docker*[^doc] . 
 
-#### Component
+#### Components
 
 *Docker* hosts can run in swarm mode, a *swarm* consists of one or mode hosts that act as managers and workers. Hosts can be managers, which means delegators of work, or workers, that run services, or both. \cite{dock-swarm}
 
 ##### Service
-A service has attributes attached to it, that define its optimal state. These include number of replicas, storage and network resources, like exposed ports to the outside.  You can change the attributes while runtime, without restarting a service. \cite{dock-swarm}
+Services are definitions of tasks that will be executed on manager or worker nodes, specified by which container image to use and which commands to execute \cite{dock-swarm}.
+
+A service has attributes attached to it, that define its optimal state. 
+
+Services can be replicated, attached to storage and network resources and expose ports to the outside, defined by attributes. You can change the attributes while runtime, without restarting a service. \cite{dock-swarm}
+
+<!--For **global services**, the swarm runs one task for the service on every available node in the cluster.-->
 
 ##### Task 
 
-A task is a the running container itself which is assigned to the service. It is managed by the *swarm manager*. \cite{dock-swarm}
+A task is a running container itself which is assigned to the service. It is managed by the *swarm manager*. Manager nodes assign tasks to worker nodes, respecting the service scale.\cite{dock-swarm}
+
+<!--A **task** carries a Docker container and the commands to run inside the container. It is the atomic scheduling unit of swarm. Manager nodes assign tasks to worker nodes according to the number of replicas set in the service scale. Once a task is assigned to a node, it cannot move to another node. It can only run on the assigned node or fail.-->
 
 ##### Nodes
 
@@ -203,16 +211,40 @@ A node is a *Docker* instance that is a participant in the the *swarm*. Nodes ar
 
 Manager nodes are responsible for deploying applications and dispatching tasks to worker nodes. Secondly one elected leader manager node supervises functions to maintain the desired state of the swarm (defined by the service). \cite{dock-swarm}
 
+##### Worker nodes 
 
+Worker nodes execute tasks from the manager nodes and notifies them about the current state of its tasks.\cite{dock-swarm}
+
+##### Load balancing & DNS
+
+Like Kubernetes, the swarm manager uses ingress to expose and load balance services. 
+
+An internal DNS component assigns each service a DNS entry automatically.  \cite{dock-swarm}
 
 On October 17, 2017 at the conference *DockerCon*[^doccon], *Docker* announced that it would integrate *Kubernetes* into the *Docker* platform. 
 
-https://github.com/GuillaumeRochat/container-orchestration-comparison
+<!--https://github.com/GuillaumeRochat/container-orchestration-comparison-->
 
 [^doc]: https://docker.com
 [^doccon]: https://europe-2017.dockercon.com/
 
 ### Comparison
+
+#### Community
+
+The following table shows a comparison of publicly available metrics on GitHub, trying to represent community interest in various orchestrator softwares. These metrics were collected on June 21, 2018 and are rounded to the nearest ten. Comparing the numbers it can be assumed that the open-source community has currently a stronger interest in the *Kubernetes* project.
+
+|              | Kubernetes[^kubrepo] | Docker Swarm Mode[^swarmrepo] |
+| ------------ | -------------------- | ----------------------------- |
+| Contributors | 1.700                | 165                           |
+| Commits      | 66.820               | 3.530                         |
+| Stars        | 37.830               | 5.150                         |
+| Forks        | 13.220               | 1.060                         |
+
+[^kubrepo]: https://github.com/kubernetes/kubernetes
+[^swarmrepo]: https://github.com/docker/swarm
+
+#### 
 
 
 

@@ -377,7 +377,7 @@ Source
 implements a cluster management and orchestration tooling directly built
 into \emph{Docker}\footnote{https://docker.com} .
 
-\subsubsection{Component}\label{component}
+\subsubsection{Components}\label{components}
 
 \emph{Docker} hosts can run in swarm mode, a \emph{swarm} consists of
 one or mode hosts that act as managers and workers. Hosts can be
@@ -386,15 +386,22 @@ or both. \cite{dock-swarm}
 
 \paragraph{Service}\label{service}
 
+Services are definitions of tasks that will be executed on manager or
+worker nodes, specified by which container image to use and which
+commands to execute \cite{dock-swarm}.
+
 A service has attributes attached to it, that define its optimal state.
-These include number of replicas, storage and network resources, like
-exposed ports to the outside. You can change the attributes while
-runtime, without restarting a service. \cite{dock-swarm}
+
+Services can be replicated, attached to storage and network resources
+and expose ports to the outside, defined by attributes. You can change
+the attributes while runtime, without restarting a service.
+\cite{dock-swarm}
 
 \paragraph{Task}\label{task}
 
-A task is a the running container itself which is assigned to the
-service. It is managed by the \emph{swarm manager}. \cite{dock-swarm}
+A task is a running container itself which is assigned to the service.
+It is managed by the \emph{swarm manager}. Manager nodes assign tasks to
+worker nodes, respecting the service scale.\cite{dock-swarm}
 
 \paragraph{Nodes}\label{nodes}
 
@@ -410,13 +417,48 @@ tasks to worker nodes. Secondly one elected leader manager node
 supervises functions to maintain the desired state of the swarm (defined
 by the service). \cite{dock-swarm}
 
+\paragraph{Worker nodes}\label{worker-nodes}
+
+Worker nodes execute tasks from the manager nodes and notifies them
+about the current state of its tasks.\cite{dock-swarm}
+
+\paragraph{Load balancing \& DNS}\label{load-balancing-dns}
+
+Like Kubernetes, the swarm manager uses ingress to expose and load
+balance services.
+
+An internal DNS component assigns each service a DNS entry
+automatically. \cite{dock-swarm}
+
 On October 17, 2017 at the conference \emph{DockerCon}\footnote{https://europe-2017.dockercon.com/},
 \emph{Docker} announced that it would integrate \emph{Kubernetes} into
 the \emph{Docker} platform.
 
-https://github.com/GuillaumeRochat/container-orchestration-comparison
-
 \subsection{Comparison}\label{comparison}
+
+\subsubsection{Community}\label{community}
+
+The following table shows a comparison of publicly available metrics on
+GitHub, trying to represent community interest in various orchestrator
+softwares. These metrics were collected on June 21, 2018 and are rounded
+to the nearest ten. Comparing the numbers it can be assumed that the
+open-source community has currently a stronger interest in the
+\emph{Kubernetes} project.
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+& Kubernetes\footnote{https://github.com/kubernetes/kubernetes} & Docker
+Swarm Mode\footnote{https://github.com/docker/swarm}\tabularnewline
+\midrule
+\endhead
+Contributors & 1.700 & 165\tabularnewline
+Commits & 66.820 & 3.530\tabularnewline
+Stars & 37.830 & 5.150\tabularnewline
+Forks & 13.220 & 1.060\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{}\label{section}
 
 \section{Machine Learning}\label{machine-learning}
 
@@ -1192,8 +1234,16 @@ Example of stored file:
 
 The neural network cloud execution stack consists of four main services
 that expose a RESTful API to users and two supporting services in charge
-of persisting data. Figure \ref{img.overview_main_services} shows an
-overview of these services.
+of persisting data. Figure \ref{img.overview_nn_architecture} displays
+an overview of the service architecture, including the exposed endpoints
+and storage backends.
+
+\begin{figure}
+\centering
+\includegraphics[width=16.50000cm]{images/overview_nn_architecture}
+\caption{Architectural Overview of the Neural Network
+Stack\label{img.overview_nn_architecture}}
+\end{figure}
 
 \subsection{Vinnsl Service
 (vinnsl-service)}\label{vinnsl-service-vinnsl-service}
@@ -1621,7 +1671,7 @@ disturbances in the application.
 The API provided by the services is documented and \emph{Swagger}
 provides a web interface to the documentation.
 
-\subsubsection{}\label{section}
+\subsubsection{}\label{section-1}
 
 \section{Class Diagrams}\label{class-diagrams}
 
@@ -4078,4 +4128,4 @@ the API Specification.
 kubectl --context $CONTEXT apply -f ingress.yaml
 \end{verbatim}
 
-\section{}\label{section-1}
+\section{}\label{section-2}
