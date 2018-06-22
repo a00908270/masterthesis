@@ -178,7 +178,7 @@ The dashboard is a web-based user interface that allows to manage *Kubernetes* c
 
 #### Minikube
 
-*Minikube* is a tool to run a single-node Kubernetes cluster locally on computers supporting various virtual machine drivers. TODO Source
+Minikube is a tool to run a single-node Kubernetes cluster locally on computers supporting various virtual machine drivers.
 
 ### Docker Swarm Mode
 
@@ -186,7 +186,7 @@ The dashboard is a web-based user interface that allows to manage *Kubernetes* c
 
 #### Components
 
-*Docker* hosts can run in swarm mode, a *swarm* consists of one or mode hosts that act as managers and workers. Hosts can be managers, which means delegators of work, or workers, that run services, or both. \cite{dock-swarm}
+Docker hosts can run in swarm mode, a swarm consists of one or mode hosts that act as managers and workers. Hosts can be managers, which means delegators of work, or workers, that run services, or both. \cite{dock-swarm}
 
 ##### Service
 Services are definitions of tasks that will be executed on manager or worker nodes, specified by which container image to use and which commands to execute \cite{dock-swarm}.
@@ -205,7 +205,7 @@ A task is a running container itself which is assigned to the service. It is man
 
 ##### Nodes
 
-A node is a *Docker* instance that is a participant in the the *swarm*. Nodes are typically typically distributed across multiple physical machines (in the cloud), but can also run on a single computer. \cite{dock-swarm}
+A node is a Docker instance that is a participant in the the *swarm*. Nodes are typically typically distributed across multiple physical machines (in the cloud), but can also run on a single computer. \cite{dock-swarm}
 
 ##### Manager Nodes
 
@@ -221,7 +221,9 @@ Like Kubernetes, the swarm manager uses ingress to expose and load balance servi
 
 An internal DNS component assigns each service a DNS entry automatically.  \cite{dock-swarm}
 
-On October 17, 2017 at the conference *DockerCon*[^doccon], *Docker* announced that it would integrate *Kubernetes* into the *Docker* platform. 
+#### Announcements
+
+On October 17, 2017 at the conference *DockerCon*[^doccon], Docker announced that it would integrate Kubernetes into the Docker platform. 
 
 <!--https://github.com/GuillaumeRochat/container-orchestration-comparison-->
 
@@ -232,9 +234,9 @@ On October 17, 2017 at the conference *DockerCon*[^doccon], *Docker* announced t
 
 #### Community
 
-The following table shows a comparison of publicly available metrics on GitHub, trying to represent community interest in various orchestrator softwares. These metrics were collected on June 21, 2018 and are rounded to the nearest ten. Comparing the numbers it can be assumed that the open-source community has currently a stronger interest in the *Kubernetes* project.
+The following table shows a comparison of publicly available metrics on *GitHub*, trying to represent community interest in the previously mentioned orchestrator softwares. Both projects are open-sourced and released under the *Apache-2.0*[^apl] license. These metrics were collected on June 21, 2018 and are rounded to the nearest ten. Comparing the numbers it can be assumed that the open-source community has currently a stronger interest in the *Kubernetes* project.
 
-|              | Kubernetes[^kubrepo] | Docker Swarm Mode[^swarmrepo] |
+|              | Kubernetes [^kubrepo] | Docker Swarm Mode [^swarmrepo] |
 | ------------ | -------------------- | ----------------------------- |
 | Contributors | 1.700                | 165                           |
 | Commits      | 66.820               | 3.530                         |
@@ -243,14 +245,21 @@ The following table shows a comparison of publicly available metrics on GitHub, 
 
 [^kubrepo]: https://github.com/kubernetes/kubernetes
 [^swarmrepo]: https://github.com/docker/swarm
+[^apl]: http://www.apache.org/licenses/LICENSE-2.0
 
-#### 
+#### Feature Differentiation 
 
+The handling of *Docker Swarm Mode* and Kubernetes is similar in many aspects, like load balancing with Ingress, service discovery via DNS, and the definition language YAML. Auto-scaling, which means increasing or decreasing running instances of a service as the load changes over time, is not directly available in *Docker Swarm Mode*, in contrast to Kubernetes. 
 
+*Docker Swam Mode* provides the possibility to mount local volumes or folders into a container.  Kubernetes has two APIs available: Volumes and Persistent Volumes. Volumes are an abstraction with several different implementations for cloud storages (like AWS, Azure) and are bound to the lifecycle of a pod. Once a pod is removed, also the volume data is gone. Persistent Volumens allow data to be persisted independently from a pod.
+
+Both technologies provide an easy to install development environment, Kubernetes is available via the minikube package as well as in the newest version of Docker Community Edition. Docker Swarm Mode is also available via the Docker application.
+
+### Decision
+
+Taking into account the community size, the feature-richness and the out-of-the-box support by the major players Amazon AWS, Microsoft Azure and Google Cloud Engine, Kubernetes is the selected technology for the presented execution stack.
 
 ## Machine Learning
-
-
 
 *Machine learning—the process by which computers can get better at performing tasks through exposure to data, rather than through explicit programming—requires massive computational power, the kind usually found in clusters of energy-guzzling, cloud-based computer servers outfitted with specialized processors. But an emerging trend promises to bring the power of machine learning to mobile devices that may lack or have only intermittent online connectivity. This will give rise to machines that sense, perceive, learn from, and respond to their environment and their users, enabling the emergence of new product categories, reshaping how businesses engage with customers, and transforming how work gets done across industries.(https://www2.deloitte.com/insights/us/en/focus/signals-for-strategists/machine-learning-mobile-applications.html)*  TODO CITATION
 
@@ -917,8 +926,8 @@ Content-Type: application/xml
       </version>
     </metadata>
     <creator>
-      <name>Ronald Fisher</name>
-      <contact>ronald.fisher@institution.com</contact>
+      <name>Benjamin Nussbaum</name>
+      <contact>nussbaum@institution.com</contact>
     </creator>
     <problemDomain>
       <propagationType type="feedforward">
