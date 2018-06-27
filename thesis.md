@@ -261,9 +261,17 @@ Taking into account the community size, the feature-richness and the out-of-the-
 
 ## Machine Learning
 
-*Machine learning—the process by which computers can get better at performing tasks through exposure to data, rather than through explicit programming—requires massive computational power, the kind usually found in clusters of energy-guzzling, cloud-based computer servers outfitted with specialized processors. But an emerging trend promises to bring the power of machine learning to mobile devices that may lack or have only intermittent online connectivity. This will give rise to machines that sense, perceive, learn from, and respond to their environment and their users, enabling the emergence of new product categories, reshaping how businesses engage with customers, and transforming how work gets done across industries.(https://www2.deloitte.com/insights/us/en/focus/signals-for-strategists/machine-learning-mobile-applications.html)*  TODO CITATION
+The term *machine learning* originates from a 1959 article by Arthur Samuel \cite{Samuel59somestudies} presenting a method how computers can learn to play a better game of checkers than human.
 
-### Classification
+Today, a research area within artificial intelligence, it is generally known as the process that trains computers to improve performance specific tasks through exposure to data, rather than through explicit programming by using statistical techniques.
+
+There are various approaches for machine learning tasks, like decision tree learning, or cluster analysis, This thesis focuses on neural networks.
+
+### Neural Networks
+
+
+
+#### Backpropagation
 
 ### Neural Network Frameworks
 

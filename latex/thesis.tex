@@ -367,9 +367,8 @@ The dashboard is a web-based user interface that allows to manage
 
 \subsubsection{Minikube}\label{minikube}
 
-\emph{Minikube} is a tool to run a single-node Kubernetes cluster
-locally on computers supporting various virtual machine drivers. TODO
-Source
+Minikube is a tool to run a single-node Kubernetes cluster locally on
+computers supporting various virtual machine drivers.
 
 \subsection{Docker Swarm Mode}\label{docker-swarm-mode}
 
@@ -379,10 +378,10 @@ into \emph{Docker}\footnote{https://docker.com} .
 
 \subsubsection{Components}\label{components}
 
-\emph{Docker} hosts can run in swarm mode, a \emph{swarm} consists of
-one or mode hosts that act as managers and workers. Hosts can be
-managers, which means delegators of work, or workers, that run services,
-or both. \cite{dock-swarm}
+Docker hosts can run in swarm mode, a swarm consists of one or mode
+hosts that act as managers and workers. Hosts can be managers, which
+means delegators of work, or workers, that run services, or both.
+\cite{dock-swarm}
 
 \paragraph{Service}\label{service}
 
@@ -405,7 +404,7 @@ worker nodes, respecting the service scale.\cite{dock-swarm}
 
 \paragraph{Nodes}\label{nodes}
 
-A node is a \emph{Docker} instance that is a participant in the the
+A node is a Docker instance that is a participant in the the
 \emph{swarm}. Nodes are typically typically distributed across multiple
 physical machines (in the cloud), but can also run on a single computer.
 \cite{dock-swarm}
@@ -430,25 +429,29 @@ balance services.
 An internal DNS component assigns each service a DNS entry
 automatically. \cite{dock-swarm}
 
+\subsubsection{Announcements}\label{announcements}
+
 On October 17, 2017 at the conference \emph{DockerCon}\footnote{https://europe-2017.dockercon.com/},
-\emph{Docker} announced that it would integrate \emph{Kubernetes} into
-the \emph{Docker} platform.
+Docker announced that it would integrate Kubernetes into the Docker
+platform.
 
 \subsection{Comparison}\label{comparison}
 
 \subsubsection{Community}\label{community}
 
 The following table shows a comparison of publicly available metrics on
-GitHub, trying to represent community interest in various orchestrator
-softwares. These metrics were collected on June 21, 2018 and are rounded
+\emph{GitHub}, trying to represent community interest in the previously
+mentioned orchestrator softwares. Both projects are open-sourced and
+released under the \emph{Apache-2.0}\footnote{http://www.apache.org/licenses/LICENSE-2.0}
+license. These metrics were collected on June 21, 2018 and are rounded
 to the nearest ten. Comparing the numbers it can be assumed that the
 open-source community has currently a stronger interest in the
 \emph{Kubernetes} project.
 
 \begin{longtable}[]{@{}lll@{}}
 \toprule
-& Kubernetes\footnote{https://github.com/kubernetes/kubernetes} & Docker
-Swarm Mode\footnote{https://github.com/docker/swarm}\tabularnewline
+& Kubernetes \footnote{https://github.com/kubernetes/kubernetes} &
+Docker Swarm Mode \footnote{https://github.com/docker/swarm}\tabularnewline
 \midrule
 \endhead
 Contributors & 1.700 & 165\tabularnewline
@@ -458,25 +461,53 @@ Forks & 13.220 & 1.060\tabularnewline
 \bottomrule
 \end{longtable}
 
-\subsubsection{}\label{section}
+\subsubsection{Feature Differentiation}\label{feature-differentiation}
+
+The handling of \emph{Docker Swarm Mode} and Kubernetes is similar in
+many aspects, like load balancing with Ingress, service discovery via
+DNS, and the definition language YAML. Auto-scaling, which means
+increasing or decreasing running instances of a service as the load
+changes over time, is not directly available in \emph{Docker Swarm
+Mode}, in contrast to Kubernetes.
+
+\emph{Docker Swam Mode} provides the possibility to mount local volumes
+or folders into a container. Kubernetes has two APIs available: Volumes
+and Persistent Volumes. Volumes are an abstraction with several
+different implementations for cloud storages (like AWS, Azure) and are
+bound to the lifecycle of a pod. Once a pod is removed, also the volume
+data is gone. Persistent Volumens allow data to be persisted
+independently from a pod.
+
+Both technologies provide an easy to install development environment,
+Kubernetes is available via the minikube package as well as in the
+newest version of Docker Community Edition. Docker Swarm Mode is also
+available via the Docker application.
+
+\subsection{Decision}\label{decision}
+
+Taking into account the community size, the feature-richness and the
+out-of-the-box support by the major players Amazon AWS, Microsoft Azure
+and Google Cloud Engine, Kubernetes is the selected technology for the
+presented execution stack.
 
 \section{Machine Learning}\label{machine-learning}
 
-\emph{Machine learning---the process by which computers can get better
-at performing tasks through exposure to data, rather than through
-explicit programming---requires massive computational power, the kind
-usually found in clusters of energy-guzzling, cloud-based computer
-servers outfitted with specialized processors. But an emerging trend
-promises to bring the power of machine learning to mobile devices that
-may lack or have only intermittent online connectivity. This will give
-rise to machines that sense, perceive, learn from, and respond to their
-environment and their users, enabling the emergence of new product
-categories, reshaping how businesses engage with customers, and
-transforming how work gets done across
-industries.(https://www2.deloitte.com/insights/us/en/focus/signals-for-strategists/machine-learning-mobile-applications.html)}
-TODO CITATION
+The term \emph{machine learning} originates from a 1959 article by
+Arthur Samuel \cite{Samuel59somestudies} presenting a method how
+computers can learn to play a better game of checkers than human.
 
-\subsection{Classification}\label{classification}
+Today, a research area within artificial intelligence, it is generally
+known as the process that trains computers to improve performance
+specific tasks through exposure to data, rather than through explicit
+programming by using statistical techniques.
+
+There are various approaches for machine learning tasks, like decision
+tree learning, or cluster analysis, This thesis focuses on neural
+networks.
+
+\subsection{Neural Networks}\label{neural-networks}
+
+\subsubsection{Backpropagation}\label{backpropagation}
 
 \subsection{Neural Network Frameworks}\label{neural-network-frameworks}
 
@@ -1671,7 +1702,7 @@ disturbances in the application.
 The API provided by the services is documented and \emph{Swagger}
 provides a web interface to the documentation.
 
-\subsubsection{}\label{section-1}
+\subsubsection{}\label{section}
 
 \section{Class Diagrams}\label{class-diagrams}
 
@@ -1927,8 +1958,8 @@ Content-Type: application/xml
       </version>
     </metadata>
     <creator>
-      <name>Ronald Fisher</name>
-      <contact>ronald.fisher@institution.com</contact>
+      <name>Benjamin Nussbaum</name>
+      <contact>nussbaum@institution.com</contact>
     </creator>
     <problemDomain>
       <propagationType type="feedforward">
@@ -4128,4 +4159,4 @@ the API Specification.
 kubectl --context $CONTEXT apply -f ingress.yaml
 \end{verbatim}
 
-\section{}\label{section-2}
+\section{}\label{section-1}
