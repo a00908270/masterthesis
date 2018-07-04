@@ -20,7 +20,7 @@ The prototype does not fully implement the *ViNNSL* in version 2.0, as described
 
 ## Problem Statement
 
-Getting started with machine learning and in particular with neural networks is not a trivial task. It is a complex field with a high entry barrier and most often requires programming skills and expertise in neural network frameworks. In most cases a complex setup is needed to train and evaluate networks, which is both a processor- and memory-intense job. With cloud computing getting more and more affordable and powerful, it makes sense to shift these tasks into the cloud. There are already existing cloud platforms for machine learning, but to my present research all of them do not fulfil at least one of the following criteria:
+Getting started with machine learning and in particular with neural networks is not a trivial task. It is a complex field with a high entry barrier and most often requires programming skills and expertise in neural network frameworks. In most cases a complex setup is needed to train and evaluate networks, which is both, a processor- and memory-intense job. With cloud computing getting more and more affordable and powerful, it makes sense to shift these tasks into the cloud. There are already existing cloud platforms for machine learning, but to my present research all of them do not fulfil at least one of the following criteria:
 
 * platform is open-source
 * no programming skills required to define and train a neural network model
@@ -50,7 +50,7 @@ Machine learning has become a highly discussed topic in information technology i
 
 A recent Californian study shows that 6.5 million developers worldwide are currently involved in projects that use artificial intelligence techniques and another 5.8 million developers expect to implement these in near future \cite{evans}.
 
-Machine learning is not just a business area in the United States, survey results of 264 companies in the DACH region show, that 56 of them already use that kind of technology in production. In the near future 112 companies plan to do so or already have initial experiences (see figure \ref{img.crisp_ml_verbreitung}). It is seen by a fifth of the decision-makers as a core area to improve the competitiveness and profitability of companies in future. \cite{crisp}
+Machine learning is not just a business area in the United States. Survey results of 264 companies in the DACH region show, that 56 of them already use that kind of technology in production. In the near future 112 companies plan to do so or already have initial experiences (see figure \ref{img.crisp_ml_verbreitung}). It is seen by a fifth of the decision-makers as a core area to improve the competitiveness and profitability of companies in future. \cite{crisp}
 
 <!--\bilds{crisp_ml_verbreitung}{Distribution of machine learning of 264 companies in the DACH region \cite{crisp}}{Distribution of machine learning in 264 companies (DACH region) \cite{crisp}}-->
 
@@ -74,7 +74,7 @@ Future work mentions ideas on how the prototype can be extended and integrated i
 
 ### ViNNSL
 
-The Vienna Neural Network Specification Language (*ViNNSL*) is a domain specific language developed by the *University of Vienna* to describe neural network objects and designed as a communication framework in service-oriented architectures. It is based on XML and provides the schemas that allow the creation, training, evaluation of artificial neural networks. \cite{beran_2008} 
+The Vienna Neural Network Specification Language (*ViNNSL*) is a domain specific language developed by the *University of Vienna* to describe neural network objects and is designed as a communication framework in service-oriented architectures. It is based on XML and provides the schemas that allow the creation, training and evaluation of artificial neural networks. \cite{beran_2008} 
 
 ### N2Sky
 
@@ -86,9 +86,9 @@ The Vienna Neural Network Specification Language (*ViNNSL*) is a domain specific
 
 ### Docker Containers
 
-Containers enable software developers to deploy applications that are portable and consistent across different environments and providers \cite{baier-kub} by running isolated on top of the operating system's kernel \cite{bashari}. As an organisation, Docker[^4] has seen an increase of popularity very quickly, mainly because of its advantages, which are speed, portability, scalability, rapid delivery, and density \cite{bashari} compared to other solutions.
+Containers enable software developers to deploy applications that are portable and consistent across different environments and providers \cite{baier-kub} by running isolated on top of the operating system's kernel \cite{bashari}. As an organisation, Docker[^4] has seen an increase of popularity very quickly, mainly because of its advantages compared to other solutions, which are speed, portability, scalability, rapid delivery and density \cite{bashari}.
 
-Building a Docker container is fast, because images do not include a guest operating system. The container format itself is standardized, which means that developers only have to ensure that their application runs inside the container, which is then bundled into a single unit. The unit can be deployed on any Linux system as well as on various cloud environments and therefore easily be scaled. Not using a full operating system makes containers use less resources than virtual machines, which ensures higher workloads with greater density. \cite{joy2015}
+Building a Docker container is fast, because images do not include a guest operating system. The container format itself is standardized, which means that developers just have to ensure that their application runs inside the container, which is then bundled into a single unit. The unit can be deployed on any Linux system as well as on various cloud environments and therefore easily be scaled. Not using a full operating system makes containers use less resources than virtual machines, which ensures higher workloads with greater density. \cite{joy2015}
 
 ## Microservices
 
@@ -96,7 +96,7 @@ The micoservice architecture pattern is a variant of a service-oriented architec
 
 > In short, the microservice architectural style is an approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms, often an HTTP resource API. These services are built around business capabilities and independently deployable by fully automated deployment machinery. There is a bare minimum of centralized management of these services, which may be written in different programming languages and use different data storage technologies. \cite{lewis2014microservices}
 
-Figure \ref{monolithic_vs_microservice} shows the architectural difference between the monolithic and microservice architecture. Monolithic applications bundle user interface, data access layer and business logic together a single unit. In the microservice architecture each task has its own service. The user interface puts information together from multiple services.
+Figure \ref{monolithic_vs_microservice} shows the architectural difference between the monolithic and microservice architecture. Monolithic applications bundle user interface, data access layer and business logic together as a single unit. In the microservice architecture each task has its own service. The user interface puts information together from multiple services.
 
 ![Monolithic Architecture vs. Microservice Architecture \label{monolithic_vs_microservice}](images/monolithic_vs_microservice.png){width=15cm}
 
@@ -263,19 +263,61 @@ Taking into account the community size, the feature-richness and the out-of-the-
 
 The term *machine learning* originates from a 1959 article by Arthur Samuel \cite{Samuel59somestudies} presenting a method how computers can learn to play a better game of checkers than human.
 
-Today, a research area within artificial intelligence, it is generally known as the process that trains computers to improve performance specific tasks through exposure to data, rather than through explicit programming by using statistical techniques.
+Today, a research area within artificial intelligence, it is generally known as the process that trains computers to improve performance specific tasks through exposure to data, rather than through explicit programming by using statistical techniques. It is used to conceive complex models that lead themselves to prediction. 
 
-There are various approaches for machine learning tasks, like decision tree learning, or cluster analysis, This thesis focuses on neural networks.
+There are different approaches to machine learning, like decision trees or predicition rules \cite{michalski2013machine}. This thesis focuses on neural networks. 
 
-### Neural Networks
+## Neural Networks
+
+Neural networks, or more correctly artificial neural networks, are derived from the neural system of the human brain. Neurons are the basic element of the nervous system and can be divided into three essential features: the dendrites, the soma and the axon. The human brain consists of about 10 billon neurons, which communicate through a network of axons and synapses. Artificial neural networks try to imitate this connection. \cite{haun1998simulation}
+
+### Classification of Neural Networks
+
+Figure \ref{nn_class_haun} shows a classification of neural networks by Haun \cite{haun1998simulation} divided into three levels based on connection type, neuronal behavior and learning methods. The first level classifies into feedback and feedforward networks. 
+
+#### Feedforward networks 
+
+Feedforward networks consist of connections in one direction only. Neurons are connected between different layers and normally spread from input to output through hidden layers. The output can be calculated from the input directly. Loops are not allowed \cite{haun1998simulation}.
+
+TODO Figure
+
+##### Linear and non-linear networks
+
+Linear networks use linear activation functions. The output of a neuron is bound directly to the value of activation function. Non-linear networks use non-linear activation functions, which means that the activation value is one, if the sum of all input values exceed a threshold value, otherwise it is zero.   \cite{haun1998simulation} 
+
+A Perceptron network is for example a linear network.
+
+##### Supervised and unsupervised networks
+
+Supervised networks compare its output values with the correct answer during training and continuously adapt input values to approximate both values. Unsupervised networks do not have such information and must learn through an inherent mechanism. It is presumed that impulses and reactions relate in a way that produces correct behaviour after the learning period is finished. \cite{haun1998simulation}
+
+#### Feedback networks
+
+Feedback networks are networks where neurons are also connected between different layers, but the output of a neuron can connected with an input of other neuron. Output values are therefore dependant from previous input values of the neural network. \cite{haun1998simulation}
+
+TODO Figure
+
+##### Defined constructed networks
+
+asdf
+
+##### Trained networks
 
 
 
-#### Backpropagation
+
+
+ ![Classification of neural networks by Haun \cite{haun1998simulation} \label{nn_class_haun}](images/nn_class_haun.png){width=15cm}
+
+### Backpropagation
 
 ### Neural Network Frameworks
 
+Neural network frameworks 
+
 #### Tensorflow
+
+Tensorflow is an open-sourced framework that was developed by the *Google Brain Team* as successor to the proprietary software DistBelief. It is an interface and implementation for machine learning algorithms featuring support for a wide range of devices and GPU cards. \cite{dean-tensor}
 
 #### Deeplearning4J
 
