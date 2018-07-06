@@ -273,7 +273,7 @@ Neural networks, or more correctly artificial neural networks, are derived from 
 
 ### Classification of Neural Networks
 
-Figure \ref{nn_class_haun} shows a classification of neural networks by Haun \cite{haun1998simulation} divided into three levels based on connection type, neuronal behavior and learning methods. The first level classifies into feedback and feedforward networks. 
+This thesis focuses on Backpropagation networks, but to provide a general overview, Figure \ref{nn_class_haun} shows a classification of neural networks by Haun \cite{haun1998simulation} divided into three levels based on connection type, neuronal behavior and learning methods. The first level classifies into feedback and feedforward networks. The second level into linear and non-linear networks, the third one into supervised and non-supervised networks.
 
 #### Feedforward networks 
 
@@ -293,15 +293,7 @@ Supervised networks compare its output values with the correct answer during tra
 
 #### Feedback networks
 
-Feedback networks are networks where neurons are also connected between different layers, but the output of a neuron can connected with an input of other neuron. Output values are therefore dependant from previous input values of the neural network. \cite{haun1998simulation}
-
-TODO Figure
-
-##### Defined constructed networks
-
-asdf
-
-##### Trained networks
+Feedback networks are networks where neurons are also connected between different layers, but the output of a neuron can be connected to an input of another neuron. Output values are therefore dependant from previous input values of the neural network. \cite{haun1998simulation} Feedback networks are further grouped into defined constructed networks and trained networks. Defined constructed networks already have a defined structure when the data is presented, for example Hopfield networks. Trained networks can be trained with supervised and unsupervised training, for example the ART-1 (Adaptive Resonance Theory). \cite{haun1998simulation}
 
 
 
