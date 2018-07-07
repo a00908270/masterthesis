@@ -301,7 +301,7 @@ Feedback networks are networks where neurons are also connected between differen
 
  ![Classification of neural networks by Haun \cite{haun1998simulation} \label{nn_class_haun}](images/nn_class_haun.png){width=15cm}
 
-### Backpropagation
+### Backpropagation Networks
 
 ### Neural Network Frameworks
 
@@ -2401,13 +2401,21 @@ There are neural network platforms on the market that could be integrated. Accor
 
 The graphical interface of the prototype provides a quick overview over neural networks and their status, but does not cover all features specified in the RESTful API. It could be extended to behave like a fully featured web application that can be used as an alternative to the API. It could also provide a functionality to integrate plugins into the user interface.
 
-# Conclusions 
+# Conclusion 
+
+This thesis presented an execution stack for neural network simulation in an effective and efficient way using simple RESTful webservices fostering Cloud container orchestration and microservices. 
+
+A respective prototype system was demonstrated and evaluated on the Iris flower data set and TODO. 
+
+The appendix lists how to set up and use this stack in various ways on popular Cloud platforms. Single components are fully interchangeable, as long as the documented RESTful API is implemented. Furthermore various ideas to integrate this solution into other neural network platforms are given. 
 
 
 
 # Acknowledgments 
 
-# Dedication 
+I would like to thank my girlfriend and my whole family for the support and patience during the time I was occupied doing research, the long nights I was programming code, who were always pushing me forwards to achieve my goals. 
+
+Furthermore I would like to express my deepest appreciation to my supervisor and lecturer Mr. Univ.-Prof. DI Dr. Erich Schikuta for his ideas, support and input, which made this thesis possible.
 
 # Appendices
 
