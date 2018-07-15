@@ -279,8 +279,6 @@ This thesis focuses on Backpropagation networks, but to provide a general overvi
 
 Feedforward networks consist of connections in one direction only. Neurons are connected between different layers and normally spread from input to output through hidden layers. The output can be calculated from the input directly. Loops are not allowed \cite{haun1998simulation}.
 
-TODO Figure
-
 ##### Linear and non-linear networks
 
 Linear networks use linear activation functions. The output of a neuron is bound directly to the value of activation function. Non-linear networks use non-linear activation functions, which means that the activation value is one, if the sum of all input values exceed a threshold value, otherwise it is zero.   \cite{haun1998simulation} 
@@ -299,19 +297,46 @@ Feedback networks are networks where neurons are also connected between differen
 
 
 
- ![Classification of neural networks by Haun \cite{haun1998simulation} \label{nn_class_haun}](images/nn_class_haun.png){width=15cm}
+ ![Classification of neural networks by Haun \cite{haun1998simulation} \label{nn_class_haun}](images/nn_classification.png){width=15cm}
 
 ### Backpropagation Networks
 
 ### Neural Network Frameworks
 
-Neural network frameworks 
+Neural network frameworks provide an abstraction and simplification to complex programming challenges \cite{dzone-frameworks} regarding neural network models and the simulation of the training and evaluation processes. Developers are given helper functions to build a network according to their liking. Most frameworks also provide implementations of the backpropagation algorithm, activation functions and data structures to load training data into memory. Frameworks can also help to transform raw data, like images, into data that is more suitable to neural network training.
 
-#### Tensorflow
+#### TensorFlow
 
-Tensorflow is an open-sourced framework that was developed by the *Google Brain Team* as successor to the proprietary software DistBelief. It is an interface and implementation for machine learning algorithms featuring support for a wide range of devices and GPU cards. \cite{dean-tensor}
+TensorFlow[^tegit] is an open-sourced framework, released under the Apache 2.0[^te] license, that was developed by the *Google Brain Team* as successor to the proprietary software DistBelief, which was used for research on various use cases including unsupervised learning, image classification, object detection and many more. TensorFlow is an interface and implementation for machine learning algorithms, featuring support for a wide range of devices (from mobile phones to server hardware) and GPU cards. \cite{dean-tensor}
+
+According to Google's whitepaper \cite{dean-tensor}, in their implementation, a *tensor* is a typed, multidimensional array, that supports a variety of tensor element types . It can be seen as abstraction to scalars, vectors and matrices \cite{raschka2017machine}. 
+
+TensorFlow computations are expressed as directed dataflow graph, in which each node has zero or more inputs and outputs. Values, called tensors, flow along the edges of the graph. \cite{dean-tensor}. Figure \ref{tensor-flow-graph} shows a matrix multiplication of input *X*  with a matrix *W*. Vector *b* is then added to this matrix terminating in output *O*.
+
+These computations can be executed on either on local or the distributed implementation, on a single or multiple devices \cite{dean-tensor}.
+
+![Tensor flow computation graph, adapted from \cite{dean-tensor} \label{tensor-flow-graph}](images/tensorflow_comp_graph.png){width=6cm} 
+
+For framework demonstration purposes, the source code classifying the Iris dataset from the first use case (see section \ref{iris-classification-example}) implemented using TensorFlow is attached in the appendix section \ref{tensorflow-iris-dataset-training-example}.
+
+##### TensorFlow Programming Stack
+
+The TensorFlow programming stack consists of multiple API layers, as is illustrated in Figure \ref{tensorflow-api-levels}. On the lowest level, the TensorFlow Kernel, is the distributed execution engine. The low-level APIs are implemented in different programming languages, including Python, C++, Java and Go. Currently only Python provides higher-level TensorFlow APIs. 
+
+The mid-level API provides access to layers, datasets and metrics, the high-level API adds estimators, which encapsulate training, evaluation and prediction of models \cite{tensorflow-estimators}.
+
+![TensorFlow Programming Stack, adapted from \cite{tensorflow-gettingstarted} \label{tensorflow-api-levels}](images/tensorflow-api-levels.png)
+
+
+
+[^te]: http://www.apache.org/licenses/LICENSE-2.0
+[^tegit]: https://github.com/tensorflow/tensorflow
+
+
 
 #### Deeplearning4J
+
+
 
 # Requirements
 
@@ -2403,13 +2428,11 @@ The graphical interface of the prototype provides a quick overview over neural n
 
 # Conclusion 
 
-This thesis presented an execution stack for neural network simulation in an effective and efficient way using simple RESTful webservices fostering Cloud container orchestration and microservices. 
+This thesis presented an open-source execution stack for neural network simulation in an effective and efficient way using simple RESTful webservices fostering Kubernetes Cloud container orchestration and microservices. Using this technique it becomes possible to scale individual services easily and automatically according to current load. Each component is fully interchangeable, as long as the documented RESTful API is implemented. A respective prototype system was demonstrated and evaluated on the Iris flower data set and TODO. Furthermore various ideas, to integrate this solution into other neural network platforms, were given. 
 
-A respective prototype system was demonstrated and evaluated on the Iris flower data set and TODO. 
+Using ViNNSL as domain specific modelling language, enables users to define neural networks without explicit programming skills. 
 
-The appendix lists how to set up and use this stack in various ways on popular Cloud platforms. Single components are fully interchangeable, as long as the documented RESTful API is implemented. Furthermore various ideas to integrate this solution into other neural network platforms are given. 
-
-
+The appendix lists how to set up and use this stack in various ways on popular Cloud platforms. 
 
 # Acknowledgments 
 
@@ -2532,7 +2555,83 @@ Sets up a proxy to make services available at the endpoint specified in the API 
 kubectl --context $CONTEXT apply -f ingress.yaml
 ```
 
-## 
+##TensorFlow Iris Dataset Training Example
+
+For better understanding of the TensorFlow syntax and functionality, this commented code example[^tenscode], written by the TensorFlow authors, is pointed out. 
+
+In the first step the program features a parser for the Iris dataset and defines feature columns. The TensorFlow ```NetworkClassifier``` class is then instantiated building a neural network with two hidden layers of ten nodes each. The classifier offers a function for network training called ```train()```, which is followed by evaluating the accuracy of the trained network in the final step. 
+
+```
+#  Copyright 2016 The TensorFlow Authors. All Rights Reserved.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+"""An Example of a DNNClassifier for the Iris dataset."""
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
+import argparse
+import tensorflow as tf
+
+import iris_data
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--batch_size', default=100, type=int, help='batch size')
+parser.add_argument('--train_steps', default=1000, type=int,
+                    help='number of training steps')
+
+def main(argv):
+    args = parser.parse_args(argv[1:])
+
+    # Fetch the data
+    (train_x, train_y), (test_x, test_y) = iris_data.load_data()
+
+    # Feature columns describe how to use the input.
+    my_feature_columns = []
+    for key in train_x.keys():
+        my_feature_columns.append(tf.feature_column.numeric_column(key=key))
+
+    # Build 2 hidden layer DNN with 10, 10 units respectively.
+    classifier = tf.estimator.DNNClassifier(
+        feature_columns=my_feature_columns,
+        # Two hidden layers of 10 nodes each.
+        hidden_units=[10, 10],
+        # The model must choose between 3 classes.
+        n_classes=3)
+
+    # Train the Model.
+    classifier.train(
+        input_fn=lambda:iris_data.train_input_fn(train_x, train_y,
+                                                 args.batch_size),
+        steps=args.train_steps)
+
+    # Evaluate the model.
+    eval_result = classifier.evaluate(
+        input_fn=lambda:iris_data.eval_input_fn(test_x, test_y,
+                                                args.batch_size))
+
+    print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
+
+    [...]
+
+
+if __name__ == '__main__':
+    tf.logging.set_verbosity(tf.logging.INFO)
+    tf.app.run(main)
+```
+
+[^tenscode]: https://github.com/tensorflow/models/blob/v1.9.0/samples/core/get_started/premade_estimator.py
 
  
 
