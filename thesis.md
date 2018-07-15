@@ -596,7 +596,7 @@ The neural network cloud execution stack consists of four main services that exp
 
 ### Vinnsl Service (vinnsl-service)
 
-The `vinnsl-service` is responsible for handling the import, management and manipulation of neural network objects and it's status. It maps the CRUD[^5] operations to HTTP methods. A new neural network is created by sending a `POST` request to the `/vinnsl` endpoint containing a ViNNSL Definition XML as body. Sending a `GET` request to the `/vinnsl` route returns a JSON containing all ViNNSL neural network objects. 
+The `vinnsl-service` is responsible for handling the import, management and manipulation of neural network objects and their status. It maps the CRUD[^5] operations to HTTP methods. A new neural network is created by sending a `POST` request to the `/vinnsl` endpoint containing a ViNNSL Definition XML as body. Sending a `GET` request to the `/vinnsl` route returns a JSON containing all ViNNSL neural network objects. 
 
 The `vinnsl-service` depends on the `vinnsl-db` service, which runs a MongoDB database to store the objects. 
 
@@ -614,7 +614,7 @@ The Frontend UI is a web application that gives a brief overview of all neural n
 
 ## User Interface Design
 
-Based on the mockup in section \ref{mockup}, a user interface design has been created, that will later be implemented as a web application. Buttons to import, delete a neural network and to refresh the user interface have been added to the design. 
+Based on the mockup in section \ref{mockup}, a user interface design has been created, that will later be implemented as a web application. Buttons to import or delete a neural network and to refresh the user interface have been added to the design. 
 
 Figure \ref{vinnsl-ui-design} shows the user interface design for the frontend web service.
 
@@ -622,11 +622,11 @@ Figure \ref{vinnsl-ui-design} shows the user interface design for the frontend w
 
 ## Service Discovery and Load Balancing
 
-*Service Discovery* is the process of finding out how to connect to a specific service. This applies within the cluster, which is typically firewalled from the internet. As Kubernetes allows services to be scaled, there is also a logic that knows and decides how network traffic is routed. This is called *Load Balancing*. Figure \ref{img.service-discovery} shows an overview of the microservices, their endpoint URL and the domain name service. External access to specific services is managed by *Ingress*. 
+*Service Discovery* is the process of finding a way to connect to a specific service. This applies within the cluster, which is typically firewalled from the internet. As Kubernetes allows services to be scaled, there is also a logic that knows and decides how network traffic is routed. This is called *Load Balancing*. Figure \ref{img.service-discovery} shows an overview of the microservices, their endpoint URL and the domain name service. External access to specific services is managed by *Ingress*. 
 
 ### Kubernetes DNS-based Service Discovery
 
-`kube-dns` is the Kubernetes add-on that starts a pod with a DNS service and configures the kubelets to resolve DNS names over this service. It listens on port 53, the standard DNS port. Services in a cluster are assigned a DNS A record derived from their service metadata name specified in the *ServiceSpec*. \cite{kub-dns-spec} 
+`kube-dns` is the Kubernetes add-on that starts a pod with a DNS service and configures the kubelets to resolve DNS names over this service. It listens on port 53, the standard DNS port. Services in a cluster are assigned a *DNS A record* derived from their service metadata name specified in the *ServiceSpec*. \cite{kub-dns-spec} 
 
 The following code snippet is an extract of the *ServiceSpec* for the `vinnsl-service` defining the metadata name:
 
@@ -658,7 +658,7 @@ The vinnsl-service running on a local minikube cluster gets the following DNS re
 
 #### Service Discovery
 
-Using the Kubernetes DNS service a microservice instance (kubelet) can now lookup other services by using DNS Queries.
+Using the Kubernetes DNS, a microservice instance (kubelet) can now lookup other services by using DNS Queries.
 
 ##### Example
 
@@ -679,7 +679,7 @@ In this example the service is reachable at the IP address *10.102.84.122*.
 
 #### External Access and Load Balancing
 
-External Access from outside the cluster to specific services is managed and provided through the *Ingress* API object. The associated implementation is called *Ingress controller* and is obligatory. Currently there are two official implementations: `ingress-gce` and `ingress-nginx`. \cite{kub-ingress}
+External access from outside the cluster to specific services is managed and provided through the *Ingress* API object. The associated implementation is called *Ingress controller* and is obligatory. Currently there are two official implementations: `ingress-gce` and `ingress-nginx`. \cite{kub-ingress}
 
 *Minikube* runs the `ingress-nginx` implementation as default and also provides basic load balancing by configuring a `nginx` [^8] web server. Kubernetes configures `nginx` to use the *least-connected* load balancing mechanism, which means that the *next request is assigned to the server with the least number of active connections* \cite{nginx-loadbal}.
 
@@ -689,7 +689,7 @@ External Access from outside the cluster to specific services is managed and pro
 
 ## Neural Network Objects State
 
-The state of neural network objects is saved in the `NnCloud` object. When the object is instantiated the default value is `CREATED`.  When the network is queued, the worker service gathers all the necessary data from the vinnsl and vinnsl storage service and changes the state the `QUEUED`. During the network training, the worker changes the state to `INPROGRESS`. As soon as the training is finished, the worker service uploads the results and updated network state to the storage service and subsequently changes the state to `FINISHED`. Trained networks can be queued for retraining: in that case the state returns to `QUEUED`.  If errors occur during the training process the state will be set to `ERROR`.
+The state of neural network objects is saved in the `NnCloud` object. When the object is instantiated the default value is `CREATED`.  When the network is queued, the worker service gathers all the necessary data from the vinnsl and vinnsl storage service and changes the state to `QUEUED`. During the network training, the worker changes the state to `INPROGRESS`. As soon as the training is finished, the worker service uploads the results and updated network state to the storage service and subsequently changes the state to `FINISHED`. Trained networks can be queued for retraining: in that case the state returns to `QUEUED`.  If errors occur during the training process the state will be set to `ERROR`.
 
 Figure \ref{nn-states} visualizes the state changes in a state machine.
 
@@ -701,7 +701,7 @@ Figure \ref{nn-states} visualizes the state changes in a state machine.
 
 # Prototype Implementation 
 
-Following the specification, this section showcases an implementation of a prototype using microservices glued together by *Kubernetes*. This represents the execution stack for neural networks. Backend components are realized with *Java* and the *Spring Boot* framework and expose a RESTful API. The processing and training of neural networks is done by the *Deeplearning4J* framework. Database and file storage are powered by *MongoDB*. The frontend service is implemented using *Vue.js* and the *Twitter Bootstrap* UI framework, visualizing and consuming backend services.
+Following the specification, this section showcases an implementation of a prototype, using microservices glued together by *Kubernetes*. This represents the execution stack for neural networks. Backend components are realized with *Java* and the *Spring Boot* framework and expose a RESTful API. The processing and training of neural networks is done by the *Deeplearning4J* framework. Database and file storage are powered by *MongoDB*. The frontend service is implemented using *Vue.js* and the *Twitter Bootstrap* UI framework, visualizing and consuming backend services.
 
 
 
@@ -716,7 +716,7 @@ The source code of the implemented microservices is released on *GitHub*. The fo
 | vinnsl-storage-service | https://github.com/a00908270/vinnsl-storage-service |
 | vinnsl-nn-worker       | https://github.com/a00908270/vinnsl-nn-worker       |
 
-The *ViNNSL* XSD schema specified in \cite{kopica_2015} including (generated) examples is released on GitHub with permission from Dipl.-Ing. Thomas Kopica. JAXB class generation of the XML files is already included in the release with the intention of making it easier to include *ViNNSL* into new services.
+The *ViNNSL* XSD schema, specified in \cite{kopica_2015}, including (generated) examples, is released on GitHub with permission from Dipl.-Ing. Thomas Kopica. JAXB class generation of the XML files is already included in the release with the intention of making it easier to include *ViNNSL* into new services.
 
 | Name          | Repository Link                            |
 | ------------- | ------------------------------------------ |
@@ -735,11 +735,11 @@ Docker Contrainers ready for deployment in a *Kubernetes* cluster are released o
 
 ## Framework Dependencies
 
-All services are written in *Java* and build using the *Apache Maven* build automation and dependency management tool.
+All services are written in *Java* and built using the *Apache Maven* build automation and dependency management tool.
 
 ### Spring
 
-*Spring* is a *Java* framework consisting of many modules, most importantly this project uses its feature so set up `RestController` instances that listen on specified endpoints.
+*Spring* is a *Java* framework consisting of many modules. Most importantly this project uses its feature so set up `RestController` instances that listen on specified endpoints.
 
 ##### Used in following services:
 
