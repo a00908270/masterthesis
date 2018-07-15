@@ -102,7 +102,7 @@ Figure \ref{monolithic_vs_microservice} shows the architectural difference betwe
 
 ## Container Orchestration Technologies
 
-As every single microservice runs as a container, we need a tool to manage, organise and replace these containers. Services should also be able to speak to each other and restarted if they fail. Services under heavy load should be scaled for better performance. To deal with these challenges container orchestration technologies come into place.  According to a study from 2017 published by Portworx, Kubernetes is the most frequently used container orchestration tool in organizations, followed by Docker Swarm and Amazon ECS. \cite{portworx-2017}
+As every single microservice runs as a container, we need a tool to manage, organise and replace these containers. Services should also be able to speak to each other and to be restarted if they fail. Services under heavy load should be scaled for better performance. To deal with these challenges container orchestration technologies come into place.  According to a study from 2017 published by Portworx, Kubernetes is the most frequently used container orchestration tool in organizations, followed by Docker Swarm and Amazon ECS. \cite{portworx-2017}
 
 This section describes the architecture of the mentioned container orchestration technologies and compares them.
 
@@ -118,13 +118,13 @@ The master consists of the core API server, that provides information about the 
 
 ##### etcd
 
-etcd is a key-value store, accessible by a HTTP/JSON API,  which can be distributed across multiple nodes and is used by Kubernetes to store configuration data, which needs to be accessible across nodes deployed in the cluster. It is essential for service discovery and to describe the state of the cluster, among other things. \cite{kub_intro}
+Etcd is a key-value store, accessible by a HTTP/JSON API,  which can be distributed across multiple nodes and is used by Kubernetes to store configuration data, which needs to be accessible across nodes deployed in the cluster. It is essential for service discovery and to describe the state of the cluster, among other things. \cite{kub_intro}
 
-etcd can also watch values for changes \cite{baier-kub}.
+Etcd can also watch values for changes \cite{baier-kub}.
 
 ##### kube-apiserver
 
-The API server acts as the main management point for the cluster and provides a RESTful interface for users and other services to configure workloads in the cluster. It is a bridge between other master components and is responsible of maintaining health and spreading commands in the cluster. \cite{kub_intro}
+The API server acts as the main management point for the cluster and provides a RESTful interface for users and other services to configure workloads in the cluster. It is a bridge between other master components and responsible of maintaining health and spreading commands in the cluster. \cite{kub_intro}
 
 ##### kube-scheduler
 
@@ -138,11 +138,11 @@ For example the node controller's task is to react when nodes go offline or down
 
 ##### cloud-controller-manager
 
-Kubernetes supports different cloud infrastructure providers. As each cloud providers has different features, apis and capabilities, cloud controller managers act as an abstraction to the generic internal Kubernetes constructs. This has the advantage that the core Kubernetes code is not dependent on cloud-provider-specific code. \cite{kub_comp} 
+Kubernetes supports different cloud infrastructure providers. As each cloud provider has different features, apis and capabilities, cloud controller managers act as an abstraction to the generic internal Kubernetes constructs. This has the advantage that the core Kubernetes code is not dependent on cloud-provider-specific code. \cite{kub_comp} 
 
 #### Node Components
 
-Servers that accomplish workloads are called nodes. Each workload is described as one or more containers that have to be deployed. Node components run on every node in the cluster providing the Kubernetes runtime environment \cite{kub_comp}, that establishes networking and communicates with the master components. They also take care of deploying the necessary containers on a node and keep them running \cite{kub_intro}. Kubernetes requires a dedicated subnet for each node server and a supported container runtime \cite{kub_comp}.
+Servers that accomplish workloads are called nodes. Each workload is described as one or more container/s that has/have to be deployed. Node components run on every node in the cluster, providing the Kubernetes runtime environment \cite{kub_comp}, that establishes networking and communicates with the master components. They also take care of deploying the necessary containers on a node and keep them running \cite{kub_intro}. Kubernetes requires a dedicated subnet for each node server and a supported container runtime \cite{kub_comp}.
 
 ##### kubelet
 
@@ -186,7 +186,7 @@ Minikube is a tool to run a single-node Kubernetes cluster locally on computers 
 
 #### Components
 
-Docker hosts can run in swarm mode, a swarm consists of one or mode hosts that act as managers and workers. Hosts can be managers, which means delegators of work, or workers, that run services, or both. \cite{dock-swarm}
+Docker hosts can run in swarm mode, a swarm consists of one or more hosts that act as managers and workers. Hosts can be managers, which means delegators of work, or workers, that run services, or both. \cite{dock-swarm}
 
 ##### Service
 Services are definitions of tasks that will be executed on manager or worker nodes, specified by which container image to use and which commands to execute \cite{dock-swarm}.
@@ -205,7 +205,7 @@ A task is a running container itself which is assigned to the service. It is man
 
 ##### Nodes
 
-A node is a Docker instance that is a participant in the the *swarm*. Nodes are typically typically distributed across multiple physical machines (in the cloud), but can also run on a single computer. \cite{dock-swarm}
+A node is a Docker instance that is a participant in the the *swarm*. Nodes are typically distributed across multiple physical machines (in the cloud), but can also run on a single computer. \cite{dock-swarm}
 
 ##### Manager Nodes
 
@@ -213,7 +213,7 @@ Manager nodes are responsible for deploying applications and dispatching tasks t
 
 ##### Worker nodes 
 
-Worker nodes execute tasks from the manager nodes and notifies them about the current state of its tasks.\cite{dock-swarm}
+Worker nodes execute tasks from the manager nodes and notify them about the current state of its tasks.\cite{dock-swarm}
 
 ##### Load balancing & DNS
 
@@ -253,7 +253,7 @@ The handling of *Docker Swarm Mode* and Kubernetes is similar in many aspects, l
 
 *Docker Swam Mode* provides the possibility to mount local volumes or folders into a container.  Kubernetes has two APIs available: Volumes and Persistent Volumes. Volumes are an abstraction with several different implementations for cloud storages (like AWS, Azure) and are bound to the lifecycle of a pod. Once a pod is removed, also the volume data is gone. Persistent Volumens allow data to be persisted independently from a pod.
 
-Both technologies provide an easy to install development environment, Kubernetes is available via the minikube package as well as in the newest version of Docker Community Edition. Docker Swarm Mode is also available via the Docker application.
+Both technologies provide an easy to install development environment. Kubernetes is available via the minikube package as well as in the newest version of Docker Community Edition. Docker Swarm Mode is also available via the Docker application.
 
 ### Decision
 
@@ -263,7 +263,7 @@ Taking into account the community size, the feature-richness and the out-of-the-
 
 The term *machine learning* originates from a 1959 article by Arthur Samuel \cite{Samuel59somestudies} presenting a method how computers can learn to play a better game of checkers than human.
 
-Today, a research area within artificial intelligence, it is generally known as the process that trains computers to improve performance specific tasks through exposure to data, rather than through explicit programming by using statistical techniques. It is used to conceive complex models that lead themselves to prediction. 
+Today, as a research area within artificial intelligence, machine learning is generally known as the process that trains computers to improve performance specific tasks through exposure to data, rather than through explicit programming by using statistical techniques. It is used to conceive complex models that lead themselves to prediction. 
 
 There are different approaches to machine learning, like decision trees or predicition rules \cite{michalski2013machine}. This thesis focuses on neural networks. 
 
@@ -317,8 +317,6 @@ These computations can be executed on either on local or the distributed impleme
 
 ![Tensor flow computation graph, adapted from \cite{dean-tensor} \label{tensor-flow-graph}](images/tensorflow_comp_graph.png){width=6cm} 
 
-For framework demonstration purposes, the source code classifying the Iris dataset from the first use case (see section \ref{iris-classification-example}) implemented using TensorFlow is attached in the appendix section \ref{tensorflow-iris-dataset-training-example}.
-
 ##### TensorFlow Programming Stack
 
 The TensorFlow programming stack consists of multiple API layers, as is illustrated in Figure \ref{tensorflow-api-levels}. On the lowest level, the TensorFlow Kernel, is the distributed execution engine. The low-level APIs are implemented in different programming languages, including Python, C++, Java and Go. Currently only Python provides higher-level TensorFlow APIs. 
@@ -327,7 +325,9 @@ The mid-level API provides access to layers, datasets and metrics, the high-leve
 
 ![TensorFlow Programming Stack, adapted from \cite{tensorflow-gettingstarted} \label{tensorflow-api-levels}](images/tensorflow-api-levels.png)
 
+##### Implementation Example
 
+For framework demonstration purposes, the source code classifying the Iris dataset from the first use case (see section \ref{iris-classification-example}) implemented using TensorFlow is attached in the appendix section \ref{tensorflow-iris-dataset-training-example}.
 
 [^te]: http://www.apache.org/licenses/LICENSE-2.0
 [^tegit]: https://github.com/tensorflow/tensorflow
@@ -335,6 +335,12 @@ The mid-level API provides access to layers, datasets and metrics, the high-leve
 
 
 #### Deeplearning4J
+
+### Comparison
+
+#### Community
+
+
 
 
 
@@ -350,7 +356,7 @@ Developers can extend the neural network stack with features or use the provided
 
 Due to the fact that neural network training requires a lot of computing power, the main requirement is to design an architecture that can be executed in the cloud or on-site cluster hardware. 
 
-To enable developers to extend the application, it is designed as a platform that is open-sourced and documented. An easy setup on a local computer and small micro-services with a clear structure and manageable code base make it easier to get acquainted with the architecture. 
+To enable developers to extend the application, it is designed as a platform that is open-sourced and documented. The easy setup on local computers and the micro-services, that feature a clear structure and manageable code base, make it easier to get acquainted with the architecture. 
 
 The neural network platform should also offer a way to be extended or used by external applications and services, therefore a documented RESTful webservice is provided, that can be consumed by various clients. 
 
@@ -527,13 +533,13 @@ Figure \ref{img.use_case_nn} shows the UML use case diagram.
 
 ## Sequence Diagram
 
-Figure \ref{img.training_sequence} shows the sequence diagram of a neural network training process and which microservices are involved in the communication. The *vinnsl service* is the main communication hub that enables access to the neural network object and all of its data and also provides interfaces to update it. The *vinnsl storage service* most importantly stores necessary binary data used by the neural network objects. On one hand that are tables and pictures on the other hand the binary (trained) *Deeplearning4J* model. The *vinnsl worker service* has the role of training the neural networks models.
+Figure \ref{img.training_sequence} shows the sequence diagram of a neural network training process and which microservices are involved in the communication. The *vinnsl service* is the main communication hub that enables access to the neural network object and all of its data and also provides interfaces to update it. The *vinnsl storage service* most importantly stores necessary binary data used by the neural network objects. On one hand that are tables and pictures on the other hand the binary (trained) *Deeplearning4J* model. The *vinnsl worker service* has the role of training the neural network models.
 
 ### Sequence of Training
 
 New neural networks are created by sending a `POST` request including a XML ViNNSL network description in the request body. The *vinnsl service* creates a new neural network based on the definition and answers with the HTTP status code 201 (CREATED). The location header points to the URL where the created network can be retrieved. The URL contains the unique identifier. Using this identifier the next step is to add the ViNNSL definition XML file to the network. This is done via a `POST` request appending the id and the `/definition` endpoint. The XML file is placed in the request body. Resources that are required for the training (like the training set) need to be uploaded to the storage service, which returns a unique file id. Before the training can start, the training set needs to be linked to the neural network. This is possible with the `/addfile` endpoint. 
 
-Next the network is marked for training by calling the worker service with its identifier. The worker service confirms that the training is queued. As soon as the training is finished, the worker service updates the neural network object with the result schema and uploads the trained binary model to the storage service for retraining. 
+Next, the network is marked for training by calling the worker service with its identifier. The worker service confirms that the training is queued. As soon as the training is finished, the worker service updates the neural network object with the result schema and uploads the trained binary model to the storage service for retraining. 
 
 A simple `GET` request to the vinnsl service along with the identifier returns the current trained neural network model. 
 
