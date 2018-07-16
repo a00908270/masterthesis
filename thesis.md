@@ -305,6 +305,8 @@ Feedback networks are networks where neurons are also connected between differen
 
 Neural network frameworks provide an abstraction and simplification to complex programming challenges \cite{dzone-frameworks} regarding neural network models and the simulation of the training and evaluation processes. Developers are given helper functions to build a network according to their liking. Most frameworks also provide implementations of the backpropagation algorithm, activation functions and data structures to load training data into memory. Frameworks can also help to transform raw data, like images, into data that is more suitable to neural network training.
 
+There are currently many popular neural network frameworks on the market. Google's TensorFlow is having the biggest impact in terms of contributions and community (see Comparison).
+
 #### TensorFlow
 
 TensorFlow[^tegit] is an open-sourced framework, released under the Apache 2.0[^te] license, that was developed by the *Google Brain Team* as successor to the proprietary software DistBelief, which was used for research on various use cases including unsupervised learning, image classification, object detection and many more. TensorFlow is an interface and implementation for machine learning algorithms, featuring support for a wide range of devices (from mobile phones to server hardware) and GPU cards. \cite{dean-tensor}
@@ -336,11 +338,24 @@ For framework demonstration purposes, the source code classifying the Iris datas
 
 #### Deeplearning4J
 
+Deeplearning4J is an open-source machine learning library by the Eclipse Foundation released under the Apache 2.0 license. It provides a set of components, to read from various data sources and build neural networks.
+
 ### Comparison
 
 #### Community
 
+Statistics of open-source Frameworks, like *Stars*, *Contributors* and *Forks*, on the version control platform GitHub increasingly influence the community and other developers.  In a blog article[^leaf], the founder of a machine learning framework called *Leaf* announced the suspension of the development featuring a screenshot that compares the *Stars* on GitHub of Leaf and TensorFlow. 
 
+|              | TensorFlow [^tens] | Deeplearning4J [^dl4j] |
+| ------------ | ------------------ | ---------------------- |
+| Contributors | 1.500              | 225                    |
+| Commits      | 36.450             | 23.260                 |
+| Stars        | 105.120            | 9.320                  |
+| Forks        | 65.410             | 4.350                  |
+
+[^leaf]: https://medium.com/@mjhirn/tensorflow-wins-89b78b29aafb
+[^tens]: https://github.com/tensorflow/tensorflow
+[^dl4j]: https://github.com/deeplearning4j/deeplearning4j
 
 
 
@@ -801,7 +816,7 @@ The `vinnsl-nn-ui` is a single page application (SPA) that displays all neural n
 
 #### Architecture
 
-The web application is a Javascript based frontend using the *Vue.js* and *Twitter Bootstrap* framework. The single main controller called `VinnslUI` provides methods to fetch a list of neural networks and their status.  Additionally it queries for available files from the storage service and enables to connect them to a neural network. 
+The web application is a Javascript based frontend, using the *Vue.js* and *Twitter Bootstrap* framework. The single main controller, called `VinnslUI`, provides methods to fetch a list of neural networks and their status.  Additionally it queries for available files from the storage service and enables to connect them to a neural network. 
 
 ## Endpoints
 
@@ -816,7 +831,7 @@ The following table gives an overview of the provided RESTful endpoints provided
 
 ### Additional Endpoints
 
-Additional Endpoints are used internally and not directly exposed outside the *Kubernetes* cluster. They can be reached by using port forwarding to directly access the service in the cluster. 
+Additional endpoints are used internally and are not directly exposed outside the *Kubernetes* cluster. They can be reached by using port forwarding to directly access the service in the cluster. 
 
 ##### /health
 
@@ -824,7 +839,7 @@ The health endpoints returns the status of the application. `UP` if the applicat
 
 ##### /swagger
 
-The API provided by the services is documented and *Swagger* provides a web interface to the documentation. 
+The API, provided by the services, is documented and *Swagger* provides a web interface to the documentation. 
 
 
 
@@ -848,11 +863,11 @@ The *vinnsl service* is the main communication hub that enables access to the ne
 
 #### VinnslServiceController
 
-`VinnslServiceController` is a *Spring* `RestController` implementing all Mappings for the endpoint `/vinnsl`. All required dependencies on *MongoDB* and are injected by Spring Boot. 
+`VinnslServiceController` is a *Spring* `RestController` implementing all Mappings for the endpoint `/vinnsl`. All required dependencies on *MongoDB* are injected by Spring Boot. 
 
 #### NnStatusController
 
-`NnStatusController` provides methods to get the current training status of all or an individual neural network(s). Methods are exposed at the `/status` endpoint. Other services, like the *vinnsl worker service* can also update the status.
+`NnStatusController` provides methods to get the current training status of one or all individual neural network(s). Methods are exposed at the `/status` endpoint. Other services, like the *vinnsl worker service* can also update the status.
 
 #### Dl4JServiceController
 
@@ -868,7 +883,7 @@ The *vinnsl* class is a *POJO*[^po] representation of the *ViNNSL* XML structure
 
 #### NnCloud
 
-The `NnCloud` class is an extension to `Vinnsl` used to store the status and the *Deeplearning4J* representation of a neural network.
+The `NnCloud` class is an extension to `Vinnsl`, used to store the status and the *Deeplearning4J* representation of a neural network.
 
 
 
@@ -888,7 +903,7 @@ The *vinnsl storage service* is a web service for storing and retrieving files i
 
 `VinnslStorageController` makes retrieving and uploading files available via the `/storage` endpoint.
 
-For one there is an HTML form that enables a `Multipart` file upload from a browser, which is handled by the `handleFileUpload()` method. Secondly instead of directly uploading a file, a *URL* can be given as parameter via the `handleRestFileUploadFromUrl`. The storage service takes care of downloading and storing the file. The controller uses the *GridFS* template as an abstraction to the *MongoDB* database. 
+For one, there is an HTML form that enables a `Multipart` file upload from a browser, which is handled by the `handleFileUpload()` method. Secondly instead of directly uploading a file, a *URL* can be given as parameter via the `handleRestFileUploadFromUrl`. The storage service takes care of downloading and storing the file. The controller uses the *GridFS* template as an abstraction to the *MongoDB* database. 
 
 
 
@@ -896,13 +911,13 @@ For one there is an HTML form that enables a `Multipart` file upload from a brow
 
 ### vinnsl-worker-service
 
-The *vinnsl worker service* is the component used for training and evaluating neural networks using the *Deeplearning4J* framework. Figure \ref{class_vinnsl-worker-service} shows the class diagram.
+The *vinnsl worker service* is the component, which is used for training and evaluating neural networks, executing the *Deeplearning4J* framework. Figure \ref{class_vinnsl-worker-service} shows the class diagram.
 
 #### MappingUtil / VinnslDL4JMapperImpl
 
 The classes `MappingUtil` and `VinnslDL4JMapperImpl` are responsible for mapping a *Vinnsl* to a *DeepLearning4J* network that can be trained.
 
-The Mappings are done in inner classes of the `MappingUtil`. `VinnslDL4JMapperImpl` initialized the necessary objects and calls the right methods to perform the mapping.
+The mappings are done in the inner classes of the `MappingUtil`. `VinnslDL4JMapperImpl` initializes the necessary objects and calls the right methods to perform the mapping.
 
 #### Worker Controller
 
@@ -914,11 +929,11 @@ The Mappings are done in inner classes of the `MappingUtil`. `VinnslDL4JMapperIm
 
 #### Worker
 
-The *worker* class checks the `WorkerQueue` periodically and if not empty polls the first element. It fetches the associated *Vinnsl* network from the *vinnsl-service* and hands it over to the *Dl4JNetworkTrainer*. The service further sets the training status to `INPROGRESS`.  
+The worker class checks the `WorkerQueue` periodically and if not empty polls the first element. It fetches the associated *Vinnsl* network from the *vinnsl-service* and hands it over to the *Dl4JNetworkTrainer*. The service further sets the training status to `INPROGRESS`.  
 
 #### Dl4JNetworkTrainer
 
-The training is initiated by the `Worker` class. The *network trainer* fetches and parses the training data if necessary (for example *comma separed value* files) and initializes the `MappingUtil`. The transformed *Deeplearning4J* model contains the neural network structure and parameters required for training and it attached to the *ViNNSL* model.
+The training is initiated by the `Worker` class. The *network trainer* fetches and parses the training data if necessary (for example *comma separed value* files) and initializes the `MappingUtil`. The transformed *Deeplearning4J* model contains the neural network structure and parameters, required for training and is attached to the *ViNNSL* model.
 
 Next the *Deeplearning4J* `UI Server` is initialized, which visualizes the training process. Test and training data is split and the training is started. After the training process is finished, the result is uploaded to the storage service.  
 
@@ -926,7 +941,7 @@ Next the *Deeplearning4J* `UI Server` is initialized, which visualizes the train
 
 ### vinnsl-nn-ui
 
-The frontend service consists of one single controller named `VinnslUI`. The `getStatus()` method retrieves all and neural network ids and their status. This is stored in `vinnslList`. When selecting a neural network from the list, the neural network object is loaded by executing `getDetailsById()`. The response is stored in `currentVinnslItem`.
+The frontend service consists of one single controller named `VinnslUI`. The `getStatus()` method retrieves all neural network ids and their status. This is stored in `vinnslList`. When selecting a neural network from the list, the neural network object is loaded by executing `getDetailsById()`. The response is stored in `currentVinnslItem`.
 
 Figure \ref{vinnsl-nn-ui_class} gives an overview of the used methods and stored variables. 
 
@@ -2067,7 +2082,7 @@ PUT /worker/queue/{id}
 
 # Use Cases
 
-As demonstration of the implemented prototype this thesis features two use cases with practical relevance.
+As a demonstration of the implemented prototype, this thesis features two use cases with practical relevance.
 
 ## Iris Classification Example
 
@@ -2195,7 +2210,7 @@ BODY
 201 CREATED 
 ```
 
-Aside from the HTTP Status Code, we also get HTTP headers in the response. The one needed for further requests is named `location`. The value of this field is the URL of the network that was created and can be used to get and update fields on the dataset.
+Aside from the HTTP Status Code, we also get HTTP headers in the response. The one needed for further requests is named `location`. The value of this field is the URL of the network, that was created and can be used to get and update fields on the dataset.
 
 In this example the following value is returned:
 
@@ -2205,11 +2220,11 @@ In this example the following value is returned:
 
 The id of the new dataset is 5b1811a046e0fb0001fa28cc. In the following requests the id is shortened as `{id}`. 
 
-### Add ViNNSL Definition to the neural network
+### Add ViNNSL Definition to the Neural Network
 
 The ViNNSL definition XML contains metadata like name and description of the network as well as the stucture of the neural network model. There is one input and one output layer defined. In between there are two hidden layers. It is also possible to specify additional parameters.
 
-The activation function is set to Tangens hyperbolicus, the learning rate is 0.1 and the training is limited to 500 iterations. A seed, set to 6, allows reproducable training score.
+The activation function is set to tangens hyperbolicus, the learning rate is 0.1 and the training is limited to 500 iterations. A seed, set to 6, allows a reproducible training score.
 
 #### Request
 
@@ -2300,7 +2315,7 @@ BODY
 
 
 
-Figure \ref{usecase_1_datastructure} shows a graphical visualisation of the neural network data structure after adding the description and definition in *ViNNSL* XML. It is noticeable that *description* and *definition* have been transformed into objects. The status is initialized with the value `CREATED`.
+Figure \ref{usecase_1_datastructure} shows a graphical visualisation of the neural network data structure, after adding the description and definition in *ViNNSL* XML. It is noticeable that *description* and *definition* have been transformed into objects. The status is initialized with the value `CREATED`.
 
 
 
@@ -2326,7 +2341,7 @@ POST https://cluster.local/worker/queue/{id}
 
 ### Training
 
-During the training it is possible to open the graphical user interface called *DL4J Training UI* in a browser, that is provided with the *Deeplearning4J* package, to see the learning progress of the neural network.  
+During the training it is possible to open the graphical user interface, called *DL4J Training UI* in a browser, that is provided with the *Deeplearning4J* package, to see the learning progress of the neural network.  
 
 ```
 https://cluster.local/train/overview
@@ -2357,16 +2372,16 @@ The second tab provides information about the neural network layers of the model
 
 Testing takes place automatically after training and evaluates the accuracy of the trained neural network. In this case 65 percent of the dataset is used for training and 35 percent for testing.
 
-### Evaluate Result
+### Evaluation Result
 
-As soon as the training and testing process is finished a file with the testing report is ready on the storage server. Figure \ref{usecase_1_datastructure_finished} clarifies the updated data structure of the neural network object. A result file with id `5b19972052faff0001cb6bbf` was uploaded to the storage service, the status changed to `FINISHED` and the transformed *Deeplearning4J* model representation is updated in the field *dl4jNetwork*.
+As soon as the training and testing process is finished, a file with the testing report is ready on the storage server. Figure \ref{usecase_1_datastructure_finished} clarifies the updated data structure of the neural network object. A result file with id `5b19972052faff0001cb6bbf` was uploaded to the storage service. The status is changed to `FINISHED` and the transformed *Deeplearning4J* model representation is updated in the field *dl4jNetwork*.
 
 ![Neural Network Datastructure of the fninished network visualized in the Robo3T[^9] application \label{usecase_1_datastructure_finished}](images/usecase_1_datastructure_finished.png){width=12cm}
 
-In the ViNNSL NN UI the result file can be viewed by switching to the *Data* tab and selecting *See File* under the headline *Result Data*.
+In the *ViNNSL NN UI*, the result file can be viewed by switching to the *Data* tab and selecting *See File* under the headline *Result Data*.
 
 ```
-...
+[...]
 
 Examples labeled as 0 classified by model as 0: 19 times
 Examples labeled as 1 classified by model as 1: 17 times
@@ -2384,25 +2399,25 @@ Precision, recall & F1: macro-averaged (equally weighted avg. of 3 classes)
 ===========================================================================
 ```
 
-By examining the result file it can be noticed that the accuracy of the network was 96 percent. All *Iris setosa* and *Iris versicolor* from the testset were recognized correctly, two *Iris virginica* were incorrectly recognized as *Iris versicolor*. 
+By examining the result file, it can be noticed that the accuracy of the network was 96 percent. All *Iris setosa* and *Iris versicolor* from the testset were recognized correctly, two *Iris virginica* were incorrectly recognized as *Iris versicolor*. 
 
 <!--mnist?-->
 
-## Hosted trained network
+## Use Case 2
 
 TODO
 
 # Future Work
 
-The flexibility of the presented neural network stack opens up many opportunities for future work and integration into already existing frameworks and applications. This section points out a few ideas.
+The flexibility of the presented neural network stack opens up many opportunities for further work and integration into already existing frameworks and applications. This section points out a few ideas.
 
 ## ViNNSL Compatibility
 
-ViNNSL Compatibility is limited in the current prototype and could be fully implemented to be fully compatible with other systems. See section TODO for current limitations.
+ViNNSL compatibility is limited in the current prototype and could be fully implemented to be fully compatible with other systems. See section TODO for current limitations.
 
 ## Integration in N2Sky
 
-*N2Sky* features a graphical editor to design the neural network structure and training of the model, as seen in Figure \ref{n2sky_eval}. *N2Sky* also uses the *ViNNSL* language to model neural networks and could enable to run the training process in the neural network stack by using the provided API.
+*N2Sky* features a graphical editor to design the neural network structure and training of the model, as seen in Figure \ref{n2sky_eval}. *N2Sky* also uses the *ViNNSL* language to model neural networks. It enables to run the training process in the neural network stack by using the provided API.
 
 ![N2Sky Neural network evaluation process \cite{n2sky-2} \label{n2sky_eval}](images/n2sky_eval.png){width=12cm}
 
@@ -2412,7 +2427,7 @@ Presently the *Deeplearning4J* platform undertakes the task of network training.
 
 ## Graphical Neural Network Designer
 
-The *ViNNSL* XML scheme could be used to design and validate *ViNNSL* networks in a graphical editor presenting a drag&drop interface. Another possible function could be an integration of the neural network stack directly into the visual designer to import and train networks into the cluster without leaving the application.
+The *ViNNSL* XML scheme could be used to design and validate *ViNNSL* networks in a graphical editor,  presenting a drag&drop interface. Another possible function could be an integration of the neural network stack directly into the visual designer to import and train networks into the cluster without leaving the application.
 
 ## Deploy trained Models as Web Service
 

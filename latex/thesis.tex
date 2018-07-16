@@ -589,6 +589,10 @@ structures to load training data into memory. Frameworks can also help
 to transform raw data, like images, into data that is more suitable to
 neural network training.
 
+There are currently many popular neural network frameworks on the
+market. Google's TensorFlow is having the biggest impact in terms of
+contributions and community (see Comparison).
+
 \subsubsection{TensorFlow}\label{tensorflow}
 
 TensorFlow\footnote{https://github.com/tensorflow/tensorflow} is an
@@ -652,9 +656,36 @@ Iris dataset from the first use case (see section
 attached in the appendix section
 \ref{tensorflow-iris-dataset-training-example}.
 
-\paragraph{}\label{section}
-
 \subsubsection{Deeplearning4J}\label{deeplearning4j}
+
+Deeplearning4J is an open-source machine learning library by the Eclipse
+Foundation released under the Apache 2.0 license. It provides a set of
+components, to read from various data sources and build neural networks.
+
+\subsection{Comparison}\label{comparison-1}
+
+\subsubsection{Community}\label{community-1}
+
+Statistics of open-source Frameworks, like \emph{Stars},
+\emph{Contributors} and \emph{Forks}, on the version control platform
+GitHub increasingly influence the community and other developers. In a
+blog article\footnote{https://medium.com/@mjhirn/tensorflow-wins-89b78b29aafb},
+the founder of a machine learning framework called \emph{Leaf} announced
+the suspension of the development featuring a screenshot that compares
+the \emph{Stars} on GitHub of Leaf and TensorFlow.
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+& TensorFlow \footnote{https://github.com/tensorflow/tensorflow} &
+Deeplearning4J \footnote{https://github.com/deeplearning4j/deeplearning4j}\tabularnewline
+\midrule
+\endhead
+Contributors & 1.500 & 225\tabularnewline
+Commits & 36.450 & 23.260\tabularnewline
+Stars & 105.120 & 9.320\tabularnewline
+Forks & 65.410 & 4.350\tabularnewline
+\bottomrule
+\end{longtable}
 
 \chapter{Requirements}\label{requirements}
 
@@ -1422,7 +1453,7 @@ Stack\label{img.overview_nn_architecture}}
 (vinnsl-service)}\label{vinnsl-service-vinnsl-service}
 
 The \texttt{vinnsl-service} is responsible for handling the import,
-management and manipulation of neural network objects and it's status.
+management and manipulation of neural network objects and their status.
 It maps the CRUD\footnote{Create, Read, Update, Delete} operations to
 HTTP methods. A new neural network is created by sending a \texttt{POST}
 request to the \texttt{/vinnsl} endpoint containing a ViNNSL Definition
@@ -1457,7 +1488,7 @@ neural network models, their training status and linked files.
 
 Based on the mockup in section \ref{mockup}, a user interface design has
 been created, that will later be implemented as a web application.
-Buttons to import, delete a neural network and to refresh the user
+Buttons to import or delete a neural network and to refresh the user
 interface have been added to the design.
 
 Figure \ref{vinnsl-ui-design} shows the user interface design for the
@@ -1473,8 +1504,8 @@ frontend web service.
 \section{Service Discovery and Load
 Balancing}\label{service-discovery-and-load-balancing}
 
-\emph{Service Discovery} is the process of finding out how to connect to
-a specific service. This applies within the cluster, which is typically
+\emph{Service Discovery} is the process of finding a way to connect to a
+specific service. This applies within the cluster, which is typically
 firewalled from the internet. As Kubernetes allows services to be
 scaled, there is also a logic that knows and decides how network traffic
 is routed. This is called \emph{Load Balancing}. Figure
@@ -1488,8 +1519,8 @@ Discovery}\label{kubernetes-dns-based-service-discovery}
 \texttt{kube-dns} is the Kubernetes add-on that starts a pod with a DNS
 service and configures the kubelets to resolve DNS names over this
 service. It listens on port 53, the standard DNS port. Services in a
-cluster are assigned a DNS A record derived from their service metadata
-name specified in the \emph{ServiceSpec}. \cite{kub-dns-spec}
+cluster are assigned a \emph{DNS A record} derived from their service
+metadata name specified in the \emph{ServiceSpec}. \cite{kub-dns-spec}
 
 The following code snippet is an extract of the \emph{ServiceSpec} for
 the \texttt{vinnsl-service} defining the metadata name:
@@ -1532,8 +1563,8 @@ following DNS record name:
 
 \subsubsection{Service Discovery}\label{service-discovery}
 
-Using the Kubernetes DNS service a microservice instance (kubelet) can
-now lookup other services by using DNS Queries.
+Using the Kubernetes DNS, a microservice instance (kubelet) can now
+lookup other services by using DNS Queries.
 
 \paragraph{Example}\label{example-1}
 
@@ -1561,7 +1592,7 @@ In this example the service is reachable at the IP address
 \subsubsection{External Access and Load
 Balancing}\label{external-access-and-load-balancing}
 
-External Access from outside the cluster to specific services is managed
+External access from outside the cluster to specific services is managed
 and provided through the \emph{Ingress} API object. The associated
 implementation is called \emph{Ingress controller} and is obligatory.
 Currently there are two official implementations: \texttt{ingress-gce}
@@ -1582,7 +1613,7 @@ The state of neural network objects is saved in the \texttt{NnCloud}
 object. When the object is instantiated the default value is
 \texttt{CREATED}. When the network is queued, the worker service gathers
 all the necessary data from the vinnsl and vinnsl storage service and
-changes the state the \texttt{QUEUED}. During the network training, the
+changes the state to \texttt{QUEUED}. During the network training, the
 worker changes the state to \texttt{INPROGRESS}. As soon as the training
 is finished, the worker service uploads the results and updated network
 state to the storage service and subsequently changes the state to
@@ -1601,7 +1632,7 @@ Figure \ref{nn-states} visualizes the state changes in a state machine.
 \chapter{Prototype Implementation}\label{prototype-implementation}
 
 Following the specification, this section showcases an implementation of
-a prototype using microservices glued together by \emph{Kubernetes}.
+a prototype, using microservices glued together by \emph{Kubernetes}.
 This represents the execution stack for neural networks. Backend
 components are realized with \emph{Java} and the \emph{Spring Boot}
 framework and expose a RESTful API. The processing and training of
@@ -1648,8 +1679,8 @@ https://github.com/a00908270/vinnsl-nn-worker\strut
 \bottomrule
 \end{longtable}
 
-The \emph{ViNNSL} XSD schema specified in \cite{kopica_2015} including
-(generated) examples is released on GitHub with permission from
+The \emph{ViNNSL} XSD schema, specified in \cite{kopica_2015}, including
+(generated) examples, is released on GitHub with permission from
 Dipl.-Ing. Thomas Kopica. JAXB class generation of the XML files is
 already included in the release with the intention of making it easier
 to include \emph{ViNNSL} into new services.
@@ -1704,13 +1735,13 @@ https://hub.docker.com/r/a00908270/vinnsl-nn-worker/\strut
 
 \section{Framework Dependencies}\label{framework-dependencies}
 
-All services are written in \emph{Java} and build using the \emph{Apache
+All services are written in \emph{Java} and built using the \emph{Apache
 Maven} build automation and dependency management tool.
 
 \subsection{Spring}\label{spring}
 
-\emph{Spring} is a \emph{Java} framework consisting of many modules,
-most importantly this project uses its feature so set up
+\emph{Spring} is a \emph{Java} framework consisting of many modules.
+Most importantly this project uses its feature so set up
 \texttt{RestController} instances that listen on specified endpoints.
 
 \paragraph{Used in following
@@ -1799,12 +1830,12 @@ Figure \ref{img.vinnsl-nn-ui} shows a screenshot of the user interface.
 
 \subsubsection{Architecture}\label{architecture}
 
-The web application is a Javascript based frontend using the
+The web application is a Javascript based frontend, using the
 \emph{Vue.js} and \emph{Twitter Bootstrap} framework. The single main
-controller called \texttt{VinnslUI} provides methods to fetch a list of
-neural networks and their status. Additionally it queries for available
-files from the storage service and enables to connect them to a neural
-network.
+controller, called \texttt{VinnslUI}, provides methods to fetch a list
+of neural networks and their status. Additionally it queries for
+available files from the storage service and enables to connect them to
+a neural network.
 
 \section{Endpoints}\label{endpoints}
 
@@ -1827,7 +1858,7 @@ vinnsl-nn-worker & \texttt{/worker}\tabularnewline
 
 \subsection{Additional Endpoints}\label{additional-endpoints}
 
-Additional Endpoints are used internally and not directly exposed
+Additional endpoints are used internally and are not directly exposed
 outside the \emph{Kubernetes} cluster. They can be reached by using port
 forwarding to directly access the service in the cluster.
 
@@ -1841,10 +1872,10 @@ disturbances in the application.
 
 \paragraph{/swagger}\label{swagger-1}
 
-The API provided by the services is documented and \emph{Swagger}
+The API, provided by the services, is documented and \emph{Swagger}
 provides a web interface to the documentation.
 
-\subsubsection{}\label{section-1}
+\subsubsection{}\label{section}
 
 \section{Class Diagrams}\label{class-diagrams}
 
@@ -1870,14 +1901,14 @@ of the \emph{vinnsl service}.
 
 \texttt{VinnslServiceController} is a \emph{Spring}
 \texttt{RestController} implementing all Mappings for the endpoint
-\texttt{/vinnsl}. All required dependencies on \emph{MongoDB} and are
+\texttt{/vinnsl}. All required dependencies on \emph{MongoDB} are
 injected by Spring Boot.
 
 \subsubsection{NnStatusController}\label{nnstatuscontroller}
 
 \texttt{NnStatusController} provides methods to get the current training
-status of all or an individual neural network(s). Methods are exposed at
-the \texttt{/status} endpoint. Other services, like the \emph{vinnsl
+status of one or all individual neural network(s). Methods are exposed
+at the \texttt{/status} endpoint. Other services, like the \emph{vinnsl
 worker service} can also update the status.
 
 \subsubsection{Dl4JServiceController}\label{dl4jservicecontroller}
@@ -1894,7 +1925,7 @@ different services.
 
 \subsubsection{NnCloud}\label{nncloud}
 
-The \texttt{NnCloud} class is an extension to \texttt{Vinnsl} used to
+The \texttt{NnCloud} class is an extension to \texttt{Vinnsl}, used to
 store the status and the \emph{Deeplearning4J} representation of a
 neural network.
 
@@ -1921,7 +1952,7 @@ enables to store large data is activated. Figure
 \texttt{VinnslStorageController} makes retrieving and uploading files
 available via the \texttt{/storage} endpoint.
 
-For one there is an HTML form that enables a \texttt{Multipart} file
+For one, there is an HTML form that enables a \texttt{Multipart} file
 upload from a browser, which is handled by the
 \texttt{handleFileUpload()} method. Secondly instead of directly
 uploading a file, a \emph{URL} can be given as parameter via the
@@ -1938,9 +1969,10 @@ template as an abstraction to the \emph{MongoDB} database.
 
 \subsection{vinnsl-worker-service}\label{vinnsl-worker-service}
 
-The \emph{vinnsl worker service} is the component used for training and
-evaluating neural networks using the \emph{Deeplearning4J} framework.
-Figure \ref{class_vinnsl-worker-service} shows the class diagram.
+The \emph{vinnsl worker service} is the component, which is used for
+training and evaluating neural networks, executing the
+\emph{Deeplearning4J} framework. Figure
+\ref{class_vinnsl-worker-service} shows the class diagram.
 
 \subsubsection{MappingUtil /
 VinnslDL4JMapperImpl}\label{mappingutil-vinnsldl4jmapperimpl}
@@ -1949,8 +1981,8 @@ The classes \texttt{MappingUtil} and \texttt{VinnslDL4JMapperImpl} are
 responsible for mapping a \emph{Vinnsl} to a \emph{DeepLearning4J}
 network that can be trained.
 
-The Mappings are done in inner classes of the \texttt{MappingUtil}.
-\texttt{VinnslDL4JMapperImpl} initialized the necessary objects and
+The mappings are done in the inner classes of the \texttt{MappingUtil}.
+\texttt{VinnslDL4JMapperImpl} initializes the necessary objects and
 calls the right methods to perform the mapping.
 
 \subsubsection{Worker Controller}\label{worker-controller}
@@ -1966,11 +1998,11 @@ of the queued networks in memory.
 
 \subsubsection{Worker}\label{worker}
 
-The \emph{worker} class checks the \texttt{WorkerQueue} periodically and
-if not empty polls the first element. It fetches the associated
-\emph{Vinnsl} network from the \emph{vinnsl-service} and hands it over
-to the \emph{Dl4JNetworkTrainer}. The service further sets the training
-status to \texttt{INPROGRESS}.
+The worker class checks the \texttt{WorkerQueue} periodically and if not
+empty polls the first element. It fetches the associated \emph{Vinnsl}
+network from the \emph{vinnsl-service} and hands it over to the
+\emph{Dl4JNetworkTrainer}. The service further sets the training status
+to \texttt{INPROGRESS}.
 
 \subsubsection{Dl4JNetworkTrainer}\label{dl4jnetworktrainer}
 
@@ -1978,8 +2010,8 @@ The training is initiated by the \texttt{Worker} class. The
 \emph{network trainer} fetches and parses the training data if necessary
 (for example \emph{comma separed value} files) and initializes the
 \texttt{MappingUtil}. The transformed \emph{Deeplearning4J} model
-contains the neural network structure and parameters required for
-training and it attached to the \emph{ViNNSL} model.
+contains the neural network structure and parameters, required for
+training and is attached to the \emph{ViNNSL} model.
 
 Next the \emph{Deeplearning4J} \texttt{UI\ Server} is initialized, which
 visualizes the training process. Test and training data is split and the
@@ -1996,11 +2028,11 @@ is uploaded to the storage service.
 \subsection{vinnsl-nn-ui}\label{vinnsl-nn-ui}
 
 The frontend service consists of one single controller named
-\texttt{VinnslUI}. The \texttt{getStatus()} method retrieves all and
-neural network ids and their status. This is stored in
-\texttt{vinnslList}. When selecting a neural network from the list, the
-neural network object is loaded by executing \texttt{getDetailsById()}.
-The response is stored in \texttt{currentVinnslItem}.
+\texttt{VinnslUI}. The \texttt{getStatus()} method retrieves all neural
+network ids and their status. This is stored in \texttt{vinnslList}.
+When selecting a neural network from the list, the neural network object
+is loaded by executing \texttt{getDetailsById()}. The response is stored
+in \texttt{currentVinnslItem}.
 
 Figure \ref{vinnsl-nn-ui_class} gives an overview of the used methods
 and stored variables.
@@ -3641,8 +3673,8 @@ array\tabularnewline
 
 \chapter{Use Cases}\label{use-cases}
 
-As demonstration of the implemented prototype this thesis features two
-use cases with practical relevance.
+As a demonstration of the implemented prototype, this thesis features
+two use cases with practical relevance.
 
 \section{Iris Classification Example}\label{iris-classification-example}
 
@@ -3795,7 +3827,7 @@ BODY
 
 Aside from the HTTP Status Code, we also get HTTP headers in the
 response. The one needed for further requests is named
-\texttt{location}. The value of this field is the URL of the network
+\texttt{location}. The value of this field is the URL of the network,
 that was created and can be used to get and update fields on the
 dataset.
 
@@ -3814,17 +3846,17 @@ https://cluster.local/vinnsl/5b1811a046e0fb0001fa28cc\tabularnewline
 The id of the new dataset is 5b1811a046e0fb0001fa28cc. In the following
 requests the id is shortened as \texttt{\{id\}}.
 
-\subsection{Add ViNNSL Definition to the neural
-network}\label{add-vinnsl-definition-to-the-neural-network}
+\subsection{Add ViNNSL Definition to the Neural
+Network}\label{add-vinnsl-definition-to-the-neural-network}
 
 The ViNNSL definition XML contains metadata like name and description of
 the network as well as the stucture of the neural network model. There
 is one input and one output layer defined. In between there are two
 hidden layers. It is also possible to specify additional parameters.
 
-The activation function is set to Tangens hyperbolicus, the learning
+The activation function is set to tangens hyperbolicus, the learning
 rate is 0.1 and the training is limited to 500 iterations. A seed, set
-to 6, allows reproducable training score.
+to 6, allows a reproducible training score.
 
 \subsubsection{Request}\label{request-1}
 
@@ -3914,7 +3946,7 @@ BODY
 \end{verbatim}
 
 Figure \ref{usecase_1_datastructure} shows a graphical visualisation of
-the neural network data structure after adding the description and
+the neural network data structure, after adding the description and
 definition in \emph{ViNNSL} XML. It is noticeable that
 \emph{description} and \emph{definition} have been transformed into
 objects. The status is initialized with the value \texttt{CREATED}.
@@ -3953,7 +3985,7 @@ POST https://cluster.local/worker/queue/{id}
 
 \subsection{Training}\label{training}
 
-During the training it is possible to open the graphical user interface
+During the training it is possible to open the graphical user interface,
 called \emph{DL4J Training UI} in a browser, that is provided with the
 \emph{Deeplearning4J} package, to see the learning progress of the
 neural network.
@@ -4014,14 +4046,14 @@ Testing takes place automatically after training and evaluates the
 accuracy of the trained neural network. In this case 65 percent of the
 dataset is used for training and 35 percent for testing.
 
-\subsection{Evaluate Result}\label{evaluate-result}
+\subsection{Evaluation Result}\label{evaluation-result}
 
-As soon as the training and testing process is finished a file with the
+As soon as the training and testing process is finished, a file with the
 testing report is ready on the storage server. Figure
 \ref{usecase_1_datastructure_finished} clarifies the updated data
 structure of the neural network object. A result file with id
-\texttt{5b19972052faff0001cb6bbf} was uploaded to the storage service,
-the status changed to \texttt{FINISHED} and the transformed
+\texttt{5b19972052faff0001cb6bbf} was uploaded to the storage service.
+The status is changed to \texttt{FINISHED} and the transformed
 \emph{Deeplearning4J} model representation is updated in the field
 \emph{dl4jNetwork}.
 
@@ -4036,12 +4068,12 @@ application \label{usecase_1_datastructure_finished}}
 \end{figure}
 \footnotetext{https://www.robomongo.org}
 
-In the ViNNSL NN UI the result file can be viewed by switching to the
-\emph{Data} tab and selecting \emph{See File} under the headline
+In the \emph{ViNNSL NN UI}, the result file can be viewed by switching
+to the \emph{Data} tab and selecting \emph{See File} under the headline
 \emph{Result Data}.
 
 \begin{verbatim}
-...
+[...]
 
 Examples labeled as 0 classified by model as 0: 19 times
 Examples labeled as 1 classified by model as 1: 17 times
@@ -4059,24 +4091,24 @@ Precision, recall & F1: macro-averaged (equally weighted avg. of 3 classes)
 ===========================================================================
 \end{verbatim}
 
-By examining the result file it can be noticed that the accuracy of the
+By examining the result file, it can be noticed that the accuracy of the
 network was 96 percent. All \emph{Iris setosa} and \emph{Iris
 versicolor} from the testset were recognized correctly, two \emph{Iris
 virginica} were incorrectly recognized as \emph{Iris versicolor}.
 
-\section{Hosted trained network}\label{hosted-trained-network}
+\section{Use Case 2}\label{use-case-2}
 
 TODO
 
 \chapter{Future Work}\label{future-work}
 
 The flexibility of the presented neural network stack opens up many
-opportunities for future work and integration into already existing
+opportunities for further work and integration into already existing
 frameworks and applications. This section points out a few ideas.
 
 \section{ViNNSL Compatibility}\label{vinnsl-compatibility}
 
-ViNNSL Compatibility is limited in the current prototype and could be
+ViNNSL compatibility is limited in the current prototype and could be
 fully implemented to be fully compatible with other systems. See section
 TODO for current limitations.
 
@@ -4085,8 +4117,8 @@ TODO for current limitations.
 \emph{N2Sky} features a graphical editor to design the neural network
 structure and training of the model, as seen in Figure \ref{n2sky_eval}.
 \emph{N2Sky} also uses the \emph{ViNNSL} language to model neural
-networks and could enable to run the training process in the neural
-network stack by using the provided API.
+networks. It enables to run the training process in the neural network
+stack by using the provided API.
 
 \begin{figure}
 \centering
@@ -4112,7 +4144,7 @@ covered.
 Designer}\label{graphical-neural-network-designer}
 
 The \emph{ViNNSL} XML scheme could be used to design and validate
-\emph{ViNNSL} networks in a graphical editor presenting a drag\&drop
+\emph{ViNNSL} networks in a graphical editor, presenting a drag\&drop
 interface. Another possible function could be an integration of the
 neural network stack directly into the visual designer to import and
 train networks into the cluster without leaving the application.
