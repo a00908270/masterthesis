@@ -16,7 +16,7 @@ Finally the microservices are deployed to containers and combined in a cluster.
 
 ##### Non-Objectives: 
 
-The prototype does not fully implement the *ViNNSL* in version 2.0, as described in \cite{kopica_2015} and provides limited data in-/output. Limitations are described in section TODO.
+The prototype does not fully implement the *ViNNSL* in version 2.0, as described in \cite{kopica_2015} and provides limited data in-/output. Limitations are described in section \ref{limitations}.
 
 ## Problem Statement
 
@@ -74,11 +74,11 @@ Future work mentions ideas on how the prototype can be extended and integrated i
 
 ### ViNNSL
 
-The Vienna Neural Network Specification Language (*ViNNSL*) is a domain specific language developed by the *University of Vienna* to describe neural network objects and is designed as a communication framework in service-oriented architectures. It is based on XML and provides the schemas that allow the creation, training and evaluation of artificial neural networks. \cite{beran_2008} 
+The Vienna Neural Network Specification Language (*ViNNSL*) is a domain specific language developed by the University of Vienna to describe neural network objects and is designed as a communication framework in service-oriented architectures. It is based on XML and provides the schemas that allow the creation, training and evaluation of artificial neural networks. \cite{beran_2008} 
 
 ### N2Sky
 
-*N2Sky* is a cloud-based platform developed by the *University of Vienna* that follows the Neural Networks as a Service paradigm and provides an implementation example of *ViNNSL*. It is designed as virtual collaboration platform allowing to exchange neural network knowledge with a neural network community. The service delivers an interface to create and train neural network objects and subsequently share them with the community. \cite{schikuta_2013}\cite{n2sky-2}
+*N2Sky* is a cloud-based platform developed by the University of Vienna that follows the Neural Networks as a Service paradigm and provides an implementation example of *ViNNSL*. It is designed as virtual collaboration platform allowing to exchange neural network knowledge with a neural network community. The service delivers an interface to create and train neural network objects and subsequently share them with the community. \cite{schikuta_2013}\cite{n2sky-2}
 
 # State of the Art
 
@@ -329,7 +329,7 @@ The mid-level API provides access to layers, datasets and metrics, the high-leve
 
 ##### Implementation Example
 
-For framework demonstration purposes, the source code classifying the Iris dataset from the first use case (see section \ref{iris-classification-example}) implemented using TensorFlow is attached in the appendix section \ref{tensorflow-iris-dataset-training-example}.
+For framework demonstration purposes, the source code classifying the Iris dataset from the first use case (see section \ref{iris-classification-example}) implemented using TensorFlow is attached in the appendix section \ref{tensorflow-implementation-example}.
 
 [^te]: http://www.apache.org/licenses/LICENSE-2.0
 [^tegit]: https://github.com/tensorflow/tensorflow
@@ -338,13 +338,29 @@ For framework demonstration purposes, the source code classifying the Iris datas
 
 #### Deeplearning4J
 
-Deeplearning4J is an open-source machine learning library by the Eclipse Foundation released under the Apache 2.0 license. It provides a set of components, to read from various data sources and build neural networks.
+Deeplearning4J is an open-source machine learning library by the Eclipse Foundation released under the Apache 2.0 license. It provides a set of components, to read from various data sources and build neural networks. Deeplearning4J provides support for CPU and GPU processing.             
+
+##### ND4J
+
+The framework is built on top of ND4J, a numerical computing engine, which implements n-dimensional array objects (tensors) for Java. It is a library, that is optimized for GPU processing with a CUDA backend and supports all common  operations to manipulate matrices. Parts of core are written in C++ to increase performance of numerical operations.
+
+##### Main Features
+
+The framework supports convolutional and recurrent nets and deep nets of various types. Furthermore it provides implementation of backpropagation and optimization algorithms, various activation- and loss functions as well as hyperparameters. 
+
+The user interface features a computation graph and visualization tools, further explained in section \ref{training}.
+
+##### Implementation Example
+
+For framework demonstration purposes, the source code also classifying the Iris dataset using Deeplearning4J is attached in the appendix section \ref{deeplearning4j-implementation-example}.
 
 ### Comparison
 
 #### Community
 
-Statistics of open-source Frameworks, like *Stars*, *Contributors* and *Forks*, on the version control platform GitHub increasingly influence the community and other developers.  In a blog article[^leaf], the founder of a machine learning framework called *Leaf* announced the suspension of the development featuring a screenshot that compares the *Stars* on GitHub of Leaf and TensorFlow. 
+Statistics (like *stars*, *contributors* and *forks*) of open-source projects hosted on the version control platform GitHub, increasingly influence the community and other developers. Every user on GitHub can show interest in a project by giving it a star, or copy the complete source code (a fork). Programmers that contributed code to a project are called contributors. In a blog article[^leaf], the founder of a machine learning framework called *Leaf* announced the suspension of the development. The announcement featured a screenshot that compared Leaf to TensorFlow by the amount of stars on GitHub. 
+
+TensorFlow is currently the leading framework in terms of stars and contributors. Backed by Google, TensorFlow is fully integrated into the Google Cloud and Android platform. It has also been adopted by several large companies, like IBM, Twitter and Airbus \cite{dzone-frameworks}. Furthermore tech blogs rather report on TensorFlow than other framworks. A Google search for TensorFlow on the popular tech blog *DZone.com* returns over 5.300 results, while Deeplearning4J got less than 500 (as of July 17, 2018). The following table compares the statistics of the two mentioned projects on GitHub.
 
 |              | TensorFlow [^tens] | Deeplearning4J [^dl4j] |
 | ------------ | ------------------ | ---------------------- |
@@ -358,6 +374,12 @@ Statistics of open-source Frameworks, like *Stars*, *Contributors* and *Forks*, 
 [^dl4j]: https://github.com/deeplearning4j/deeplearning4j
 
 
+
+### Decision
+
+The prototype in this thesis will be implemented in the Java programming language. Deeplearning4J is based on C/C++ with a Java based library on top, while TensorFlow is based on Python. Deeplearning4J has a clear and understandable framework architecture, broad support for machine learning algorithms and data transformation. It further offers a model import tool for TensorFlow models. From the author's point of view, the source code of Deeplearning4J programs is cleaner and easier to interpret, as well as the transformation from the ViNNSL to Deeplearning4J is preferable to alternatives. 
+
+As part of future work it is desirable to implement a native TensorFlow worker service in addition to Deeplearning4J.
 
 # Requirements
 
@@ -786,7 +808,7 @@ All services are written in *Java* and built using the *Apache Maven* build auto
 
 ### Fabric8
 
-*Fabric8* packs the generated executables from the build process into a *Docker* container that can run in a *Kubernetes* cluster. The process is described in detail in section TODO
+*Fabric8* packs the generated executables from the build process into a *Docker* container that can run in a *Kubernetes* cluster. 
 
 ##### Used in following services:
 
@@ -948,6 +970,23 @@ Figure \ref{vinnsl-nn-ui_class} gives an overview of the used methods and stored
 ![VinnslUI Vue Class \label{vinnsl-nn-ui_class}](images/vinnsl-nn-ui_class.png){width=6cm}
 
 
+
+## Limitations
+
+### Neural Network Design
+
+The prototyped ViNNSL to Deeplearning4J mapper currently supports only multi-layers and fully connected backpropagation networks.
+
+### Parameters
+
+The prototyped ViNNSL to Deeplearning4J mapper currently supports the following parameters:
+
+1. learningrate
+2. momentum
+3. biasInput
+4. epochs
+5. threshold
+6. activationfunction
 
 # Prototype API Documentation
 
@@ -2413,7 +2452,7 @@ The flexibility of the presented neural network stack opens up many opportunitie
 
 ## ViNNSL Compatibility
 
-ViNNSL compatibility is limited in the current prototype and could be fully implemented to be fully compatible with other systems. See section TODO for current limitations.
+ViNNSL compatibility is limited in the current prototype and could be fully implemented to be fully compatible with other systems. See section \ref{limitations} for current limitations.
 
 ## Integration in N2Sky
 
@@ -2576,7 +2615,9 @@ Sets up a proxy to make services available at the endpoint specified in the API 
 kubectl --context $CONTEXT apply -f ingress.yaml
 ```
 
-##TensorFlow Iris Dataset Training Example
+##Iris Dataset Training Example
+
+### TensorFlow Implementation Example
 
 For better understanding of the TensorFlow syntax and functionality, this commented code example[^tenscode], written by the TensorFlow authors, is pointed out. 
 
@@ -2654,10 +2695,133 @@ if __name__ == '__main__':
 
 [^tenscode]: https://github.com/tensorflow/models/blob/v1.9.0/samples/core/get_started/premade_estimator.py
 
- 
+###  Deeplearning4J Implementation Example
+
+For better understanding of the Deeplearning4J syntax and functionality, this commented code example[^dl4jcode], written by the Adam Gibson and released under Apache License Version 2.0, is pointed out. 
+
+```
+package org.deeplearning4j.examples.dataexamples;
+
+import org.datavec.api.records.reader.RecordReader;
+import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
+import org.datavec.api.split.FileSplit;
+import org.datavec.api.util.ClassPathResource;
+import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
+import org.deeplearning4j.eval.Evaluation;
+import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
+import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.layers.DenseLayer;
+import org.deeplearning4j.nn.conf.layers.OutputLayer;
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.nn.weights.WeightInit;
+import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.dataset.SplitTestAndTrain;
+import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
+import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
+import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
+import org.nd4j.linalg.learning.config.Sgd;
+import org.nd4j.linalg.lossfunctions.LossFunctions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Adam Gibson
+ */
+public class CSVExample {
+
+    private static Logger log = LoggerFactory.getLogger(CSVExample.class);
+
+    public static void main(String[] args) throws  Exception {
+
+        //First: get the dataset using the record reader. CSVRecordReader handles 
+        loading/parsing
+        int numLinesToSkip = 0;
+        char delimiter = ',';
+        RecordReader recordReader = new CSVRecordReader(numLinesToSkip,delimiter);
+        recordReader.initialize(new FileSplit(new 
+        ClassPathResource("iris.txt").getFile()));
+
+        //Second: the RecordReaderDataSetIterator handles conversion to DataSet 
+        objects, ready for use in neural network
+        int labelIndex = 4;     //5 values in each row of the iris.txt CSV: 
+        4 input features followed by an integer label (class) index. 
+        Labels are the 5th value (index 4) in each row
+        int numClasses = 3;     //3 classes (types of iris flowers) in the 
+        iris data set. 
+        Classes have integer values 0, 1 or 2
+        int batchSize = 150;    //Iris data set: 150 examples total. We are 
+        loading all of them into one DataSet (not recommended for large data sets)
+
+        DataSetIterator iterator = new 
+        RecordReaderDataSetIterator(recordReader,batchSize,labelIndex,numClasses);
+        DataSet allData = iterator.next();
+        allData.shuffle();
+        SplitTestAndTrain testAndTrain = allData.splitTestAndTrain(0.65);  
+        //Use 65% of data for training
+
+        DataSet trainingData = testAndTrain.getTrain();
+        DataSet testData = testAndTrain.getTest();
+
+        //We need to normalize our data. We'll use NormalizeStandardize (which 
+        gives us mean 0, unit variance):
+        DataNormalization normalizer = new NormalizerStandardize();
+        normalizer.fit(trainingData);           //Collect the statistics (mean/
+        																 stdev) 
+        from the training data. This does not modify the input data
+        normalizer.transform(trainingData); //Apply normalization to 
+        									  the training data
+        normalizer.transform(testData);  //Apply normalization to 
+        									  the test data. 
+        This is using statistics calculated from the *training* set
 
 
+        final int numInputs = 4;
+        int outputNum = 3;
+        long seed = 6;
 
+
+        log.info("Build model....");
+        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+            .seed(seed)
+            .activation(Activation.TANH)
+            .weightInit(WeightInit.XAVIER)
+            .updater(new Sgd(0.1))
+            .l2(1e-4)
+            .list()
+            .layer(0, new DenseLayer.Builder().nIn(numInputs).nOut(3)
+                .build())
+            .layer(1, new DenseLayer.Builder().nIn(3).nOut(3)
+                .build())
+            .layer(2, new 
+            OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                .activation(Activation.SOFTMAX)
+                .nIn(3).nOut(outputNum).build())
+            .backprop(true).pretrain(false)
+            .build();
+
+        //run the model
+        MultiLayerNetwork model = new MultiLayerNetwork(conf);
+        model.init();
+        model.setListeners(new ScoreIterationListener(100));
+
+        for(int i=0; i<1000; i++ ) {
+            model.fit(trainingData);
+        }
+
+        //evaluate the model on the test set
+        Evaluation eval = new Evaluation(3);
+        INDArray output = model.output(testData.getFeatureMatrix());
+        eval.eval(testData.getLabels(), output);
+        log.info(eval.stats());
+    }
+
+}
+```
+
+[^dl4jcode]: https://github.com/deeplearning4j/dl4j-examples/blob/master/dl4j-examples/src/main/java/ org/deeplearning4j/examples/dataexamples/CSVExample.java
 [^1]: https://cloud.google.com/kubernetes-engine
 [^2]: https://aws.amazon.com/eks
 [^3]: https://azure.microsoft.com/services/container-service

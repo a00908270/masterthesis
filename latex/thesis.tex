@@ -34,7 +34,7 @@ cluster.
 
 The prototype does not fully implement the \emph{ViNNSL} in version 2.0,
 as described in \cite{kopica_2015} and provides limited data in-/output.
-Limitations are described in section TODO.
+Limitations are described in section \ref{limitations}.
 
 \section{Problem Statement}\label{problem-statement}
 
@@ -138,7 +138,7 @@ stack.
 \subsection{ViNNSL}\label{vinnsl}
 
 The Vienna Neural Network Specification Language (\emph{ViNNSL}) is a
-domain specific language developed by the \emph{University of Vienna} to
+domain specific language developed by the University of Vienna to
 describe neural network objects and is designed as a communication
 framework in service-oriented architectures. It is based on XML and
 provides the schemas that allow the creation, training and evaluation of
@@ -146,8 +146,8 @@ artificial neural networks. \cite{beran_2008}
 
 \subsection{N2Sky}\label{n2sky}
 
-\emph{N2Sky} is a cloud-based platform developed by the \emph{University
-of Vienna} that follows the Neural Networks as a Service paradigm and
+\emph{N2Sky} is a cloud-based platform developed by the University of
+Vienna that follows the Neural Networks as a Service paradigm and
 provides an implementation example of \emph{ViNNSL}. It is designed as
 virtual collaboration platform allowing to exchange neural network
 knowledge with a neural network community. The service delivers an
@@ -654,25 +654,63 @@ For framework demonstration purposes, the source code classifying the
 Iris dataset from the first use case (see section
 \ref{iris-classification-example}) implemented using TensorFlow is
 attached in the appendix section
-\ref{tensorflow-iris-dataset-training-example}.
+\ref{tensorflow-implementation-example}.
 
 \subsubsection{Deeplearning4J}\label{deeplearning4j}
 
 Deeplearning4J is an open-source machine learning library by the Eclipse
 Foundation released under the Apache 2.0 license. It provides a set of
 components, to read from various data sources and build neural networks.
+Deeplearning4J provides support for CPU and GPU processing.
+
+\paragraph{ND4J}\label{nd4j}
+
+The framework is built on top of ND4J, a numerical computing engine,
+which implements n-dimensional array objects (tensors) for Java. It is a
+library, that is optimized for GPU processing with a CUDA backend and
+supports all common operations to manipulate matrices. Parts of core are
+written in C++ to increase performance of numerical operations.
+
+\paragraph{Main Features}\label{main-features}
+
+The framework supports convolutional and recurrent nets and deep nets of
+various types. Furthermore it provides implementation of backpropagation
+and optimization algorithms, various activation- and loss functions as
+well as hyperparameters.
+
+The user interface features a computation graph and visualization tools,
+further explained in section \ref{training}.
+
+\paragraph{Implementation Example}\label{implementation-example-1}
+
+For framework demonstration purposes, the source code also classifying
+the Iris dataset using Deeplearning4J is attached in the appendix
+section \ref{deeplearning4j-implementation-example}.
 
 \subsection{Comparison}\label{comparison-1}
 
 \subsubsection{Community}\label{community-1}
 
-Statistics of open-source Frameworks, like \emph{Stars},
-\emph{Contributors} and \emph{Forks}, on the version control platform
-GitHub increasingly influence the community and other developers. In a
-blog article\footnote{https://medium.com/@mjhirn/tensorflow-wins-89b78b29aafb},
+Statistics (like \emph{stars}, \emph{contributors} and \emph{forks}) of
+open-source projects hosted on the version control platform GitHub,
+increasingly influence the community and other developers. Every user on
+GitHub can show interest in a project by giving it a star, or copy the
+complete source code (a fork). Programmers that contributed code to a
+project are called contributors. In a blog article\footnote{https://medium.com/@mjhirn/tensorflow-wins-89b78b29aafb},
 the founder of a machine learning framework called \emph{Leaf} announced
-the suspension of the development featuring a screenshot that compares
-the \emph{Stars} on GitHub of Leaf and TensorFlow.
+the suspension of the development. The announcement featured a
+screenshot that compared Leaf to TensorFlow by the amount of stars on
+GitHub.
+
+TensorFlow is currently the leading framework in terms of stars and
+contributors. Backed by Google, TensorFlow is fully integrated into the
+Google Cloud and Android platform. It has also been adopted by several
+large companies, like IBM, Twitter and Airbus \cite{dzone-frameworks}.
+Furthermore tech blogs rather report on TensorFlow than other framworks.
+A Google search for TensorFlow on the popular tech blog \emph{DZone.com}
+returns over 5.300 results, while Deeplearning4J got less than 500 (as
+of July 17, 2018). The following table compares the statistics of the
+two mentioned projects on GitHub.
 
 \begin{longtable}[]{@{}lll@{}}
 \toprule
@@ -686,6 +724,21 @@ Stars & 105.120 & 9.320\tabularnewline
 Forks & 65.410 & 4.350\tabularnewline
 \bottomrule
 \end{longtable}
+
+\subsection{Decision}\label{decision-1}
+
+The prototype in this thesis will be implemented in the Java programming
+language. Deeplearning4J is based on C/C++ with a Java based library on
+top, while TensorFlow is based on Python. Deeplearning4J has a clear and
+understandable framework architecture, broad support for machine
+learning algorithms and data transformation. It further offers a model
+import tool for TensorFlow models. From the author's point of view, the
+source code of Deeplearning4J programs is cleaner and easier to
+interpret, as well as the transformation from the ViNNSL to
+Deeplearning4J is preferable to alternatives.
+
+As part of future work it is desirable to implement a native TensorFlow
+worker service in addition to Deeplearning4J.
 
 \chapter{Requirements}\label{requirements}
 
@@ -1788,7 +1841,7 @@ services:}\label{used-in-following-services-3}
 
 \emph{Fabric8} packs the generated executables from the build process
 into a \emph{Docker} container that can run in a \emph{Kubernetes}
-cluster. The process is described in detail in section TODO
+cluster.
 
 \paragraph{Used in following
 services:}\label{used-in-following-services-4}
@@ -2043,6 +2096,35 @@ and stored variables.
 \caption{VinnslUI Vue Class \label{vinnsl-nn-ui_class}}
 \end{figure}
 
+\section{Limitations}\label{limitations}
+
+\subsection{Neural Network Design}\label{neural-network-design}
+
+The prototyped ViNNSL to Deeplearning4J mapper currently supports only
+multi-layers and fully connected backpropagation networks.
+
+\subsection{Parameters}\label{parameters}
+
+The prototyped ViNNSL to Deeplearning4J mapper currently supports the
+following parameters:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  learningrate
+\item
+  momentum
+\item
+  biasInput
+\item
+  epochs
+\item
+  threshold
+\item
+  activationfunction
+\end{enumerate}
+
 \chapter{Prototype API Documentation}\label{prototype-api-documentation}
 
 \paragraph{Base URL}\label{base-url}
@@ -2060,7 +2142,7 @@ Defintion}\label{import-a-new-vinnsl-xml-defintion}
 POST /vinnsl
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters}
+\subsubsection{Parameters}\label{parameters-1}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -2297,7 +2379,7 @@ HTTP Code & Description & Schema\tabularnewline
 GET /vinnsl/{id}
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-1}
+\subsubsection{Parameters}\label{parameters-2}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -2480,7 +2562,7 @@ Object}\label{remove-neural-network-object}
 DELETE /vinnsl/{id}
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-2}
+\subsubsection{Parameters}\label{parameters-3}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -2527,7 +2609,7 @@ Network}\label{addreplace-file-of-neural-network}
 PUT /vinnsl/{id}/addfile
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-3}
+\subsubsection{Parameters}\label{parameters-4}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -2586,7 +2668,7 @@ Network}\label{addreplace-vinnsl-definition-of-neural-network}
 PUT /vinnsl/{id}/definition
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-4}
+\subsubsection{Parameters}\label{parameters-5}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -2722,7 +2804,7 @@ Network}\label{addreplace-vinnsl-instanceschema-of-neural-network}
 PUT /vinnsl/{id}/instanceschema
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-5}
+\subsubsection{Parameters}\label{parameters-6}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -2790,7 +2872,7 @@ Network}\label{addreplace-vinnsl-resultschema-of-neural-network}
 PUT /vinnsl/{id}/resultschema
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-6}
+\subsubsection{Parameters}\label{parameters-7}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -2858,7 +2940,7 @@ Network}\label{addreplace-vinnsl-trainingresult-of-neural-network}
 PUT /vinnsl/{id}/trainingresult
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-7}
+\subsubsection{Parameters}\label{parameters-8}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -2969,7 +3051,7 @@ Network}\label{get-status-of-neural-network}
 GET /status/{id}
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-8}
+\subsubsection{Parameters}\label{parameters-9}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -3015,7 +3097,7 @@ Network}\label{set-status-of-a-neural-network}
 PUT /status/{id}/{status}
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-9}
+\subsubsection{Parameters}\label{parameters-10}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -3095,7 +3177,7 @@ Network}\label{get-deeplearning4j-transformation-object-of-neural-network}
 GET /dl4j/{id}
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-10}
+\subsubsection{Parameters}\label{parameters-11}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -3141,7 +3223,7 @@ Network}\label{put-deeplearning4j-transformation-object-of-neural-network}
 PUT /dl4j/{id}
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-11}
+\subsubsection{Parameters}\label{parameters-12}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -3200,7 +3282,7 @@ Form}\label{handle-file-upload-from-html-form}
 POST /storage
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-12}
+\subsubsection{Parameters}\label{parameters-13}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -3290,7 +3372,7 @@ Filename}\label{download-file-by-original-filename}
 GET /storage/files/name/{filename}
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-13}
+\subsubsection{Parameters}\label{parameters-14}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -3337,7 +3419,7 @@ FileID}\label{download-or-show-file-by-fileid}
 GET /storage/files/{fileId}
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-14}
+\subsubsection{Parameters}\label{parameters-15}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -3385,7 +3467,7 @@ HTTP Code & Description & Schema\tabularnewline
 DELETE /storage/files/{fileId}
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-15}
+\subsubsection{Parameters}\label{parameters-16}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -3433,7 +3515,7 @@ FileID}\label{get-file-metadata-by-fileid}
 GET /storage/metadata/{fileId}
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-16}
+\subsubsection{Parameters}\label{parameters-17}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -3480,7 +3562,7 @@ map\tabularnewline
 POST /storage/upload
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-17}
+\subsubsection{Parameters}\label{parameters-18}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -3535,7 +3617,7 @@ HTTP Code & Description & Schema\tabularnewline
 GET /storage/upload
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-18}
+\subsubsection{Parameters}\label{parameters-19}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -3620,7 +3702,7 @@ array\tabularnewline
 PUT /worker/queue/{id}
 \end{verbatim}
 
-\subsubsection{Parameters}\label{parameters-19}
+\subsubsection{Parameters}\label{parameters-20}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
@@ -4110,7 +4192,7 @@ frameworks and applications. This section points out a few ideas.
 
 ViNNSL compatibility is limited in the current prototype and could be
 fully implemented to be fully compatible with other systems. See section
-TODO for current limitations.
+\ref{limitations} for current limitations.
 
 \section{Integration in N2Sky}\label{integration-in-n2sky}
 
@@ -4357,8 +4439,11 @@ the API Specification.
 kubectl --context $CONTEXT apply -f ingress.yaml
 \end{verbatim}
 
-\section{TensorFlow Iris Dataset Training
-Example}\label{tensorflow-iris-dataset-training-example}
+\section{Iris Dataset Training
+Example}\label{iris-dataset-training-example}
+
+\subsection{TensorFlow Implementation
+Example}\label{tensorflow-implementation-example}
 
 For better understanding of the TensorFlow syntax and functionality,
 this commented code example\footnote{https://github.com/tensorflow/models/blob/v1.9.0/samples/core/get\_started/premade\_estimator.py},
@@ -4439,4 +4524,135 @@ def main(argv):
 if __name__ == '__main__':
     tf.logging.set_verbosity(tf.logging.INFO)
     tf.app.run(main)
+\end{verbatim}
+
+\subsection{Deeplearning4J Implementation
+Example}\label{deeplearning4j-implementation-example}
+
+For better understanding of the Deeplearning4J syntax and functionality,
+this commented code example\footnote{https://github.com/deeplearning4j/dl4j-examples/blob/master/dl4j-examples/src/main/java/
+  org/deeplearning4j/examples/dataexamples/CSVExample.java}, written by
+the Adam Gibson and released under Apache License Version 2.0, is
+pointed out.
+
+\begin{verbatim}
+package org.deeplearning4j.examples.dataexamples;
+
+import org.datavec.api.records.reader.RecordReader;
+import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
+import org.datavec.api.split.FileSplit;
+import org.datavec.api.util.ClassPathResource;
+import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
+import org.deeplearning4j.eval.Evaluation;
+import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
+import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.layers.DenseLayer;
+import org.deeplearning4j.nn.conf.layers.OutputLayer;
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.nn.weights.WeightInit;
+import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.dataset.SplitTestAndTrain;
+import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
+import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
+import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
+import org.nd4j.linalg.learning.config.Sgd;
+import org.nd4j.linalg.lossfunctions.LossFunctions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Adam Gibson
+ */
+public class CSVExample {
+
+    private static Logger log = LoggerFactory.getLogger(CSVExample.class);
+
+    public static void main(String[] args) throws  Exception {
+
+        //First: get the dataset using the record reader. CSVRecordReader handles 
+        loading/parsing
+        int numLinesToSkip = 0;
+        char delimiter = ',';
+        RecordReader recordReader = new CSVRecordReader(numLinesToSkip,delimiter);
+        recordReader.initialize(new FileSplit(new 
+        ClassPathResource("iris.txt").getFile()));
+
+        //Second: the RecordReaderDataSetIterator handles conversion to DataSet 
+        objects, ready for use in neural network
+        int labelIndex = 4;     //5 values in each row of the iris.txt CSV: 
+        4 input features followed by an integer label (class) index. 
+        Labels are the 5th value (index 4) in each row
+        int numClasses = 3;     //3 classes (types of iris flowers) in the 
+        iris data set. 
+        Classes have integer values 0, 1 or 2
+        int batchSize = 150;    //Iris data set: 150 examples total. We are 
+        loading all of them into one DataSet (not recommended for large data sets)
+
+        DataSetIterator iterator = new 
+        RecordReaderDataSetIterator(recordReader,batchSize,labelIndex,numClasses);
+        DataSet allData = iterator.next();
+        allData.shuffle();
+        SplitTestAndTrain testAndTrain = allData.splitTestAndTrain(0.65);  
+        //Use 65% of data for training
+
+        DataSet trainingData = testAndTrain.getTrain();
+        DataSet testData = testAndTrain.getTest();
+
+        //We need to normalize our data. We'll use NormalizeStandardize (which 
+        gives us mean 0, unit variance):
+        DataNormalization normalizer = new NormalizerStandardize();
+        normalizer.fit(trainingData);           //Collect the statistics (mean/
+                                                                         stdev) 
+        from the training data. This does not modify the input data
+        normalizer.transform(trainingData); //Apply normalization to 
+                                              the training data
+        normalizer.transform(testData);  //Apply normalization to 
+                                              the test data. 
+        This is using statistics calculated from the *training* set
+
+
+        final int numInputs = 4;
+        int outputNum = 3;
+        long seed = 6;
+
+
+        log.info("Build model....");
+        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+            .seed(seed)
+            .activation(Activation.TANH)
+            .weightInit(WeightInit.XAVIER)
+            .updater(new Sgd(0.1))
+            .l2(1e-4)
+            .list()
+            .layer(0, new DenseLayer.Builder().nIn(numInputs).nOut(3)
+                .build())
+            .layer(1, new DenseLayer.Builder().nIn(3).nOut(3)
+                .build())
+            .layer(2, new 
+            OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                .activation(Activation.SOFTMAX)
+                .nIn(3).nOut(outputNum).build())
+            .backprop(true).pretrain(false)
+            .build();
+
+        //run the model
+        MultiLayerNetwork model = new MultiLayerNetwork(conf);
+        model.init();
+        model.setListeners(new ScoreIterationListener(100));
+
+        for(int i=0; i<1000; i++ ) {
+            model.fit(trainingData);
+        }
+
+        //evaluate the model on the test set
+        Evaluation eval = new Evaluation(3);
+        INDArray output = model.output(testData.getFeatureMatrix());
+        eval.eval(testData.getLabels(), output);
+        log.info(eval.stats());
+    }
+
+}
 \end{verbatim}
