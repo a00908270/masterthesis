@@ -234,7 +234,7 @@ On October 17, 2017 at the conference *DockerCon*[^doccon], Docker announced tha
 
 #### Community
 
-The following table shows a comparison of publicly available metrics on *GitHub*, trying to represent community interest in the previously mentioned orchestrator softwares. Both projects are open-sourced and released under the *Apache-2.0*[^apl] license. These metrics were collected on June 21, 2018 and are rounded to the nearest ten. Comparing the numbers it can be assumed that the open-source community has currently a stronger interest in the *Kubernetes* project.
+The following table shows a comparison of publicly available metrics on *GitHub*, trying to represent community interest in the previously mentioned orchestrator softwares. Both projects are open-sourced and released under the *Apache-2.0*[^apl] license. These metrics were collected on June 21, 2018 and are rounded to the nearest ten. Comparing the numbers it can be assumed that the open-source community has currently a stronger interest in the Kubernetes project. In July 2018, Kubernetes won the *OSCON Most Impact Award* at the O'Reillys Open Source Conference \cite{heise-oscon}.
 
 |              | Kubernetes [^kubrepo] | Docker Swarm Mode [^swarmrepo] |
 | ------------ | -------------------- | ----------------------------- |
@@ -301,9 +301,13 @@ Feedback networks are networks where neurons are also connected between differen
 
 ### Backpropagation Networks
 
+Backpropagation is not a network design per se, but a supervised learning algorithm. It is used for example in Multi-Layer-Perceptrons. The purpose is to change weights on hidden layers in the network, based on a calculated (net) output error, to improve network accuracy. \cite{nn-froehlich}
+
+An input vector is forward-propagated through all layers until the output layer, which is compared to the desired output. This step results in the error values using a loss function. In process of backpropagation the weights are then updated to minimize the loss function. The process is repeated until the net error is approximately zero. \cite{nn-froehlich}
+
 ### Neural Network Frameworks
 
-Neural network frameworks provide an abstraction and simplification to complex programming challenges \cite{dzone-frameworks} regarding neural network models and the simulation of the training and evaluation processes. Developers are given helper functions to build a network according to their liking. Most frameworks also provide implementations of the backpropagation algorithm, activation functions and data structures to load training data into memory. Frameworks can also help to transform raw data, like images, into data that is more suitable to neural network training.
+Neural network frameworks provide an abstraction and simplification to complex programming challenges \cite{dzone-frameworks} regarding neural network models and the simulation of the training and evaluation processes. Developers are given helper functions to build a network according to their liking. Most frameworks also provide implementations of the backpropagation algorithm, activation functions and data structures to load training data into memory. Frameworks can also help to transform raw data, like images, into data that is more suitable to neural network training. 
 
 There are currently many popular neural network frameworks on the market. Google's TensorFlow is having the biggest impact in terms of contributions and community (see Comparison).
 
@@ -338,15 +342,17 @@ For framework demonstration purposes, the source code classifying the Iris datas
 
 #### Deeplearning4J
 
-Deeplearning4J is an open-source machine learning library by the Eclipse Foundation released under the Apache 2.0 license. It provides a set of components, to read from various data sources and build neural networks. Deeplearning4J provides support for CPU and GPU processing.             
+Deeplearning4J is an open-source machine learning library by the Eclipse Foundation released under the Apache 2.0 license. It provides a set of components, to read from various data sources and build neural networks. Deeplearning4J provides support for CPU and GPU processing. \cite{wired-dl4j}
+
+For large processing, the framework supports Hadoop, a way of scaled data storing and processing across numerous computer servers \cite{wired-dl4j}.
 
 ##### ND4J
 
-The framework is built on top of ND4J, a numerical computing engine, which implements n-dimensional array objects (tensors) for Java. It is a library, that is optimized for GPU processing with a CUDA backend and supports all common  operations to manipulate matrices. Parts of core are written in C++ to increase performance of numerical operations.
+The framework is built on top of ND4J, a numerical computing engine, which implements n-dimensional array objects (tensors) for Java \cite{nd4j-intro}. It is a library, that is optimized for GPU processing with a CUDA backend and supports all common operations to manipulate matrices \cite{nd4j-intro}. Parts of core are written in C++ to increase performance of numerical operations \cite{nd4j-benchmarking}.
 
 ##### Main Features
 
-The framework supports convolutional and recurrent nets and deep nets of various types. Furthermore it provides implementation of backpropagation and optimization algorithms, various activation- and loss functions as well as hyperparameters. 
+The framework supports convolutional and recurrent nets and deep nets of various types. Furthermore it provides implementation of backpropagation and optimization algorithms, various activation- and loss functions as well as hyperparameters. \cite{dl4j-features}
 
 The user interface features a computation graph and visualization tools, further explained in section \ref{training}.
 
@@ -354,9 +360,20 @@ The user interface features a computation graph and visualization tools, further
 
 For framework demonstration purposes, the source code also classifying the Iris dataset using Deeplearning4J is attached in the appendix section \ref{deeplearning4j-implementation-example}.
 
-### Comparison
+#### Further Neural Network Frameworks
 
-#### Community
+There are several other popular neural network frameworks \cite{dzone-frameworks}, that should be mentioned here. The following table lists this projects including their website. 
+
+| Framework Name                   | Projekt Website                                   |
+| -------------------------------- | ------------------------------------------------- |
+| Caffe                            | http://caffe.berkeleyvision.org                   |
+| Microsoft Cognitive Toolkit/CNTK | https://www.microsoft.com/en-us/cognitive-toolkit |
+| PyTorch                          | https://pytorch.org                               |
+| Keras                            | https://keras.io/                                 |
+
+#### Comparison
+
+##### Community
 
 Statistics (like *stars*, *contributors* and *forks*) of open-source projects hosted on the version control platform GitHub, increasingly influence the community and other developers. Every user on GitHub can show interest in a project by giving it a star, or copy the complete source code (a fork). Programmers that contributed code to a project are called contributors. In a blog article[^leaf], the founder of a machine learning framework called *Leaf* announced the suspension of the development. The announcement featured a screenshot that compared Leaf to TensorFlow by the amount of stars on GitHub. 
 

@@ -446,7 +446,9 @@ released under the \emph{Apache-2.0}\footnote{http://www.apache.org/licenses/LIC
 license. These metrics were collected on June 21, 2018 and are rounded
 to the nearest ten. Comparing the numbers it can be assumed that the
 open-source community has currently a stronger interest in the
-\emph{Kubernetes} project.
+Kubernetes project. In July 2018, Kubernetes won the \emph{OSCON Most
+Impact Award} at the O'Reillys Open Source Conference
+\cite{heise-oscon}.
 
 \begin{longtable}[]{@{}lll@{}}
 \toprule
@@ -577,6 +579,19 @@ Theory). \cite{haun1998simulation}
 
 \subsection{Backpropagation Networks}\label{backpropagation-networks}
 
+Backpropagation is not a network design per se, but a supervised
+learning algorithm. It is used for example in Multi-Layer-Perceptrons.
+The purpose is to change weights on hidden layers in the network, based
+on a calculated (net) output error, to improve network accuracy.
+\cite{nn-froehlich}
+
+An input vector is forward-propagated through all layers until the
+output layer, which is compared to the desired output. This step results
+in the error values using a loss function. In process of backpropagation
+the weights are then updated to minimize the loss function. The process
+is repeated until the net error is approximately zero.
+\cite{nn-froehlich}
+
 \subsection{Neural Network Frameworks}\label{neural-network-frameworks}
 
 Neural network frameworks provide an abstraction and simplification to
@@ -662,21 +677,27 @@ Deeplearning4J is an open-source machine learning library by the Eclipse
 Foundation released under the Apache 2.0 license. It provides a set of
 components, to read from various data sources and build neural networks.
 Deeplearning4J provides support for CPU and GPU processing.
+\cite{wired-dl4j}
+
+For large processing, the framework supports Hadoop, a way of scaled
+data storing and processing across numerous computer servers
+\cite{wired-dl4j}.
 
 \paragraph{ND4J}\label{nd4j}
 
 The framework is built on top of ND4J, a numerical computing engine,
-which implements n-dimensional array objects (tensors) for Java. It is a
-library, that is optimized for GPU processing with a CUDA backend and
-supports all common operations to manipulate matrices. Parts of core are
-written in C++ to increase performance of numerical operations.
+which implements n-dimensional array objects (tensors) for Java
+\cite{nd4j-intro}. It is a library, that is optimized for GPU processing
+with a CUDA backend and supports all common operations to manipulate
+matrices \cite{nd4j-intro}. Parts of core are written in C++ to increase
+performance of numerical operations \cite{nd4j-benchmarking}.
 
 \paragraph{Main Features}\label{main-features}
 
 The framework supports convolutional and recurrent nets and deep nets of
 various types. Furthermore it provides implementation of backpropagation
 and optimization algorithms, various activation- and loss functions as
-well as hyperparameters.
+well as hyperparameters. \cite{dl4j-features}
 
 The user interface features a computation graph and visualization tools,
 further explained in section \ref{training}.
@@ -687,9 +708,48 @@ For framework demonstration purposes, the source code also classifying
 the Iris dataset using Deeplearning4J is attached in the appendix
 section \ref{deeplearning4j-implementation-example}.
 
-\subsection{Comparison}\label{comparison-1}
+\subsubsection{Further Neural Network
+Frameworks}\label{further-neural-network-frameworks}
 
-\subsubsection{Community}\label{community-1}
+There are several other popular neural network frameworks
+\cite{dzone-frameworks}, that should be mentioned here. The following
+table lists this projects including their website.
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.37\columnwidth}\raggedright\strut
+Framework Name\strut
+\end{minipage} & \begin{minipage}[b]{0.57\columnwidth}\raggedright\strut
+Projekt Website\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.37\columnwidth}\raggedright\strut
+Caffe\strut
+\end{minipage} & \begin{minipage}[t]{0.57\columnwidth}\raggedright\strut
+http://caffe.berkeleyvision.org\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.37\columnwidth}\raggedright\strut
+Microsoft Cognitive Toolkit/CNTK\strut
+\end{minipage} & \begin{minipage}[t]{0.57\columnwidth}\raggedright\strut
+https://www.microsoft.com/en-us/cognitive-toolkit\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.37\columnwidth}\raggedright\strut
+PyTorch\strut
+\end{minipage} & \begin{minipage}[t]{0.57\columnwidth}\raggedright\strut
+https://pytorch.org\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.37\columnwidth}\raggedright\strut
+Keras\strut
+\end{minipage} & \begin{minipage}[t]{0.57\columnwidth}\raggedright\strut
+https://keras.io/\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Comparison}\label{comparison-1}
+
+\paragraph{Community}\label{community-1}
 
 Statistics (like \emph{stars}, \emph{contributors} and \emph{forks}) of
 open-source projects hosted on the version control platform GitHub,
