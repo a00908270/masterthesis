@@ -739,7 +739,7 @@ FUNCTION {format.online.lastcheck}
              cite$ * warning$
           }
           { part.of.sentence
-            lastchecked "Abruf: " swap$ * output
+            lastchecked "Retrieved: " swap$ * output
           }
         if$
       }

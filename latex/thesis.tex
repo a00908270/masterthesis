@@ -2797,8 +2797,7 @@ HTTP Code & Description & Schema\tabularnewline
   </version>
 </metadata>
 <creator>
-  <name>Ronald Fisher</name>
-  <contact>ronald.fisher@institution.com</contact>
+  <name>Nussbaum</name>
 </creator>
 <problemDomain>
   <propagationType type="feedforward">
@@ -3898,8 +3897,7 @@ BODY
       </version>
     </metadata>
     <creator>
-      <name>Ronald Fisher</name>
-      <contact>ronald.fisher@institution.com</contact>
+      <name>Nussbaum</name>
     </creator>
     <problemDomain>
       <propagationType type="feedforward">
@@ -4021,8 +4019,7 @@ BODY
   </version>
 </metadata>
 <creator>
-  <name>Ronald Fisher</name>
-  <contact>ronald.fisher@institution.com</contact>
+  <name>Nussbaum</name>
 </creator>
 <problemDomain>
   <propagationType type="feedforward">
@@ -4238,9 +4235,337 @@ network was 96 percent. All \emph{Iris setosa} and \emph{Iris
 versicolor} from the testset were recognized correctly, two \emph{Iris
 virginica} were incorrectly recognized as \emph{Iris versicolor}.
 
-\section{Use Case 2}\label{use-case-2}
+\section{Wine Score Classification}\label{wine-score-classification}
 
-TODO
+The second use case shows that a very similar ViNNSL Network can be used
+on a different data set containing a large collection of wine reviews
+from a platform called \emph{WineEnthusiast}\footnote{https://www.winemag.com/?s=\&drink\_type=wine}.
+The dataset's feature columns were reduced and the lines limited to
+twenty-thousand.
+
+\subsection{Dataset}\label{dataset-1}
+
+The dataset which will be used for training, contains 20.000 elements
+with two feature columns and two possible classes. The first feature
+column is the category of wine (red or white wine), the second is the
+price (numerical). There are two possible classes: the first class is
+applicable if the rating score, that has possible values between 0 and
+100, is below 90. Otherwise the second class is applicable.
+
+\subsubsection{Possible Classification}\label{possible-classification}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Index & Review Rating Score\tabularnewline
+\midrule
+\endhead
+0 & Review rating score \textless{}= 90\tabularnewline
+1 & Review rating score \textgreater{} 90\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Wine Category}\label{wine-category}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Index & Wine Category\tabularnewline
+\midrule
+\endhead
+0 & Red wine\tabularnewline
+1 & White wine\tabularnewline
+\bottomrule
+\end{longtable}
+
+The first wine has a rating score higher than 90, is a red wine and
+costs 235 US-Dollars. The second wine is also red, has also a rating
+over 90, but costs only 65 US-Dollars.
+
+The first lines of the dataset explain the structure of the dataset. The
+columns are formatted for better readability.
+
+\begin{verbatim}
+Rating Score Class, Category, Price (US$)
+1                 , 0       , 235
+1                 , 0       , 65
+<more lines>
+\end{verbatim}
+
+\subsection{Prerequisites}\label{prerequisites-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Kubernetes Cluster running
+\item
+  Services from the Neural Network Execution Stack deployed in cluster
+\item
+  Hostname \texttt{cluster.local} resolves to Minikube instance
+\end{itemize}
+
+\subsection{Create the neural
+network}\label{create-the-neural-network-1}
+
+\subsubsection{Request}\label{request-3}
+
+\begin{verbatim}
+POST https://cluster.local/vinnsl
+\end{verbatim}
+
+BODY
+
+\begin{verbatim}
+<vinnsl>
+  <description>
+    <identifier><!-- will be generated --></identifier>
+    <metadata>
+      <paradigm>classification</paradigm>
+      <name>Backpropagation Classification</name>
+      <description>Wine Classification Example</description>
+      <version>
+        <major>1</major>
+        <minor>0</minor>
+      </version>
+    </metadata>
+    <creator>
+      <name>Nussbaum</name>
+      <contact>nussbaum@institution.com</contact>
+    </creator>
+    <problemDomain>
+      <propagationType type="feedforward">
+        <learningType>supervised</learningType>
+      </propagationType>
+      <applicationField>Classification</applicationField>
+      <networkType>Backpropagation</networkType>
+      <problemType>Classifiers</problemType>
+    </problemDomain>
+    <endpoints>
+      <train>true</train>
+      <retrain>true</retrain>
+      <evaluate>true</evaluate>
+    </endpoints>
+    <structure>
+       <input>
+        <ID>Input1</ID>
+        <size>
+            <min>2</min>
+            <max>2</max>
+        </size>
+       </input>
+       <hidden>
+        <ID>Hidden1</ID>
+        <size>
+            <min>3</min>
+            <max>3</max>
+        </size>
+       </hidden>
+       <hidden>
+        <ID>Hidden2</ID>
+        <size>
+            <min>3</min>
+            <max>3</max>
+        </size>
+       </hidden>
+       <output>
+        <ID>Output1</ID>
+        <size>
+            <min>2</min>
+            <max>2</max>
+        </size>
+       </output>
+     </structure>
+     <parameters>
+        <valueparameter>learningrate</valueparameter>
+        <valueparameter>biasInput</valueparameter>
+        <valueparameter>biasHidden</valueparameter>
+        <valueparameter>momentum</valueparameter>
+        <comboparameter>ativationfunction</valueparameter>
+        <valueparameter>threshold</valueparameter>
+     </parameters>
+     <data>
+        <description>wine csv file with 2 classifications, 2 input vars</description>
+        <tabledescription>no input as table possible</tabledescription>
+        <filedescription>CSV file</filedescription>
+     </data>
+  </description>
+</vinnsl>
+\end{verbatim}
+
+\subsubsection{Response}\label{response-3}
+
+\begin{verbatim}
+201 CREATED 
+\end{verbatim}
+
+Aside from the HTTP Status Code, we also get HTTP headers in the
+response. The one needed for further requests is named
+\texttt{location}. The value of this field is the URL of the network,
+that was created and can be used to get and update fields on the
+dataset.
+
+In this example the following value is returned:
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Header Name & Header Value\tabularnewline
+\midrule
+\endhead
+location &
+https://cluster.local/vinnsl/5ac6a8796522050001dfff3b\tabularnewline
+\bottomrule
+\end{longtable}
+
+The id of the new dataset is 5ac6a8796522050001dfff3b. In the following
+requests the id is shortened as \texttt{\{id\}}.
+
+\subsection{Add ViNNSL Definition to the Neural
+Network}\label{add-vinnsl-definition-to-the-neural-network-1}
+
+The ViNNSL definition XML contains metadata like name and description of
+the network as well as the stucture of the neural network model. There
+is one input and one output layer defined. In between there are two
+hidden layers. It is also possible to specify additional parameters.
+
+The activation function is set to tangens hyperbolicus, the learning
+rate is 0.1 and the training is limited to 500 iterations. A seed, set
+to 6, allows a reproducible training score.
+
+\subsubsection{Request}\label{request-4}
+
+\begin{verbatim}
+POST https://cluster.local/vinnsl/{id}/definition
+\end{verbatim}
+
+BODY
+
+\begin{verbatim}
+<definition>
+<identifier><!-- will be generated --></identifier>
+<metadata>
+  <paradigm>classification</paradigm>
+   <name>Backpropagation Classification</name>
+   <description>Wine Classification Example</description>
+  <version>
+    <major>1</major>
+    <minor>0</minor>
+  </version>
+</metadata>
+<creator>
+  <name>Nussbaum</name>
+  <contact>nussbaum@institution.com</contact>
+</creator>
+<problemDomain>
+  <propagationType type="feedforward">
+    <learningType>supervised</learningType>
+  </propagationType>
+  <applicationField>Classification</applicationField>
+  <networkType>Backpropagation</networkType>
+  <problemType>Classifiers</problemType>
+</problemDomain>
+<endpoints>
+  <train>true</train>
+</endpoints>
+<executionEnvironment>
+    <serial>true</serial>
+</executionEnvironment>
+<structure>
+   <input>
+    <ID>Input1</ID>
+    <size>2</size>
+   </input>
+   <hidden>
+    <ID>Hidden1</ID>
+    <size>3</size>
+   </hidden>
+   <hidden>
+    <ID>Hidden2</ID>
+    <size>3</size>
+   </hidden>
+   <output>
+    <ID>Output1</ID>
+    <size>2</size>
+   </output>
+   <connections>
+    <fullconnected>
+        <fromblock>Input1</fromblock>
+        <toblock>Hidden1</toblock>
+        <fromblock>Hidden1</fromblock>
+        <toblock>Output1</toblock>
+    </fullconnected>
+   </connections>
+ </structure>
+ <resultSchema>
+    <instance>true</instance>
+    <training>true</training>
+ </resultSchema>
+ <parameters>
+    <valueparameter name="learningrate">0.1</valueparameter>
+    <comboparameter name="activationfunction">tanh</comboparameter>
+    <valueparameter name="iterations">500</valueparameter>
+    <valueparameter name="seed">6</valueparameter>
+ </parameters>
+ <data>
+    <description>wine csv file with 2 classifications, 2 input vars</description>
+    <dataSchemaID>name/wines.csv</dataSchemaID>
+ </data>
+</definition>
+\end{verbatim}
+
+\subsubsection{Response}\label{response-4}
+
+\begin{verbatim}
+200 OK
+\end{verbatim}
+
+\subsection{Queue Network for
+Training}\label{queue-network-for-training-1}
+
+\subsubsection{Request}\label{request-5}
+
+\begin{verbatim}
+POST https://cluster.local/worker/queue/{id}
+\end{verbatim}
+
+\subsubsection{Response}\label{response-5}
+
+\begin{verbatim}
+200 OK
+\end{verbatim}
+
+\subsection{Evaluation Result}\label{evaluation-result-1}
+
+As soon as the training and testing process is finished, a file with the
+testing report is ready on the storage server. A result file with id
+\texttt{5ac6a8796522050001dfff3b} was uploaded to the storage service.
+The status is changed to \texttt{FINISHED} and the transformed
+\emph{Deeplearning4J} model representation is updated in the field
+\emph{dl4jNetwork}.
+
+In the \emph{ViNNSL NN UI}, the result file can be viewed by switching
+to the \emph{Data} tab and selecting \emph{See File} under the headline
+\emph{Result Data}.
+
+\begin{verbatim}
+[...]
+
+Examples labeled as 0 classified by model as 0: 4648 times
+Examples labeled as 0 classified by model as 1: 548 times
+Examples labeled as 1 classified by model as 0: 959 times
+Examples labeled as 1 classified by model as 1: 845 times
+
+
+==========================Scores===========================================
+ # of classes:    2
+ Accuracy:        0.7847
+ Precision:       0.7178    
+ Recall:          0.6815    
+ F1 Score:        0.6946    
+Precision, recall & F1: macro-averaged (equally weighted avg. of 3 classes)
+===========================================================================
+\end{verbatim}
+
+By examining the result file, it can be noticed that the accuracy of the
+network was 78.5 percent. The network was pretty good at classifying the
+ratings soly based on wine category and price.
 
 \chapter{Future Work}\label{future-work}
 
@@ -4344,9 +4669,9 @@ microservices. Using this technique it becomes possible to scale
 individual services easily and automatically according to current load.
 Each component is fully interchangeable, as long as the documented
 RESTful API is implemented. A respective prototype system was
-demonstrated and evaluated on the Iris flower data set and TODO.
-Furthermore various ideas, to integrate this solution into other neural
-network platforms, were given.
+demonstrated and evaluated on the Iris flower and a wine rating data
+set. Furthermore various ideas, to integrate this solution into other
+neural network platforms, were given.
 
 Using ViNNSL as domain specific modelling language, enables users to
 define neural networks without explicit programming skills.
@@ -4372,7 +4697,7 @@ Stack}\label{deploy-neural-network-execution-stack}
 
 \subsection{Local Machine}\label{local-machine}
 
-\paragraph{Prerequisites}\label{prerequisites-1}
+\paragraph{Prerequisites}\label{prerequisites-2}
 
 \begin{itemize}
 \tightlist
@@ -4432,7 +4757,7 @@ kubectl --context $CONTEXT apply -f ingress.yaml
 This section describes how to deploy the execution stack into a
 Kubernetes cluster in the Google Kubernetes Engine.
 
-\paragraph{Prerequisites}\label{prerequisites-2}
+\paragraph{Prerequisites}\label{prerequisites-3}
 
 \begin{itemize}
 \item

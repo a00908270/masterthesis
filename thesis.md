@@ -1480,8 +1480,7 @@ PUT /vinnsl/{id}/definition
   </version>
 </metadata>
 <creator>
-  <name>Ronald Fisher</name>
-  <contact>ronald.fisher@institution.com</contact>
+  <name>Nussbaum</name>
 </creator>
 <problemDomain>
   <propagationType type="feedforward">
@@ -2197,8 +2196,7 @@ BODY
       </version>
     </metadata>
     <creator>
-      <name>Ronald Fisher</name>
-      <contact>ronald.fisher@institution.com</contact>
+      <name>Nussbaum</name>
     </creator>
     <problemDomain>
       <propagationType type="feedforward">
@@ -2303,8 +2301,7 @@ BODY
   </version>
 </metadata>
 <creator>
-  <name>Ronald Fisher</name>
-  <contact>ronald.fisher@institution.com</contact>
+  <name>Nussbaum</name>
 </creator>
 <problemDomain>
   <propagationType type="feedforward">
@@ -2459,9 +2456,293 @@ By examining the result file, it can be noticed that the accuracy of the network
 
 <!--mnist?-->
 
-## Use Case 2
+## Wine Score Classification
 
-TODO
+The second use case shows that a very similar ViNNSL Network can be used on a different data set containing a large collection of wine reviews from a platform called *WineEnthusiast*[^we]. The dataset's feature columns were reduced and the lines limited to twenty-thousand. 
+
+### Dataset
+
+The dataset which will be used for training, contains 20.000 elements with two feature columns and two possible classes. The first feature column is the category of wine (red or white wine), the second is the price (numerical). There are two possible classes: the first class is applicable if the rating score, that has possible values between 0 and 100, is below 90. Otherwise the second class is applicable.  
+
+#### Possible Classification
+
+| Index | Review Rating Score       |
+| ----- | ------------------------- |
+| 0     | Review rating score <= 90 |
+| 1     | Review rating score > 90  |
+
+#### Wine Category
+
+| Index | Wine Category |
+| ----- | ------------- |
+| 0     | Red wine      |
+| 1     | White wine    |
+
+The first wine has a rating score higher than 90, is a red wine and costs 235 US-Dollars. The second wine is also red, has also a rating over 90, but costs only 65 US-Dollars.
+
+The first lines of the dataset explain the structure of the dataset. The columns are formatted for better readability. 
+
+```
+Rating Score Class, Category, Price (US$)
+1                 , 0       , 235
+1                 , 0       , 65
+<more lines>
+```
+
+### Prerequisites
+
+- Kubernetes Cluster running
+- Services from the Neural Network Execution Stack deployed in cluster
+- Hostname `cluster.local` resolves to Minikube instance
+
+### Create the neural network
+
+#### Request
+
+```
+POST https://cluster.local/vinnsl
+
+```
+
+BODY
+
+```
+<vinnsl>
+  <description>
+    <identifier><!-- will be generated --></identifier>
+    <metadata>
+      <paradigm>classification</paradigm>
+      <name>Backpropagation Classification</name>
+      <description>Wine Classification Example</description>
+      <version>
+        <major>1</major>
+        <minor>0</minor>
+      </version>
+    </metadata>
+    <creator>
+      <name>Nussbaum</name>
+      <contact>nussbaum@institution.com</contact>
+    </creator>
+    <problemDomain>
+      <propagationType type="feedforward">
+        <learningType>supervised</learningType>
+      </propagationType>
+      <applicationField>Classification</applicationField>
+      <networkType>Backpropagation</networkType>
+      <problemType>Classifiers</problemType>
+    </problemDomain>
+    <endpoints>
+      <train>true</train>
+      <retrain>true</retrain>
+      <evaluate>true</evaluate>
+    </endpoints>
+    <structure>
+	   <input>
+	    <ID>Input1</ID>
+	    <size>
+	    	<min>2</min>
+	    	<max>2</max>
+	    </size>
+	   </input>
+	   <hidden>
+	    <ID>Hidden1</ID>
+	    <size>
+	    	<min>3</min>
+	    	<max>3</max>
+	    </size>
+	   </hidden>
+	   <hidden>
+	    <ID>Hidden2</ID>
+	    <size>
+	    	<min>3</min>
+	    	<max>3</max>
+	    </size>
+	   </hidden>
+	   <output>
+	    <ID>Output1</ID>
+	    <size>
+	    	<min>2</min>
+	    	<max>2</max>
+	    </size>
+	   </output>
+	 </structure>
+	 <parameters>
+	 	<valueparameter>learningrate</valueparameter>
+	 	<valueparameter>biasInput</valueparameter>
+	 	<valueparameter>biasHidden</valueparameter>
+	 	<valueparameter>momentum</valueparameter>
+	 	<comboparameter>ativationfunction</valueparameter>
+	 	<valueparameter>threshold</valueparameter>
+	 </parameters>
+	 <data>
+	 	<description>wine csv file with 2 classifications, 2 input vars</description>
+	 	<tabledescription>no input as table possible</tabledescription>
+	 	<filedescription>CSV file</filedescription>
+	 </data>
+  </description>
+</vinnsl>
+
+```
+
+#### Response
+
+```
+201 CREATED 
+
+```
+
+Aside from the HTTP Status Code, we also get HTTP headers in the response. The one needed for further requests is named `location`. The value of this field is the URL of the network, that was created and can be used to get and update fields on the dataset.
+
+In this example the following value is returned:
+
+| Header Name | Header Value                                          |
+| ----------- | ----------------------------------------------------- |
+| location    | https://cluster.local/vinnsl/5ac6a8796522050001dfff3b |
+
+The id of the new dataset is 5ac6a8796522050001dfff3b. In the following requests the id is shortened as `{id}`. 
+
+### Add ViNNSL Definition to the Neural Network
+
+The ViNNSL definition XML contains metadata like name and description of the network as well as the stucture of the neural network model. There is one input and one output layer defined. In between there are two hidden layers. It is also possible to specify additional parameters.
+
+The activation function is set to tangens hyperbolicus, the learning rate is 0.1 and the training is limited to 500 iterations. A seed, set to 6, allows a reproducible training score.
+
+#### Request
+
+```
+POST https://cluster.local/vinnsl/{id}/definition
+
+```
+
+BODY
+
+```
+<definition>
+<identifier><!-- will be generated --></identifier>
+<metadata>
+  <paradigm>classification</paradigm>
+   <name>Backpropagation Classification</name>
+   <description>Wine Classification Example</description>
+  <version>
+    <major>1</major>
+    <minor>0</minor>
+  </version>
+</metadata>
+<creator>
+  <name>Nussbaum</name>
+  <contact>nussbaum@institution.com</contact>
+</creator>
+<problemDomain>
+  <propagationType type="feedforward">
+    <learningType>supervised</learningType>
+  </propagationType>
+  <applicationField>Classification</applicationField>
+  <networkType>Backpropagation</networkType>
+  <problemType>Classifiers</problemType>
+</problemDomain>
+<endpoints>
+  <train>true</train>
+</endpoints>
+<executionEnvironment>
+	<serial>true</serial>
+</executionEnvironment>
+<structure>
+   <input>
+    <ID>Input1</ID>
+    <size>2</size>
+   </input>
+   <hidden>
+    <ID>Hidden1</ID>
+    <size>3</size>
+   </hidden>
+   <hidden>
+    <ID>Hidden2</ID>
+    <size>3</size>
+   </hidden>
+   <output>
+    <ID>Output1</ID>
+    <size>2</size>
+   </output>
+   <connections>
+   	<fullconnected>
+   		<fromblock>Input1</fromblock>
+   		<toblock>Hidden1</toblock>
+   		<fromblock>Hidden1</fromblock>
+   		<toblock>Output1</toblock>
+   	</fullconnected>
+   </connections>
+ </structure>
+ <resultSchema>
+ 	<instance>true</instance>
+ 	<training>true</training>
+ </resultSchema>
+ <parameters>
+ 	<valueparameter name="learningrate">0.1</valueparameter>
+	<comboparameter name="activationfunction">tanh</comboparameter>
+	<valueparameter name="iterations">500</valueparameter>
+	<valueparameter name="seed">6</valueparameter>
+ </parameters>
+ <data>
+ 	<description>wine csv file with 2 classifications, 2 input vars</description>
+	<dataSchemaID>name/wines.csv</dataSchemaID>
+ </data>
+</definition>
+
+```
+
+#### Response
+
+```
+200 OK
+
+```
+
+### Queue Network for Training
+
+#### Request
+
+```
+POST https://cluster.local/worker/queue/{id}
+
+```
+
+#### Response
+
+```
+200 OK
+```
+
+### Evaluation Result
+
+As soon as the training and testing process is finished, a file with the testing report is ready on the storage server. A result file with id `5ac6a8796522050001dfff3b` was uploaded to the storage service. The status is changed to `FINISHED` and the transformed *Deeplearning4J* model representation is updated in the field *dl4jNetwork*.
+
+In the *ViNNSL NN UI*, the result file can be viewed by switching to the *Data* tab and selecting *See File* under the headline *Result Data*.
+
+```
+[...]
+
+Examples labeled as 0 classified by model as 0: 4648 times
+Examples labeled as 0 classified by model as 1: 548 times
+Examples labeled as 1 classified by model as 0: 959 times
+Examples labeled as 1 classified by model as 1: 845 times
+
+
+==========================Scores===========================================
+ # of classes:    2
+ Accuracy:        0.7847
+ Precision:       0.7178	
+ Recall:          0.6815	
+ F1 Score:        0.6946	
+Precision, recall & F1: macro-averaged (equally weighted avg. of 3 classes)
+===========================================================================
+
+```
+
+By examining the result file, it can be noticed that the accuracy of the network was 78.5 percent. The network was pretty good at classifying the ratings soly based on wine category and price.
+
+
+
+[^we]: https://www.winemag.com/?s=&drink_type=wine
 
 # Future Work
 
@@ -2505,7 +2786,7 @@ The graphical interface of the prototype provides a quick overview over neural n
 
 # Conclusion 
 
-This thesis presented an open-source execution stack for neural network simulation in an effective and efficient way using simple RESTful webservices fostering Kubernetes Cloud container orchestration and microservices. Using this technique it becomes possible to scale individual services easily and automatically according to current load. Each component is fully interchangeable, as long as the documented RESTful API is implemented. A respective prototype system was demonstrated and evaluated on the Iris flower data set and TODO. Furthermore various ideas, to integrate this solution into other neural network platforms, were given. 
+This thesis presented an open-source execution stack for neural network simulation in an effective and efficient way using simple RESTful webservices fostering Kubernetes Cloud container orchestration and microservices. Using this technique it becomes possible to scale individual services easily and automatically according to current load. Each component is fully interchangeable, as long as the documented RESTful API is implemented. A respective prototype system was demonstrated and evaluated on the Iris flower and a wine rating data set. Furthermore various ideas, to integrate this solution into other neural network platforms, were given. 
 
 Using ViNNSL as domain specific modelling language, enables users to define neural networks without explicit programming skills. 
 
