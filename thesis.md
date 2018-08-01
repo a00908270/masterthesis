@@ -303,7 +303,7 @@ Feedback networks are networks where neurons are also connected between differen
 
 Backpropagation is not a network design per se, but a supervised learning algorithm. It is used for example in Multi-Layer-Perceptrons. The purpose is to change weights on hidden layers in the network, based on a calculated (net) output error, to improve network accuracy. \cite{nn-froehlich}
 
-An input vector is forward-propagated through all layers until the output layer, which is compared to the desired output. This step results in the error values using a loss function. In process of backpropagation the weights are then updated to minimize the loss function. The process is repeated until the net error is approximately zero. \cite{nn-froehlich}
+An input vector is forward-propagated through all layers until the output layer, which is then compared to the desired output. This step results in the error values using a loss function. In process of backpropagation the weights are then updated to minimize the loss function. The process is repeated until the net error is approximately zero. \cite{nn-froehlich}
 
 ### Neural Network Frameworks
 
