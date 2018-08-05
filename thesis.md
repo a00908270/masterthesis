@@ -4,7 +4,7 @@
 
 # Introduction
 
-This thesis presents an execution stack for neural networks using the *Kubernetes*[^0] container orchestration and a Java based microservice architecture, which is exposed to users and other systems via RESTful web services and a web frontend. The whole workflow including importing, training and evaluating a neural network model, becomes possible by using this service oriented approach (SOA). The presented stack runs on popular cloud platforms, like *Google Cloud Platform*[^1], *Amazon AWS*[^2] and *Microsoft Azure*[^3]. Furthermore it is scalable and each component is extensible and interchangeable. This work is influenced by N2Sky \cite{schikuta_2013}, a framework to exchange neural network specific knowledge and aims to support *ViNNSL*, the Vienna Neural Network Specification Language \cite{kopica_2015} \cite{beran_2008}. 
+This thesis presents a **con**tainer **b**ased **ex**ecution stack for **n**eural **n**etworks (ConbexNN) using the *Kubernetes*[^0] container orchestration and a Java based microservice architecture, which is exposed to users and other systems via RESTful web services and a web frontend. The whole workflow including importing, training and evaluating a neural network model, becomes possible by using this service oriented approach (SOA). The presented stack runs on popular cloud platforms, like *Google Cloud Platform*[^1], *Amazon AWS*[^2] and *Microsoft Azure*[^3]. Furthermore it is scalable and each component is extensible and interchangeable. This work is influenced by N2Sky \cite{schikuta_2013}, a framework to exchange neural network specific knowledge and aims to support *ViNNSL*, the Vienna Neural Network Specification Language \cite{kopica_2015} \cite{beran_2008}. 
 
 ##### Objectives:
 
@@ -753,7 +753,7 @@ Figure \ref{nn-states} visualizes the state changes in a state machine.
 
 
 
-# Prototype Implementation 
+# Implementation 
 
 Following the specification, this section showcases an implementation of a prototype, using microservices glued together by *Kubernetes*. This represents the execution stack for neural networks. Backend components are realized with *Java* and the *Spring Boot* framework and expose a RESTful API. The processing and training of neural networks is done by the *Deeplearning4J* framework. Database and file storage are powered by *MongoDB*. The frontend service is implemented using *Vue.js* and the *Twitter Bootstrap* UI framework, visualizing and consuming backend services.
 
@@ -1005,7 +1005,7 @@ The prototyped ViNNSL to Deeplearning4J mapper currently supports the following 
 5. threshold
 6. activationfunction
 
-# Prototype API Documentation
+# API Documentation
 
 ##### Base URL
 
@@ -2135,6 +2135,120 @@ PUT /worker/queue/{id}
 
 - worker-controller
 
+# Deployment
+
+## Local Machine
+
+##### Prerequisites
+
+* Install `kubectl` tool from: https://kubernetes.io/docs/tasks/tools/install-kubectl
+* Install `minikube` tool from: https://github.com/kubernetes/minikube/releases
+* git tool installed
+
+##### Run minikube
+
+`minikube start`
+
+Starts the minikube cluster
+
+##### Setting up
+
+Clone the repository
+
+```
+git clone https://github.com/a00908270/vinnsl-nn-cloud.git
+cd kubernetes_config/
+```
+
+##### Run Services in Cluster
+
+```
+# MongoDB for vinnsl-service
+kubectl --context $CONTEXT create -f mongo.yaml 
+# Vinnsl Service
+kubectl --context $CONTEXT create -f vinnsl-service.yaml
+# MongoDB for vinnsl-storage-service
+kubectl --context $CONTEXT create -f mongo-storage-service.yaml
+# Vinnsl Storage Service
+kubectl --context $CONTEXT create -f vinnsl-storage-service.yaml
+# Vinnsl NN Worker Service
+kubectl --context $CONTEXT create -f vinnsl-nn-worker.yaml
+# Vinnsl Frontend UI Webapp
+kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
+```
+
+##### Enable and Set Up Ingress
+
+Sets up a proxy to make services available at the endpoint specified in the API Specification.
+
+```
+kubectl --context $CONTEXT apply -f ingress.yaml
+```
+
+## Google Cloud Instance 
+
+This section describes how to deploy the execution stack into a Kubernetes cluster in the Google Kubernetes Engine.
+
+##### Prerequisites
+
+* Google Account with activated billing or credits
+* `kubectl` tool on local machine installed: (<https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl>)
+
+- gcloud SDK locally installed (<https://cloud.google.com/sdk/downloads>)
+
+##### Create Cluster
+
+```
+gcloud beta container --project "nn-cloud-201314" clusters create "cluster-1" 
+--zone "us-central1-a" --username "admin" --cluster-version "1.8.8-gke.0" 
+--machine-type "n1-standard-1" --image-type "COS" --disk-size "15" --scopes 
+"https://www.googleapis.com/auth/compute",
+"https://www.googleapis.com/auth/devstorage.read_only",
+"https://www.googleapis.com/auth/logging.write",
+"https://www.googleapis.com/auth/monitoring",
+"https://www.googleapis.com/auth/servicecontrol",
+"https://www.googleapis.com/auth/service.management.readonly",
+"https://www.googleapis.com/auth/trace.append" 
+--num-nodes "4" --network "default" --enable-cloud-logging 
+--enable-cloud-monitoring --subnetwork "default" --addons 
+HorizontalPodAutoscaling,HttpLoadBalancing,KubernetesDashboard
+```
+
+##### Clone the repository
+
+Clone the `vinnsl-nn-cloud` project and swtich into the google-cloud folder.
+
+```
+git clone https://github.com/a00908270/vinnsl-nn-cloud.git
+cd kubernetes_config/google-cloud/
+```
+
+##### Run Services in Cluster
+
+```
+# MongoDB for vinnsl-service
+kubectl --context $CONTEXT create -f mongo_small.yaml 
+# Vinnsl Service
+kubectl --context $CONTEXT create -f vinnsl-service.yaml
+# MongoDB for vinnsl-storage-service
+kubectl --context $CONTEXT create -f mongo-storage-service_small.yaml
+# Vinnsl Storage Service
+kubectl --context $CONTEXT create -f vinnsl-storage-service.yaml
+# Vinnsl NN Worker Service
+kubectl --context $CONTEXT create -f vinnsl-nn-worker.yaml
+# Vinnsl Frontend UI Webapp
+kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
+```
+
+##### Enable and Set Up Ingress
+
+Sets up a proxy to make services available at the endpoint specified in the API Specification.
+
+```
+kubectl --context $CONTEXT apply -f ingress.yaml
+```
+
+
 # Use Cases
 
 As a demonstration of the implemented prototype, this thesis features two use cases with practical relevance.
@@ -2799,119 +2913,6 @@ I would like to thank my girlfriend and my whole family for the support and pati
 Furthermore I would like to express my deepest appreciation to my supervisor and lecturer Mr. Univ.-Prof. DI Dr. Erich Schikuta for his ideas, support and input, which made this thesis possible.
 
 # Appendices
-
-## Deploy Neural Network Execution Stack
-
-### Local Machine
-
-##### Prerequisites
-
-* Install `kubectl` tool from: https://kubernetes.io/docs/tasks/tools/install-kubectl
-* Install `minikube` tool from: https://github.com/kubernetes/minikube/releases
-* git tool installed
-
-##### Run minikube
-
-`minikube start`
-
-Starts the minikube cluster
-
-##### Setting up
-
-Clone the repository
-
-```
-git clone https://github.com/a00908270/vinnsl-nn-cloud.git
-cd kubernetes_config/
-```
-
-##### Run Services in Cluster
-
-```
-# MongoDB for vinnsl-service
-kubectl --context $CONTEXT create -f mongo.yaml 
-# Vinnsl Service
-kubectl --context $CONTEXT create -f vinnsl-service.yaml
-# MongoDB for vinnsl-storage-service
-kubectl --context $CONTEXT create -f mongo-storage-service.yaml
-# Vinnsl Storage Service
-kubectl --context $CONTEXT create -f vinnsl-storage-service.yaml
-# Vinnsl NN Worker Service
-kubectl --context $CONTEXT create -f vinnsl-nn-worker.yaml
-# Vinnsl Frontend UI Webapp
-kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
-```
-
-##### Enable and Set Up Ingress
-
-Sets up a proxy to make services available at the endpoint specified in the API Specification.
-
-```
-kubectl --context $CONTEXT apply -f ingress.yaml
-```
-
-### Google Cloud Instance 
-
-This section describes how to deploy the execution stack into a Kubernetes cluster in the Google Kubernetes Engine.
-
-##### Prerequisites
-
-* Google Account with activated billing or credits
-* `kubectl` tool on local machine installed: (<https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl>)
-
-- gcloud SDK locally installed (<https://cloud.google.com/sdk/downloads>)
-
-##### Create Cluster
-
-```
-gcloud beta container --project "nn-cloud-201314" clusters create "cluster-1" 
---zone "us-central1-a" --username "admin" --cluster-version "1.8.8-gke.0" 
---machine-type "n1-standard-1" --image-type "COS" --disk-size "15" --scopes 
-"https://www.googleapis.com/auth/compute",
-"https://www.googleapis.com/auth/devstorage.read_only",
-"https://www.googleapis.com/auth/logging.write",
-"https://www.googleapis.com/auth/monitoring",
-"https://www.googleapis.com/auth/servicecontrol",
-"https://www.googleapis.com/auth/service.management.readonly",
-"https://www.googleapis.com/auth/trace.append" 
---num-nodes "4" --network "default" --enable-cloud-logging 
---enable-cloud-monitoring --subnetwork "default" --addons 
-HorizontalPodAutoscaling,HttpLoadBalancing,KubernetesDashboard
-```
-
-##### Clone the repository
-
-Clone the `vinnsl-nn-cloud` project and swtich into the google-cloud folder.
-
-```
-git clone https://github.com/a00908270/vinnsl-nn-cloud.git
-cd kubernetes_config/google-cloud/
-```
-
-##### Run Services in Cluster
-
-```
-# MongoDB for vinnsl-service
-kubectl --context $CONTEXT create -f mongo_small.yaml 
-# Vinnsl Service
-kubectl --context $CONTEXT create -f vinnsl-service.yaml
-# MongoDB for vinnsl-storage-service
-kubectl --context $CONTEXT create -f mongo-storage-service_small.yaml
-# Vinnsl Storage Service
-kubectl --context $CONTEXT create -f vinnsl-storage-service.yaml
-# Vinnsl NN Worker Service
-kubectl --context $CONTEXT create -f vinnsl-nn-worker.yaml
-# Vinnsl Frontend UI Webapp
-kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
-```
-
-##### Enable and Set Up Ingress
-
-Sets up a proxy to make services available at the endpoint specified in the API Specification.
-
-```
-kubectl --context $CONTEXT apply -f ingress.yaml
-```
 
 ##Iris Dataset Training Example
 
