@@ -16,7 +16,7 @@ Finally the microservices are deployed to containers and combined in a cluster.
 
 ##### Non-Objectives: 
 
-The prototype does not fully implement the *ViNNSL* in version 2.0, as described in \cite{kopica_2015} and provides limited data in-/output. Limitations are described in section \ref{limitations}.
+The prototype of ConbexNN does not fully implement the *ViNNSL* in version 2.0, as described in \cite{kopica_2015} and provides limited data in-/output. Limitations are described in section \ref{limitations}.
 
 ## Problem Statement
 
@@ -58,15 +58,15 @@ Machine learning is not just a business area in the United States. Survey result
 
 At the same time more and more companies shift their business logic from a monolithic design to microservices. Each service is dedicated to a single task that can be developed, deployed, replaced and scaled independently.  Test results have shown that not only this architecture can help reduce infrastructure costs \cite{villamizar2}\cite{villamizar}, but also reduces complexity of the code base and enables applications to dynamically adjust computing resources on demand \cite{villamizar}.
 
-The presented project combines these techniques and demonstrates a prototype that is open-source and supported by common cloud providers. Developers can integrate their own solutions into the platform or exchange components ad libitum.
+The presented project combines these techniques and demonstrates ConbexNN, that is open-source and supported by common cloud providers. Developers can integrate their own solutions into the platform or exchange components ad libitum.
 
 It also integrates with ViNNSL, a descriptive language that does not require programming skills to define, train and evaluate neural networks.
 
 ## Structure
 
-This thesis gives an introduction and comparison to state of the art technologies that support the microservice architecture pattern using container and container orchestration tools. This is followed by the acquaintance of Machine Learning (ML) and commonly used ML Frameworks. Featuring all these introduced technologies, requirements are defined for the implementation of a prototype. Main sections of this thesis are the specification, implementation and documentation of the prototype following common practices.  To demonstrate the operational purposes of the prototype, two use cases are presented. 
+This thesis gives an introduction and comparison to state of the art technologies that support the microservice architecture pattern using container and container orchestration tools. This is followed by the acquaintance of Machine Learning (ML) and commonly used ML Frameworks. Featuring all these introduced technologies, requirements are defined for the implementation of ConbexNN. Main sections of this thesis are the specification, implementation and documentation following common practices.  To demonstrate the operational purposes of ConbexNN, two use cases are presented. 
 
-Future work mentions ideas on how the prototype can be extended and integrated into other systems and the conclusion summarizes the motivation and archivements of the implemented neural network execution stack.
+Future work mentions ideas on how ConbexNN can be extended and integrated into other systems and the conclusion summarizes the motivation and archivements of the implemented neural network execution stack.
 
 <!--Following the specification of ViNNSL by Kopica \cite{kopica_2015} this thesis provides a basic implementation of the markup language used to define the structure--> 
 
@@ -394,13 +394,13 @@ TensorFlow is currently the leading framework in terms of stars and contributors
 
 ### Decision
 
-The prototype in this thesis will be implemented in the Java programming language. Deeplearning4J is based on C/C++ with a Java based library on top, while TensorFlow is based on Python. Deeplearning4J has a clear and understandable framework architecture, broad support for machine learning algorithms and data transformation. It further offers a model import tool for TensorFlow models. From the author's point of view, the source code of Deeplearning4J programs is cleaner and easier to interpret, as well as the transformation from the ViNNSL to Deeplearning4J is preferable to alternatives. 
+ConbexNN will be implemented in the Java programming language. Deeplearning4J is based on C/C++ with a Java based library on top, while TensorFlow is based on Python. Deeplearning4J has a clear and understandable framework architecture, broad support for machine learning algorithms and data transformation. It further offers a model import tool for TensorFlow models. From the author's point of view, the source code of Deeplearning4J programs is cleaner and easier to interpret, as well as the transformation from the ViNNSL to Deeplearning4J is preferable to alternatives. 
 
 As part of future work it is desirable to implement a native TensorFlow worker service in addition to Deeplearning4J.
 
 # Requirements
 
-This section defines functional and non-functional requirements for the developed prototype. The neural network execution stack focuses on two main target groups: data scientists and developers.  
+This section defines functional and non-functional requirements for ConbexNN. The neural network execution stack focuses on two main target groups: data scientists and developers.  
 
 Data scientists use the provided services in a deployed environment (cloud or own computer) to develop and train their neural networks. The system should be easy to setup and no programming knowledge should be needed to get started.  
 
@@ -461,7 +461,7 @@ The execution stack shall comply with the following quality features:
 
 ### Documentation
 
-The documentation is provided in Section \ref{prototype-api-documentation} or online on SwaggerHub[^7].
+The documentation is provided in Section \ref{api-documentation} or online on SwaggerHub[^7].
 
 ### Source Code
 
@@ -755,7 +755,7 @@ Figure \ref{nn-states} visualizes the state changes in a state machine.
 
 # Implementation 
 
-Following the specification, this section showcases an implementation of a prototype, using microservices glued together by *Kubernetes*. This represents the execution stack for neural networks. Backend components are realized with *Java* and the *Spring Boot* framework and expose a RESTful API. The processing and training of neural networks is done by the *Deeplearning4J* framework. Database and file storage are powered by *MongoDB*. The frontend service is implemented using *Vue.js* and the *Twitter Bootstrap* UI framework, visualizing and consuming backend services.
+Following the specification, this section showcases an implementation of ConbexNN, using microservices glued together by *Kubernetes*. This represents the execution stack for neural networks. Backend components are realized with *Java* and the *Spring Boot* framework and expose a RESTful API. The processing and training of neural networks is done by the *Deeplearning4J* framework. Database and file storage are powered by *MongoDB*. The frontend service is implemented using *Vue.js* and the *Twitter Bootstrap* UI framework, visualizing and consuming backend services.
 
 
 
@@ -851,7 +851,7 @@ A detailed introduction to Deeplearning4J can be found in Section \ref{deeplearn
 
 The `vinnsl-nn-ui` is a single page application (SPA) that displays all neural networks and their details in a web based frontend. Figure \ref{img.vinnsl-nn-ui} shows a screenshot of the user interface. 
 
-![User Interface of Prototype \label{img.vinnsl-nn-ui}](images/VINNSL-NN-UI.png){width=15cm}
+![User Interface of ConbexNN \label{img.vinnsl-nn-ui}](images/VINNSL-NN-UI.png){width=15cm}
 
 #### Architecture
 
@@ -996,7 +996,7 @@ The prototyped ViNNSL to Deeplearning4J mapper currently supports only multi-lay
 
 ### Parameters
 
-The prototyped ViNNSL to Deeplearning4J mapper currently supports the following parameters:
+The ViNNSL to Deeplearning4J mapper currently supports the following parameters:
 
 1. learningrate
 2. momentum
@@ -2251,7 +2251,7 @@ kubectl --context $CONTEXT apply -f ingress.yaml
 
 # Use Cases
 
-As a demonstration of the implemented prototype, this thesis features two use cases with practical relevance.
+As a demonstration of the implemented ConbexNN, this thesis features two use cases with practical relevance.
 
 ## Iris Classification Example
 
@@ -2864,7 +2864,7 @@ The flexibility of the presented neural network stack opens up many opportunitie
 
 ## ViNNSL Compatibility
 
-ViNNSL compatibility is limited in the current prototype and could be fully implemented to be fully compatible with other systems. See section \ref{limitations} for current limitations.
+ViNNSL compatibility is limited in the current prototype of ConbexNN and could be fully implemented to be fully compatible with other systems. See section \ref{limitations} for current limitations.
 
 ## Integration in N2Sky
 
@@ -2896,11 +2896,11 @@ There are neural network platforms on the market that could be integrated. Accor
 
 ## Full featured Web Application
 
-The graphical interface of the prototype provides a quick overview over neural networks and their status, but does not cover all features specified in the RESTful API. It could be extended to behave like a fully featured web application that can be used as an alternative to the API. It could also provide a functionality to integrate plugins into the user interface.
+The graphical interface of ConbexNN provides a quick overview over neural networks and their status, but does not cover all features specified in the RESTful API. It could be extended to behave like a fully featured web application that can be used as an alternative to the API. It could also provide a functionality to integrate plugins into the user interface.
 
 # Conclusion 
 
-This thesis presented an open-source execution stack for neural network simulation in an effective and efficient way using simple RESTful webservices fostering Kubernetes Cloud container orchestration and microservices. Using this technique it becomes possible to scale individual services easily and automatically according to current load. Each component is fully interchangeable, as long as the documented RESTful API is implemented. A respective prototype system was demonstrated and evaluated on the Iris flower and a wine rating data set. Furthermore various ideas, to integrate this solution into other neural network platforms, were given. 
+This thesis presented an open-source execution stack for neural network simulation  in an effective and efficient way using simple RESTful webservices fostering Kubernetes Cloud container orchestration and microservices. Using this technique it becomes possible to scale individual services easily and automatically according to current load. Each component is fully interchangeable, as long as the documented RESTful API is implemented. ConbexNN was demonstrated and evaluated on the Iris flower and a wine rating data set. Furthermore various ideas, to integrate this solution into other neural network platforms, were given. 
 
 Using ViNNSL as domain specific modelling language, enables users to define neural networks without explicit programming skills. 
 
