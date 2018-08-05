@@ -8,11 +8,11 @@ This thesis presents a **con**tainer **b**ased **ex**ecution stack for **n**eura
 
 ##### Objectives:
 
-The first objective is to specify functional and non-functional requirements for the neural network system.  This is followed by the characterisation of the API and the implemention of microservices that later define the neural network composition as a collection of loosly coupled services.
+The first objective is to specify functional and non-functional requirements for the neural network system.  This is followed by the characteristics of the API and the implementation of microservices that later define the neural network composition as a collection of loosly coupled services.
 
-The next step is to setup a *Kubernetes* cluster to create the foundation of container orchestration. 
+The next step is to setup a *Kubernetes* cluster to create the basics for container orchestration. 
 
-Finally the microservices are deployed to containers and combined in a cluster. 
+Finally, the microservices are deployed to containers and combined in a cluster. 
 
 ##### Non-Objectives: 
 
@@ -24,11 +24,11 @@ Getting started with machine learning and in particular with neural networks is 
 
 * platform is open-source
 * no programming skills required to define and train a neural network model
-* can be deployed on-site and and in the cloud (of your choice)
+* can be deployed on-site and in the cloud to your choice
 * components extensible and replaceable by developers
 * provides a RESTful interface
 
-This thesis showcases an architecture, that tries to achieve all of that.
+This thesis showcases an architecture, that achieves all of that.
 
  <!--TODO why it is important -->
 
@@ -50,7 +50,7 @@ Machine learning has become a highly discussed topic in information technology i
 
 A recent Californian study shows that 6.5 million developers worldwide are currently involved in projects that use artificial intelligence techniques and another 5.8 million developers expect to implement these in near future \cite{evans}.
 
-Machine learning is not just a business area in the United States. Survey results of 264 companies in the DACH region show, that 56 of them already use that kind of technology in production. In the near future 112 companies plan to do so or already have initial experiences (see figure \ref{img.crisp_ml_verbreitung}). It is seen by a fifth of the decision-makers as a core area to improve the competitiveness and profitability of companies in future. \cite{crisp}
+Machine learning is not just a research topic in the United States. Survey results of 264 companies in the DACH region show, that 56 of them already use that kind of technology in production. 45 companies are evaluating the use case and 65 already have initial experiences (see figure \ref{img.crisp_ml_verbreitung}). It is seen by a fifth of the decision-makers as a core area to improve the competitiveness and profitability of companies in future. \cite{crisp}
 
 <!--\bilds{crisp_ml_verbreitung}{Distribution of machine learning of 264 companies in the DACH region \cite{crisp}}{Distribution of machine learning in 264 companies (DACH region) \cite{crisp}}-->
 
@@ -88,7 +88,7 @@ The Vienna Neural Network Specification Language (*ViNNSL*) is a domain specific
 
 Containers enable software developers to deploy applications that are portable and consistent across different environments and providers \cite{baier-kub} by running isolated on top of the operating system's kernel \cite{bashari}. As an organisation, Docker[^4] has seen an increase of popularity very quickly, mainly because of its advantages compared to other solutions, which are speed, portability, scalability, rapid delivery and density \cite{bashari}.
 
-Building a Docker container is fast, because images do not include a guest operating system. The container format itself is standardized, which means that developers just have to ensure that their application runs inside the container, which is then bundled into a single unit. The unit can be deployed on any Linux system as well as on various cloud environments and therefore easily be scaled. Not using a full operating system makes containers use less resources than virtual machines, which ensures higher workloads with greater density. \cite{joy2015}
+Building a Docker container is fast, because images do not include a guest operating system. The container format itself is standardized, which means that developers just have to ensure that their application runs inside the container, which is then bundled into a single unit. The unit can be deployed on any Linux system as well as on various cloud environments and therefore scales easily. Not using a full operating system makes containers using less resources than virtual machines, which ensures higher workloads with greater density. \cite{joy2015}
 
 ## Microservices
 
@@ -96,13 +96,13 @@ The micoservice architecture pattern is a variant of a service-oriented architec
 
 > In short, the microservice architectural style is an approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms, often an HTTP resource API. These services are built around business capabilities and independently deployable by fully automated deployment machinery. There is a bare minimum of centralized management of these services, which may be written in different programming languages and use different data storage technologies. \cite{lewis2014microservices}
 
-Figure \ref{monolithic_vs_microservice} shows the architectural difference between the monolithic and microservice architecture. Monolithic applications bundle user interface, data access layer and business logic together as a single unit. In the microservice architecture each task has its own service. The user interface puts information together from multiple services.
+Figure \ref{monolithic_vs_microservice} shows the architectural difference between the monolithic and microservice architecture. Monolithic applications bundle user interface, data access layer and business logic together as a single unit. In the microservice architecture each task has its own service. The user interface comprises  information from multiple services.
 
 ![Monolithic Architecture vs. Microservice Architecture \label{monolithic_vs_microservice}](images/monolithic_vs_microservice.png){width=15cm}
 
 ## Container Orchestration Technologies
 
-As every single microservice runs as a container, we need a tool to manage, organise and replace these containers. Services should also be able to speak to each other and to be restarted if they fail. Services under heavy load should be scaled for better performance. To deal with these challenges container orchestration technologies come into place.  According to a study from 2017 published by Portworx, Kubernetes is the most frequently used container orchestration tool in organizations, followed by Docker Swarm and Amazon ECS. \cite{portworx-2017}
+As every single microservice runs as a container, we need a tool to manage, organise and replace these containers. Services should also be able to talk to each other and to be restarted if they fail. Services under heavy load should be scaled for better performance. To deal with these challenges container orchestration technologies come into place.  According to a study from 2017 published by Portworx, Kubernetes is the most frequently used container orchestration tool in organizations, followed by Docker Swarm and Amazon ECS. \cite{portworx-2017}
 
 This section describes the architecture of the mentioned container orchestration technologies and compares them.
 
@@ -134,7 +134,7 @@ The scheduler keeps track of available and allocated resources on each specific 
 
 The controller manager mainly operates different controllers that constantly check the shared state of the cluster in `etcd` via the apiserver \cite{kub_comp} and if the current state differs towards the desired state it takes compensating measures \cite{kub_intro}. 
 
-For example the node controller's task is to react when nodes go offline or down. The replication controller makes sure that the defined number of desired pods is identical to the number of currently deployed pods in the cluster and scales applications up or down accordingly. The endpoints controller populates the endpoints to services \cite{kub_comp} 
+One of the node controller's tasks is to react when nodes go offline or down. The replication controller makes sure that the defined number of desired pods is identical to the number of currently deployed pods in the cluster and scales applications up or down accordingly. The endpoints controller populates the endpoints to services \cite{kub_comp} 
 
 ##### cloud-controller-manager
 
@@ -303,11 +303,11 @@ Feedback networks are networks where neurons are also connected between differen
 
 Backpropagation is not a network design per se, but a supervised learning algorithm. It is used for example in Multi-Layer-Perceptrons. The purpose is to change weights on hidden layers in the network, based on a calculated (net) output error, to improve network accuracy. \cite{nn-froehlich}
 
-An input vector is forward-propagated through all layers until the output layer, which is then compared to the desired output. This step results in the error values using a loss function. In process of backpropagation the weights are then updated to minimize the loss function. The process is repeated until the net error is approximately zero. \cite{nn-froehlich}
+An input vector is forward-propagated through all layers until the output layer, which is then compared to the desired output. This step results in the error values,  using a loss function. In process of backpropagation the weights are then updated to minimize the loss function. The process is repeated until the net error is approximately zero. \cite{nn-froehlich}
 
 ### Neural Network Frameworks
 
-Neural network frameworks provide an abstraction and simplification to complex programming challenges \cite{dzone-frameworks} regarding neural network models and the simulation of the training and evaluation processes. Developers are given helper functions to build a network according to their liking. Most frameworks also provide implementations of the backpropagation algorithm, activation functions and data structures to load training data into memory. Frameworks can also help to transform raw data, like images, into data that is more suitable to neural network training. 
+Neural network frameworks provide an abstraction and simplification to complex programming challenges \cite{dzone-frameworks} regarding neural network models and the simulation of the training and evaluation processes. Developers are given helper functions to build their preferred network. Most frameworks also provide implementations of the backpropagation algorithm, activation functions and data structures to load training data into memory. Frameworks can also help to transform raw data, like images, into data that is more suitable to neural network training. 
 
 There are currently many popular neural network frameworks on the market. Google's TensorFlow is having the biggest impact in terms of contributions and community (see Comparison).
 
@@ -319,7 +319,7 @@ According to Google's whitepaper \cite{dean-tensor}, in their implementation, a 
 
 TensorFlow computations are expressed as directed dataflow graph, in which each node has zero or more inputs and outputs. Values, called tensors, flow along the edges of the graph. \cite{dean-tensor}. Figure \ref{tensor-flow-graph} shows a matrix multiplication of input *X*  with a matrix *W*. Vector *b* is then added to this matrix terminating in output *O*.
 
-These computations can be executed on either on local or the distributed implementation, on a single or multiple devices \cite{dean-tensor}.
+These computations can be executed either on local or the distributed implementation, on a single or multiple devices \cite{dean-tensor}.
 
 ![Tensor flow computation graph, adapted from \cite{dean-tensor} \label{tensor-flow-graph}](images/tensorflow_comp_graph.png){width=6cm} 
 
@@ -577,7 +577,7 @@ There are several other popular neural network frameworks \cite{dzone-frameworks
 
 Statistics (like *stars*, *contributors* and *forks*) of open-source projects hosted on the version control platform GitHub, increasingly influence the community and other developers. Every user on GitHub can show interest in a project by giving it a star, or copy the complete source code (a fork). Programmers that contributed code to a project are called contributors. In a blog article[^leaf], the founder of a machine learning framework called *Leaf* announced the suspension of the development. The announcement featured a screenshot that compared Leaf to TensorFlow by the amount of stars on GitHub. 
 
-TensorFlow is currently the leading framework in terms of stars and contributors. Backed by Google, TensorFlow is fully integrated into the Google Cloud and Android platform. It has also been adopted by several large companies, like IBM, Twitter and Airbus \cite{dzone-frameworks}. Furthermore tech blogs rather report on TensorFlow than other framworks. A Google search for TensorFlow on the popular tech blog *DZone.com* returns over 5.300 results, while Deeplearning4J got less than 500 (as of July 17, 2018). The following table compares the statistics of the two mentioned projects on GitHub.
+TensorFlow is currently the leading framework in terms of stars and contributors. Backed by Google, TensorFlow is fully integrated into the Google Cloud and Android platform. It has also been adopted by several large companies, like IBM, Twitter and Airbus \cite{dzone-frameworks}. Furthermore tech blogs rather report on TensorFlow than other frameworks. A Google search for TensorFlow on the popular tech blog *DZone.com* returns over 5.300 results, while Deeplearning4J got less than 500 (as of July 17, 2018). The following table compares the statistics of the two mentioned projects on GitHub.
 
 |              | TensorFlow [^tens] | Deeplearning4J [^dl4j] |
 | ------------ | ------------------ | ---------------------- |

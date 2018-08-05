@@ -21,14 +21,14 @@ support \emph{ViNNSL}, the Vienna Neural Network Specification Language
 
 The first objective is to specify functional and non-functional
 requirements for the neural network system. This is followed by the
-characterisation of the API and the implemention of microservices that
+characteristics of the API and the implementation of microservices that
 later define the neural network composition as a collection of loosly
 coupled services.
 
 The next step is to setup a \emph{Kubernetes} cluster to create the
-foundation of container orchestration.
+basics for container orchestration.
 
-Finally the microservices are deployed to containers and combined in a
+Finally, the microservices are deployed to containers and combined in a
 cluster.
 
 \paragraph{Non-Objectives:}\label{non-objectives}
@@ -58,15 +58,14 @@ following criteria:
   no programming skills required to define and train a neural network
   model
 \item
-  can be deployed on-site and and in the cloud (of your choice)
+  can be deployed on-site and in the cloud to your choice
 \item
   components extensible and replaceable by developers
 \item
   provides a RESTful interface
 \end{itemize}
 
-This thesis showcases an architecture, that tries to achieve all of
-that.
+This thesis showcases an architecture, that achieves all of that.
 
 \section{Motivation}\label{motivation}
 
@@ -84,10 +83,10 @@ are currently involved in projects that use artificial intelligence
 techniques and another 5.8 million developers expect to implement these
 in near future \cite{evans}.
 
-Machine learning is not just a business area in the United States.
+Machine learning is not just a research topic in the United States.
 Survey results of 264 companies in the DACH region show, that 56 of them
-already use that kind of technology in production. In the near future
-112 companies plan to do so or already have initial experiences (see
+already use that kind of technology in production. 45 companies are
+evaluating the use case and 65 already have initial experiences (see
 figure \ref{img.crisp_ml_verbreitung}). It is seen by a fifth of the
 decision-makers as a core area to improve the competitiveness and
 profitability of companies in future. \cite{crisp}
@@ -174,9 +173,9 @@ guest operating system. The container format itself is standardized,
 which means that developers just have to ensure that their application
 runs inside the container, which is then bundled into a single unit. The
 unit can be deployed on any Linux system as well as on various cloud
-environments and therefore easily be scaled. Not using a full operating
-system makes containers use less resources than virtual machines, which
-ensures higher workloads with greater density. \cite{joy2015}
+environments and therefore scales easily. Not using a full operating
+system makes containers using less resources than virtual machines,
+which ensures higher workloads with greater density. \cite{joy2015}
 
 \section{Microservices}\label{microservices}
 
@@ -200,8 +199,8 @@ Figure \ref{monolithic_vs_microservice} shows the architectural
 difference between the monolithic and microservice architecture.
 Monolithic applications bundle user interface, data access layer and
 business logic together as a single unit. In the microservice
-architecture each task has its own service. The user interface puts
-information together from multiple services.
+architecture each task has its own service. The user interface comprises
+information from multiple services.
 
 \begin{figure}
 \centering
@@ -215,7 +214,7 @@ Technologies}\label{container-orchestration-technologies}
 
 As every single microservice runs as a container, we need a tool to
 manage, organise and replace these containers. Services should also be
-able to speak to each other and to be restarted if they fail. Services
+able to talk to each other and to be restarted if they fail. Services
 under heavy load should be scaled for better performance. To deal with
 these challenges container orchestration technologies come into place.
 According to a study from 2017 published by Portworx, Kubernetes is the
@@ -286,9 +285,9 @@ constantly check the shared state of the cluster in \texttt{etcd} via
 the apiserver \cite{kub_comp} and if the current state differs towards
 the desired state it takes compensating measures \cite{kub_intro}.
 
-For example the node controller's task is to react when nodes go offline
-or down. The replication controller makes sure that the defined number
-of desired pods is identical to the number of currently deployed pods in
+One of the node controller's tasks is to react when nodes go offline or
+down. The replication controller makes sure that the defined number of
+desired pods is identical to the number of currently deployed pods in
 the cluster and scales applications up or down accordingly. The
 endpoints controller populates the endpoints to services \cite{kub_comp}
 
@@ -588,7 +587,7 @@ on a calculated (net) output error, to improve network accuracy.
 
 An input vector is forward-propagated through all layers until the
 output layer, which is then compared to the desired output. This step
-results in the error values using a loss function. In process of
+results in the error values, using a loss function. In process of
 backpropagation the weights are then updated to minimize the loss
 function. The process is repeated until the net error is approximately
 zero. \cite{nn-froehlich}
@@ -598,12 +597,12 @@ zero. \cite{nn-froehlich}
 Neural network frameworks provide an abstraction and simplification to
 complex programming challenges \cite{dzone-frameworks} regarding neural
 network models and the simulation of the training and evaluation
-processes. Developers are given helper functions to build a network
-according to their liking. Most frameworks also provide implementations
-of the backpropagation algorithm, activation functions and data
-structures to load training data into memory. Frameworks can also help
-to transform raw data, like images, into data that is more suitable to
-neural network training.
+processes. Developers are given helper functions to build their
+preferred network. Most frameworks also provide implementations of the
+backpropagation algorithm, activation functions and data structures to
+load training data into memory. Frameworks can also help to transform
+raw data, like images, into data that is more suitable to neural network
+training.
 
 There are currently many popular neural network frameworks on the
 market. Google's TensorFlow is having the biggest impact in terms of
@@ -633,7 +632,7 @@ tensors, flow along the edges of the graph. \cite{dean-tensor}. Figure
 with a matrix \emph{W}. Vector \emph{b} is then added to this matrix
 terminating in output \emph{O}.
 
-These computations can be executed on either on local or the distributed
+These computations can be executed either on local or the distributed
 implementation, on a single or multiple devices \cite{dean-tensor}.
 
 \begin{figure}
@@ -794,6 +793,33 @@ the Adam Gibson and released under Apache License Version 2.0, is
 pointed out.
 
 \begin{verbatim}
+package org.deeplearning4j.examples.dataexamples;
+
+import org.datavec.api.records.reader.RecordReader;
+import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
+import org.datavec.api.split.FileSplit;
+import org.datavec.api.util.ClassPathResource;
+import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
+import org.deeplearning4j.eval.Evaluation;
+import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
+import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.layers.DenseLayer;
+import org.deeplearning4j.nn.conf.layers.OutputLayer;
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.nn.weights.WeightInit;
+import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.dataset.SplitTestAndTrain;
+import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
+import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
+import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
+import org.nd4j.linalg.learning.config.Sgd;
+import org.nd4j.linalg.lossfunctions.LossFunctions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Adam Gibson
  */
@@ -946,11 +972,11 @@ TensorFlow is currently the leading framework in terms of stars and
 contributors. Backed by Google, TensorFlow is fully integrated into the
 Google Cloud and Android platform. It has also been adopted by several
 large companies, like IBM, Twitter and Airbus \cite{dzone-frameworks}.
-Furthermore tech blogs rather report on TensorFlow than other framworks.
-A Google search for TensorFlow on the popular tech blog \emph{DZone.com}
-returns over 5.300 results, while Deeplearning4J got less than 500 (as
-of July 17, 2018). The following table compares the statistics of the
-two mentioned projects on GitHub.
+Furthermore tech blogs rather report on TensorFlow than other
+frameworks. A Google search for TensorFlow on the popular tech blog
+\emph{DZone.com} returns over 5.300 results, while Deeplearning4J got
+less than 500 (as of July 17, 2018). The following table compares the
+statistics of the two mentioned projects on GitHub.
 
 \begin{longtable}[]{@{}lll@{}}
 \toprule
