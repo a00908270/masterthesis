@@ -333,7 +333,84 @@ The mid-level API provides access to layers, datasets and metrics, the high-leve
 
 ##### Implementation Example
 
-For framework demonstration purposes, the source code classifying the Iris dataset from the first use case (see section \ref{iris-classification-example}) implemented using TensorFlow is attached in the appendix section \ref{tensorflow-implementation-example}.
+For framework demonstration purposes, the source code classifying the Iris dataset from the first use case (see section \ref{iris-classification-example}) is implemented using TensorFlow.
+For better understanding of the TensorFlow syntax and functionality, this commented code example[^tenscode], written by the TensorFlow authors, is pointed out. 
+
+In the first step the program features a parser for the Iris dataset and defines feature columns. The TensorFlow ```NetworkClassifier``` class is then instantiated building a neural network with two hidden layers of ten nodes each. The classifier offers a function for network training called ```train()```, which is followed by evaluating the accuracy of the trained network in the final step. 
+
+```
+#  Copyright 2016 The TensorFlow Authors. All Rights Reserved.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+"""An Example of a DNNClassifier for the Iris dataset."""
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
+import argparse
+import tensorflow as tf
+
+import iris_data
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--batch_size', default=100, type=int, help='batch size')
+parser.add_argument('--train_steps', default=1000, type=int,
+                    help='number of training steps')
+
+def main(argv):
+    args = parser.parse_args(argv[1:])
+
+    # Fetch the data
+    (train_x, train_y), (test_x, test_y) = iris_data.load_data()
+
+    # Feature columns describe how to use the input.
+    my_feature_columns = []
+    for key in train_x.keys():
+        my_feature_columns.append(tf.feature_column.numeric_column(key=key))
+
+    # Build 2 hidden layer DNN with 10, 10 units respectively.
+    classifier = tf.estimator.DNNClassifier(
+        feature_columns=my_feature_columns,
+        # Two hidden layers of 10 nodes each.
+        hidden_units=[10, 10],
+        # The model must choose between 3 classes.
+        n_classes=3)
+
+    # Train the Model.
+    classifier.train(
+        input_fn=lambda:iris_data.train_input_fn(train_x, train_y,
+                                                 args.batch_size),
+        steps=args.train_steps)
+
+    # Evaluate the model.
+    eval_result = classifier.evaluate(
+        input_fn=lambda:iris_data.eval_input_fn(test_x, test_y,
+                                                args.batch_size))
+
+    print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
+
+    [...]
+
+
+if __name__ == '__main__':
+    tf.logging.set_verbosity(tf.logging.INFO)
+    tf.app.run(main)
+```
+
+[^tenscode]: https://github.com/tensorflow/models/blob/v1.9.0/samples/core/get_started/premade_estimator.py
+
+
 
 [^te]: http://www.apache.org/licenses/LICENSE-2.0
 [^tegit]: https://github.com/tensorflow/tensorflow
@@ -357,8 +434,131 @@ The framework supports convolutional and recurrent nets and deep nets of various
 The user interface features a computation graph and visualization tools, further explained in section \ref{training}.
 
 ##### Implementation Example
+For framework demonstration purposes, the source code classifying the Iris dataset from the first use case (see section \ref{iris-classification-example}) is implemented using Deeplearning4J.
 
-For framework demonstration purposes, the source code also classifying the Iris dataset using Deeplearning4J is attached in the appendix section \ref{deeplearning4j-implementation-example}.
+For better understanding of the Deeplearning4J syntax and functionality, this commented code example[^dl4jcode], written by the Adam Gibson and released under Apache License Version 2.0, is pointed out. 
+
+```
+package org.deeplearning4j.examples.dataexamples;
+
+import org.datavec.api.records.reader.RecordReader;
+import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
+import org.datavec.api.split.FileSplit;
+import org.datavec.api.util.ClassPathResource;
+import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
+import org.deeplearning4j.eval.Evaluation;
+import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
+import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.layers.DenseLayer;
+import org.deeplearning4j.nn.conf.layers.OutputLayer;
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.nn.weights.WeightInit;
+import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.dataset.SplitTestAndTrain;
+import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
+import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
+import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
+import org.nd4j.linalg.learning.config.Sgd;
+import org.nd4j.linalg.lossfunctions.LossFunctions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Adam Gibson
+ */
+public class CSVExample {
+
+    private static Logger log = LoggerFactory.getLogger(CSVExample.class);
+
+    public static void main(String[] args) throws  Exception {
+
+        //First: get the dataset using the record reader. CSVRecordReader handles 
+        loading/parsing
+        int numLinesToSkip = 0;
+        char delimiter = ',';
+        RecordReader recordReader = new CSVRecordReader(numLinesToSkip,delimiter);
+        recordReader.initialize(new FileSplit(new 
+        ClassPathResource("iris.txt").getFile()));
+
+        //Second: the RecordReaderDataSetIterator handles conversion to DataSet 
+        objects, ready for use in neural network
+        int labelIndex = 4;     //5 values in each row of the iris.txt CSV: 
+        4 input features followed by an integer label (class) index. 
+        Labels are the 5th value (index 4) in each row
+        int numClasses = 3;     //3 classes (types of iris flowers) in the 
+        iris data set. 
+        Classes have integer values 0, 1 or 2
+        int batchSize = 150;    //Iris data set: 150 examples total. We are 
+        loading all of them into one DataSet (not recommended for large data sets)
+
+        DataSetIterator iterator = new 
+        RecordReaderDataSetIterator(recordReader,batchSize,labelIndex,numClasses);
+        DataSet allData = iterator.next();
+        allData.shuffle();
+        SplitTestAndTrain testAndTrain = allData.splitTestAndTrain(0.65);  
+        //Use 65% of data for training
+
+        DataSet trainingData = testAndTrain.getTrain();
+        DataSet testData = testAndTrain.getTest();
+
+        //We need to normalize our data. We'll use NormalizeStandardize (which 
+        gives us mean 0, unit variance):
+        DataNormalization normalizer = new NormalizerStandardize();
+        normalizer.fit(trainingData);           //Collect the statistics (mean/
+        																 stdev) 
+        from the training data. This does not modify the input data
+        normalizer.transform(trainingData); //Apply normalization to 
+        									  the training data
+        normalizer.transform(testData);  //Apply normalization to 
+        									  the test data. 
+        This is using statistics calculated from the *training* set
+
+
+        final int numInputs = 4;
+        int outputNum = 3;
+        long seed = 6;
+
+
+        log.info("Build model....");
+        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+            .seed(seed)
+            .activation(Activation.TANH)
+            .weightInit(WeightInit.XAVIER)
+            .updater(new Sgd(0.1))
+            .l2(1e-4)
+            .list()
+            .layer(0, new DenseLayer.Builder().nIn(numInputs).nOut(3)
+                .build())
+            .layer(1, new DenseLayer.Builder().nIn(3).nOut(3)
+                .build())
+            .layer(2, new 
+            OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                .activation(Activation.SOFTMAX)
+                .nIn(3).nOut(outputNum).build())
+            .backprop(true).pretrain(false)
+            .build();
+
+        //run the model
+        MultiLayerNetwork model = new MultiLayerNetwork(conf);
+        model.init();
+        model.setListeners(new ScoreIterationListener(100));
+
+        for(int i=0; i<1000; i++ ) {
+            model.fit(trainingData);
+        }
+
+        //evaluate the model on the test set
+        Evaluation eval = new Evaluation(3);
+        INDArray output = model.output(testData.getFeatureMatrix());
+        eval.eval(testData.getLabels(), output);
+        log.info(eval.stats());
+    }
+
+}
+```
 
 #### Further Neural Network Frameworks
 
@@ -2911,214 +3111,6 @@ The appendix lists how to set up and use this stack in various ways on popular C
 I would like to thank my girlfriend and my whole family for the support and patience during the time I was occupied doing research, the long nights I was programming code, who were always pushing me forwards to achieve my goals. 
 
 Furthermore I would like to express my deepest appreciation to my supervisor and lecturer Mr. Univ.-Prof. DI Dr. Erich Schikuta for his ideas, support and input, which made this thesis possible.
-
-# Appendices
-
-##Iris Dataset Training Example
-
-### TensorFlow Implementation Example
-
-For better understanding of the TensorFlow syntax and functionality, this commented code example[^tenscode], written by the TensorFlow authors, is pointed out. 
-
-In the first step the program features a parser for the Iris dataset and defines feature columns. The TensorFlow ```NetworkClassifier``` class is then instantiated building a neural network with two hidden layers of ten nodes each. The classifier offers a function for network training called ```train()```, which is followed by evaluating the accuracy of the trained network in the final step. 
-
-```
-#  Copyright 2016 The TensorFlow Authors. All Rights Reserved.
-#
-#  Licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-#  Unless required by applicable law or agreed to in writing, software
-#  distributed under the License is distributed on an "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  See the License for the specific language governing permissions and
-#  limitations under the License.
-"""An Example of a DNNClassifier for the Iris dataset."""
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
-import argparse
-import tensorflow as tf
-
-import iris_data
-
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--batch_size', default=100, type=int, help='batch size')
-parser.add_argument('--train_steps', default=1000, type=int,
-                    help='number of training steps')
-
-def main(argv):
-    args = parser.parse_args(argv[1:])
-
-    # Fetch the data
-    (train_x, train_y), (test_x, test_y) = iris_data.load_data()
-
-    # Feature columns describe how to use the input.
-    my_feature_columns = []
-    for key in train_x.keys():
-        my_feature_columns.append(tf.feature_column.numeric_column(key=key))
-
-    # Build 2 hidden layer DNN with 10, 10 units respectively.
-    classifier = tf.estimator.DNNClassifier(
-        feature_columns=my_feature_columns,
-        # Two hidden layers of 10 nodes each.
-        hidden_units=[10, 10],
-        # The model must choose between 3 classes.
-        n_classes=3)
-
-    # Train the Model.
-    classifier.train(
-        input_fn=lambda:iris_data.train_input_fn(train_x, train_y,
-                                                 args.batch_size),
-        steps=args.train_steps)
-
-    # Evaluate the model.
-    eval_result = classifier.evaluate(
-        input_fn=lambda:iris_data.eval_input_fn(test_x, test_y,
-                                                args.batch_size))
-
-    print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
-
-    [...]
-
-
-if __name__ == '__main__':
-    tf.logging.set_verbosity(tf.logging.INFO)
-    tf.app.run(main)
-```
-
-[^tenscode]: https://github.com/tensorflow/models/blob/v1.9.0/samples/core/get_started/premade_estimator.py
-
-###  Deeplearning4J Implementation Example
-
-For better understanding of the Deeplearning4J syntax and functionality, this commented code example[^dl4jcode], written by the Adam Gibson and released under Apache License Version 2.0, is pointed out. 
-
-```
-package org.deeplearning4j.examples.dataexamples;
-
-import org.datavec.api.records.reader.RecordReader;
-import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
-import org.datavec.api.split.FileSplit;
-import org.datavec.api.util.ClassPathResource;
-import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-import org.deeplearning4j.eval.Evaluation;
-import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
-import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.layers.DenseLayer;
-import org.deeplearning4j.nn.conf.layers.OutputLayer;
-import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
-import org.deeplearning4j.nn.weights.WeightInit;
-import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
-import org.nd4j.linalg.activations.Activation;
-import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.DataSet;
-import org.nd4j.linalg.dataset.SplitTestAndTrain;
-import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
-import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
-import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
-import org.nd4j.linalg.learning.config.Sgd;
-import org.nd4j.linalg.lossfunctions.LossFunctions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * @author Adam Gibson
- */
-public class CSVExample {
-
-    private static Logger log = LoggerFactory.getLogger(CSVExample.class);
-
-    public static void main(String[] args) throws  Exception {
-
-        //First: get the dataset using the record reader. CSVRecordReader handles 
-        loading/parsing
-        int numLinesToSkip = 0;
-        char delimiter = ',';
-        RecordReader recordReader = new CSVRecordReader(numLinesToSkip,delimiter);
-        recordReader.initialize(new FileSplit(new 
-        ClassPathResource("iris.txt").getFile()));
-
-        //Second: the RecordReaderDataSetIterator handles conversion to DataSet 
-        objects, ready for use in neural network
-        int labelIndex = 4;     //5 values in each row of the iris.txt CSV: 
-        4 input features followed by an integer label (class) index. 
-        Labels are the 5th value (index 4) in each row
-        int numClasses = 3;     //3 classes (types of iris flowers) in the 
-        iris data set. 
-        Classes have integer values 0, 1 or 2
-        int batchSize = 150;    //Iris data set: 150 examples total. We are 
-        loading all of them into one DataSet (not recommended for large data sets)
-
-        DataSetIterator iterator = new 
-        RecordReaderDataSetIterator(recordReader,batchSize,labelIndex,numClasses);
-        DataSet allData = iterator.next();
-        allData.shuffle();
-        SplitTestAndTrain testAndTrain = allData.splitTestAndTrain(0.65);  
-        //Use 65% of data for training
-
-        DataSet trainingData = testAndTrain.getTrain();
-        DataSet testData = testAndTrain.getTest();
-
-        //We need to normalize our data. We'll use NormalizeStandardize (which 
-        gives us mean 0, unit variance):
-        DataNormalization normalizer = new NormalizerStandardize();
-        normalizer.fit(trainingData);           //Collect the statistics (mean/
-        																 stdev) 
-        from the training data. This does not modify the input data
-        normalizer.transform(trainingData); //Apply normalization to 
-        									  the training data
-        normalizer.transform(testData);  //Apply normalization to 
-        									  the test data. 
-        This is using statistics calculated from the *training* set
-
-
-        final int numInputs = 4;
-        int outputNum = 3;
-        long seed = 6;
-
-
-        log.info("Build model....");
-        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
-            .seed(seed)
-            .activation(Activation.TANH)
-            .weightInit(WeightInit.XAVIER)
-            .updater(new Sgd(0.1))
-            .l2(1e-4)
-            .list()
-            .layer(0, new DenseLayer.Builder().nIn(numInputs).nOut(3)
-                .build())
-            .layer(1, new DenseLayer.Builder().nIn(3).nOut(3)
-                .build())
-            .layer(2, new 
-            OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                .activation(Activation.SOFTMAX)
-                .nIn(3).nOut(outputNum).build())
-            .backprop(true).pretrain(false)
-            .build();
-
-        //run the model
-        MultiLayerNetwork model = new MultiLayerNetwork(conf);
-        model.init();
-        model.setListeners(new ScoreIterationListener(100));
-
-        for(int i=0; i<1000; i++ ) {
-            model.fit(trainingData);
-        }
-
-        //evaluate the model on the test set
-        Evaluation eval = new Evaluation(3);
-        INDArray output = model.output(testData.getFeatureMatrix());
-        eval.eval(testData.getLabels(), output);
-        log.info(eval.stats());
-    }
-
-}
-```
 
 [^dl4jcode]: https://github.com/deeplearning4j/dl4j-examples/blob/master/dl4j-examples/src/main/java/ org/deeplearning4j/examples/dataexamples/CSVExample.java
 [^1]: https://cloud.google.com/kubernetes-engine
