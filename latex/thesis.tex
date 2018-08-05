@@ -321,13 +321,13 @@ state of the pod.
 Pods are specified by the \emph{PodSpec}, which defines the workload and
 parameters on how to run the containers \cite{kub_intro}. The kubelet
 process is responsible that the containers described in the
-specification are running and healthy \cite{kub_comp}.
+specification are running and are healthy \cite{kub_comp}.
 
 \paragraph{kube-proxy}\label{kube-proxy}
 
 The proxy service is in charge of forwarding requests of defined
-services to the correct containers. On a basic level, load balancing is
-also done by the proxy. \cite{baier-kub}
+services to the correct containers. On a basic level, also load
+balancing is done by the proxy. \cite{baier-kub}
 
 \paragraph{Container Runtime}\label{container-runtime}
 
@@ -393,7 +393,7 @@ A service has attributes attached to it, that define its optimal state.
 
 Services can be replicated, attached to storage and network resources
 and expose ports to the outside, defined by attributes. You can change
-the attributes while runtime, without restarting a service.
+the attributes during runtime, without restarting a service.
 \cite{dock-swarm}
 
 \paragraph{Task}\label{task}
@@ -404,10 +404,9 @@ worker nodes, respecting the service scale.\cite{dock-swarm}
 
 \paragraph{Nodes}\label{nodes}
 
-A node is a Docker instance that is a participant in the the
-\emph{swarm}. Nodes are typically distributed across multiple physical
-machines (in the cloud), but can also run on a single computer.
-\cite{dock-swarm}
+A node is a Docker instance that is a participant in the \emph{swarm}.
+Nodes are typically distributed across multiple physical machines (in
+the cloud), but can also run on a single computer. \cite{dock-swarm}
 
 \paragraph{Manager Nodes}\label{manager-nodes}
 
@@ -477,7 +476,7 @@ or folders into a container. Kubernetes has two APIs available: Volumes
 and Persistent Volumes. Volumes are an abstraction with several
 different implementations for cloud storages (like AWS, Azure) and are
 bound to the lifecycle of a pod. Once a pod is removed, also the volume
-data is gone. Persistent Volumens allow data to be persisted
+data is deleted. Persistent Volumens allow data to be persisted
 independently from a pod.
 
 Both technologies provide an easy to install development environment.

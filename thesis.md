@@ -148,11 +148,11 @@ Servers that accomplish workloads are called nodes. Each workload is described a
 
 The kubelet is the primary agent running on each node in the cluster, responsible for running pods \cite{kub_comp}. It communicates with the API server to receive commands invoked by the scheduler. Interaction takes place with the etcd store to read and update configuration and state of the pod.
 
-Pods are specified by the *PodSpec*, which defines the workload and parameters on how to run the containers \cite{kub_intro}. The kubelet process is responsible that the containers described in the specification are running and healthy \cite{kub_comp}. 
+Pods are specified by the *PodSpec*, which defines the workload and parameters on how to run the containers \cite{kub_intro}. The kubelet process is responsible that the containers described in the specification are running and are healthy \cite{kub_comp}. 
 
 ##### kube-proxy
 
-The proxy service is in charge of forwarding requests of defined services to the correct containers. On a basic level, load balancing is also done by the proxy. \cite{baier-kub}
+The proxy service is in charge of forwarding requests of defined services to the correct containers. On a basic level, also load balancing is done by the proxy. \cite{baier-kub}
 
 ##### Container Runtime
 
@@ -193,7 +193,7 @@ Services are definitions of tasks that will be executed on manager or worker nod
 
 A service has attributes attached to it, that define its optimal state. 
 
-Services can be replicated, attached to storage and network resources and expose ports to the outside, defined by attributes. You can change the attributes while runtime, without restarting a service. \cite{dock-swarm}
+Services can be replicated, attached to storage and network resources and expose ports to the outside, defined by attributes. You can change the attributes during runtime, without restarting a service. \cite{dock-swarm}
 
 <!--For **global services**, the swarm runs one task for the service on every available node in the cluster.-->
 
@@ -205,7 +205,7 @@ A task is a running container itself which is assigned to the service. It is man
 
 ##### Nodes
 
-A node is a Docker instance that is a participant in the the *swarm*. Nodes are typically distributed across multiple physical machines (in the cloud), but can also run on a single computer. \cite{dock-swarm}
+A node is a Docker instance that is a participant in the *swarm*. Nodes are typically distributed across multiple physical machines (in the cloud), but can also run on a single computer. \cite{dock-swarm}
 
 ##### Manager Nodes
 
@@ -251,7 +251,7 @@ The following table shows a comparison of publicly available metrics on *GitHub*
 
 The handling of *Docker Swarm Mode* and Kubernetes is similar in many aspects, like load balancing with Ingress, service discovery via DNS, and the definition language YAML. Auto-scaling, which means increasing or decreasing running instances of a service as the load changes over time, is not directly available in *Docker Swarm Mode*, in contrast to Kubernetes. 
 
-*Docker Swam Mode* provides the possibility to mount local volumes or folders into a container.  Kubernetes has two APIs available: Volumes and Persistent Volumes. Volumes are an abstraction with several different implementations for cloud storages (like AWS, Azure) and are bound to the lifecycle of a pod. Once a pod is removed, also the volume data is gone. Persistent Volumens allow data to be persisted independently from a pod.
+*Docker Swam Mode* provides the possibility to mount local volumes or folders into a container.  Kubernetes has two APIs available: Volumes and Persistent Volumes. Volumes are an abstraction with several different implementations for cloud storages (like AWS, Azure) and are bound to the lifecycle of a pod. Once a pod is removed, also the volume data is deleted. Persistent Volumens allow data to be persisted independently from a pod.
 
 Both technologies provide an easy to install development environment. Kubernetes is available via the minikube package as well as in the newest version of Docker Community Edition. Docker Swarm Mode is also available via the Docker application.
 
