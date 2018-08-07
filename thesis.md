@@ -10,7 +10,7 @@ This thesis presents a **con**tainer **b**ased **ex**ecution stack for **n**eura
 
 The first objective is to specify functional and non-functional requirements for the neural network system.  This is followed by the characteristics of the API and the implementation of microservices that later define the neural network composition as a collection of loosly coupled services.
 
-The next step is to setup a *Kubernetes* cluster to create the basics for container orchestration. 
+The next step is to setup a *Kubernetes* cluster to create the basis for container orchestration. 
 
 Finally, the microservices are deployed to containers and combined in a cluster. 
 
@@ -50,7 +50,7 @@ Machine learning has become a highly discussed topic in information technology i
 
 A recent Californian study shows that 6.5 million developers worldwide are currently involved in projects that use artificial intelligence techniques and another 5.8 million developers expect to implement these in near future \cite{evans}.
 
-Machine learning is not just a research topic in the United States. Survey results of 264 companies in the DACH region show, that 56 of them already use that kind of technology in production. 45 companies are evaluating the use case and 65 already have initial experiences (see figure \ref{img.crisp_ml_verbreitung}). It is seen by a fifth of the decision-makers as a core area to improve the competitiveness and profitability of companies in future. \cite{crisp}
+Machine learning is not just a research topic in the United States. Survey results of 264 companies in the DACH region show, that 56 of them already use that kind of technology in production. 47 companies are evaluating the use case and 65 already have initial experiences (see figure \ref{img.crisp_ml_verbreitung}). It is seen by a fifth of the decision-makers as a core area to improve the competitiveness and profitability of companies in future. \cite{crisp}
 
 <!--\bilds{crisp_ml_verbreitung}{Distribution of machine learning of 264 companies in the DACH region \cite{crisp}}{Distribution of machine learning in 264 companies (DACH region) \cite{crisp}}-->
 
