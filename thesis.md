@@ -257,7 +257,7 @@ Both technologies provide an easy to install development environment. Kubernetes
 
 ### Decision
 
-Taking into account the community size, the feature-richness and the out-of-the-box support by the major players Amazon AWS, Microsoft Azure and Google Cloud Engine, Kubernetes is the selected technology for the presented execution stack.
+Taking into account the community size, the feature-richness and the out-of-the-box support by the major players Amazon AWS, Microsoft Azure and Google Cloud Engine, Kubernetes is the selected technology for ConbexNN.
 
 ## Machine Learning
 
@@ -613,7 +613,7 @@ The tabs "Description", "Definition", "Instance" and "Result" represent the epon
 
 ### Quality
 
-The execution stack shall comply with the following quality features:
+ConbexNN shall comply with the following quality features:
 
 * Standard RESTful API
 * the user interface works on all common browsers and devices (responsive design)
@@ -817,7 +817,7 @@ Example of stored file:
 
 ## Overview Microservices
 
-The neural network cloud execution stack consists of four main services that expose a RESTful API to users and two supporting services in charge of persisting data. Figure \ref{img.overview_nn_architecture} displays an overview of the service architecture, including the exposed endpoints and storage backends.
+ConbexNN consists of four main services that expose a RESTful API to users and two supporting services in charge of persisting data. Figure \ref{img.overview_nn_architecture} displays an overview of the service architecture, including the exposed endpoints and storage backends.
 
 ![Architectural Overview of the Neural Network Stack\label{img.overview_nn_architecture}](images/overview_nn_architecture.png){width=16.5cm}
 
@@ -2361,7 +2361,7 @@ kubectl --context $CONTEXT apply -f ingress.yaml
 
 ## Google Cloud Instance 
 
-This section describes how to deploy the execution stack into a Kubernetes cluster in the Google Kubernetes Engine.
+This section describes how to deploy ConbexNN into a Kubernetes cluster in the Google Kubernetes Engine.
 
 ##### Prerequisites
 
@@ -3074,11 +3074,9 @@ The graphical interface of ConbexNN provides a quick overview over neural networ
 
 # Conclusion 
 
-This thesis presented an open-source execution stack for neural network simulation  in an effective and efficient way using simple RESTful webservices fostering Kubernetes Cloud container orchestration and microservices. Using this technique it becomes possible to scale individual services easily and automatically according to current load. Each component is fully interchangeable, as long as the documented RESTful API is implemented. ConbexNN was demonstrated and evaluated on the Iris flower and a wine rating data set. Furthermore various ideas, to integrate this solution into other neural network platforms, were given. 
+This thesis presented ConbexNN, an open-source execution stack for neural network simulation in an effective and efficient way using simple RESTful webservices fostering Kubernetes Cloud container orchestration and microservices. Using this technique it becomes possible to scale individual services easily and automatically according to current load. Each component is fully interchangeable, as long as the documented RESTful API is implemented. ConbexNN was demonstrated and evaluated on the Iris flower and a wine rating data set. Furthermore various ideas to integrate this solution into other neural network platforms, were given. It is easy to set-up on popular cloud platforms, like Amazon AWS, Google Cloud Engine and Microsoft Azure.
 
 Using ViNNSL as domain specific modelling language, enables users to define neural networks without explicit programming skills. 
-
-The appendix lists how to set up and use this stack in various ways on popular Cloud platforms. 
 
 # Acknowledgments 
 

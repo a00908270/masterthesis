@@ -26,7 +26,7 @@ later define the neural network composition as a collection of loosly
 coupled services.
 
 The next step is to setup a \emph{Kubernetes} cluster to create the
-basics for container orchestration.
+basis for container orchestration.
 
 Finally, the microservices are deployed to containers and combined in a
 cluster.
@@ -85,7 +85,7 @@ in near future \cite{evans}.
 
 Machine learning is not just a research topic in the United States.
 Survey results of 264 companies in the DACH region show, that 56 of them
-already use that kind of technology in production. 45 companies are
+already use that kind of technology in production. 47 companies are
 evaluating the use case and 65 already have initial experiences (see
 figure \ref{img.crisp_ml_verbreitung}). It is seen by a fifth of the
 decision-makers as a core area to improve the competitiveness and
@@ -488,8 +488,8 @@ available via the Docker application.
 
 Taking into account the community size, the feature-richness and the
 out-of-the-box support by the major players Amazon AWS, Microsoft Azure
-and Google Cloud Engine, Kubernetes is the selected technology for the
-presented execution stack.
+and Google Cloud Engine, Kubernetes is the selected technology for
+ConbexNN.
 
 \section{Machine Learning}\label{machine-learning}
 
@@ -1045,7 +1045,7 @@ Service\label{vinnsl-ui-mockup}}
 
 \subsection{Quality}\label{quality}
 
-The execution stack shall comply with the following quality features:
+ConbexNN shall comply with the following quality features:
 
 \begin{itemize}
 \tightlist
@@ -1727,11 +1727,10 @@ Example of stored file:
 
 \section{Overview Microservices}\label{overview-microservices}
 
-The neural network cloud execution stack consists of four main services
-that expose a RESTful API to users and two supporting services in charge
-of persisting data. Figure \ref{img.overview_nn_architecture} displays
-an overview of the service architecture, including the exposed endpoints
-and storage backends.
+ConbexNN consists of four main services that expose a RESTful API to
+users and two supporting services in charge of persisting data. Figure
+\ref{img.overview_nn_architecture} displays an overview of the service
+architecture, including the exposed endpoints and storage backends.
 
 \begin{figure}
 \centering
@@ -4051,8 +4050,8 @@ kubectl --context $CONTEXT apply -f ingress.yaml
 
 \section{Google Cloud Instance}\label{google-cloud-instance}
 
-This section describes how to deploy the execution stack into a
-Kubernetes cluster in the Google Kubernetes Engine.
+This section describes how to deploy ConbexNN into a Kubernetes cluster
+in the Google Kubernetes Engine.
 
 \paragraph{Prerequisites}\label{prerequisites-1}
 
@@ -4971,22 +4970,20 @@ user interface.
 
 \chapter{Conclusion}\label{conclusion}
 
-This thesis presented an open-source execution stack for neural network
-simulation in an effective and efficient way using simple RESTful
-webservices fostering Kubernetes Cloud container orchestration and
-microservices. Using this technique it becomes possible to scale
+This thesis presented ConbexNN, an open-source execution stack for
+neural network simulation in an effective and efficient way using simple
+RESTful webservices fostering Kubernetes Cloud container orchestration
+and microservices. Using this technique it becomes possible to scale
 individual services easily and automatically according to current load.
 Each component is fully interchangeable, as long as the documented
 RESTful API is implemented. ConbexNN was demonstrated and evaluated on
-the Iris flower and a wine rating data set. Furthermore various ideas,
-to integrate this solution into other neural network platforms, were
-given.
+the Iris flower and a wine rating data set. Furthermore various ideas to
+integrate this solution into other neural network platforms, were given.
+It is easy to set-up on popular cloud platforms, like Amazon AWS, Google
+Cloud Engine and Microsoft Azure.
 
 Using ViNNSL as domain specific modelling language, enables users to
 define neural networks without explicit programming skills.
-
-The appendix lists how to set up and use this stack in various ways on
-popular Cloud platforms.
 
 \chapter{Acknowledgments}\label{acknowledgments}
 
