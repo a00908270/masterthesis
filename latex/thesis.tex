@@ -792,33 +792,6 @@ the Adam Gibson and released under Apache License Version 2.0, is
 pointed out.
 
 \begin{verbatim}
-package org.deeplearning4j.examples.dataexamples;
-
-import org.datavec.api.records.reader.RecordReader;
-import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
-import org.datavec.api.split.FileSplit;
-import org.datavec.api.util.ClassPathResource;
-import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-import org.deeplearning4j.eval.Evaluation;
-import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
-import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.layers.DenseLayer;
-import org.deeplearning4j.nn.conf.layers.OutputLayer;
-import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
-import org.deeplearning4j.nn.weights.WeightInit;
-import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
-import org.nd4j.linalg.activations.Activation;
-import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.DataSet;
-import org.nd4j.linalg.dataset.SplitTestAndTrain;
-import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
-import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
-import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
-import org.nd4j.linalg.learning.config.Sgd;
-import org.nd4j.linalg.lossfunctions.LossFunctions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @author Adam Gibson
  */
@@ -1771,7 +1744,7 @@ Stack\label{img.overview_nn_architecture}}
 (vinnsl-service)}\label{vinnsl-service-vinnsl-service}
 
 The \texttt{vinnsl-service} is responsible for handling the import,
-management and manipulation of neural network objects and their status.
+management and mani-pulation of neural network objects and their status.
 It maps the CRUD\footnote{Create, Read, Update, Delete} operations to
 HTTP methods. A new neural network is created by sending a \texttt{POST}
 request to the \texttt{/vinnsl} endpoint containing a ViNNSL Definition
@@ -1794,8 +1767,8 @@ of the network.
 (vinnsl-storage-service)}\label{storage-service-vinnsl-storage-service}
 
 Binary files, like trained network models, images or csv files are
-essential in the pocess of creating and training neural networks. File
-management is handled by the \texttt{vinnsl-storage-service}.
+essential in the process of creating and training neural networks. File
+management is handled by the \texttt{vinnsl-storage-} \texttt{service}.
 
 \subsection{Frontend UI (vinnsl-nn-ui)}\label{frontend-ui-vinnsl-nn-ui}
 
@@ -1928,7 +1901,7 @@ active connections} \cite{nginx-loadbal}.
 State}\label{neural-network-objects-state}
 
 The state of neural network objects is saved in the \texttt{NnCloud}
-object. When the object is instantiated the default value is
+object. When the object is instantiated, the default value is
 \texttt{CREATED}. When the network is queued, the worker service gathers
 all the necessary data from the vinnsl and vinnsl storage service and
 changes the state to \texttt{QUEUED}. During the network training, the
@@ -2157,9 +2130,9 @@ a neural network.
 
 \section{Endpoints}\label{endpoints}
 
-The following table gives an overview of the provided RESTful endpoints
-provided by different services. They are made available via
-\emph{Ingress} outside the \emph{Kubernetes} cluster.
+The following table gives an overview of the RESTful endpoints by
+different services. They are made available via \emph{Ingress} outside
+the \emph{Kubernetes} cluster.
 
 \begin{longtable}[]{@{}ll@{}}
 \toprule
@@ -2270,13 +2243,13 @@ enables to store large data is activated. Figure
 \texttt{VinnslStorageController} makes retrieving and uploading files
 available via the \texttt{/storage} endpoint.
 
-For one, there is an HTML form that enables a \texttt{Multipart} file
-upload from a browser, which is handled by the
-\texttt{handleFileUpload()} method. Secondly instead of directly
-uploading a file, a \emph{URL} can be given as parameter via the
-\texttt{handleRestFileUploadFromUrl}. The storage service takes care of
-downloading and storing the file. The controller uses the \emph{GridFS}
-template as an abstraction to the \emph{MongoDB} database.
+An HTML form that enables a \texttt{Multipart} file upload from a
+browser, which is handled by the \texttt{handleFileUpload()} method.
+Alternatively, instead of directly uploading a file, a \emph{URL} can be
+passed as parameter via the \texttt{handleRestFileUploadFromUrl}. The
+storage service takes care of downloading and storing the file. The
+controller uses the \emph{GridFS} template as an abstraction to the
+\emph{MongoDB} database.
 
 \begin{figure}
 \centering
@@ -4535,10 +4508,10 @@ The status is changed to \texttt{FINISHED} and the transformed
 \begin{figure}
 \centering
 \includegraphics[width=12.00000cm]{images/usecase_1_datastructure_finished}
-\caption[Neural Network Datastructure of the fninished network
-visualized in the Robo3T application
+\caption[Neural Network Datastructure of the finished network visualized
+in the Robo3T application
 \label{usecase_1_datastructure_finished}]{Neural Network Datastructure
-of the fninished network visualized in the Robo3T\footnotemark{}
+of the finished network visualized in the Robo3T\footnotemark{}
 application \label{usecase_1_datastructure_finished}}
 \end{figure}
 \footnotetext{https://www.robomongo.org}

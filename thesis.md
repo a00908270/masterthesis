@@ -439,33 +439,6 @@ For framework demonstration purposes, the source code classifying the Iris datas
 For better understanding of the Deeplearning4J syntax and functionality, this commented code example[^dl4jcode], written by the Adam Gibson and released under Apache License Version 2.0, is pointed out. 
 
 ```
-package org.deeplearning4j.examples.dataexamples;
-
-import org.datavec.api.records.reader.RecordReader;
-import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
-import org.datavec.api.split.FileSplit;
-import org.datavec.api.util.ClassPathResource;
-import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-import org.deeplearning4j.eval.Evaluation;
-import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
-import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.layers.DenseLayer;
-import org.deeplearning4j.nn.conf.layers.OutputLayer;
-import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
-import org.deeplearning4j.nn.weights.WeightInit;
-import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
-import org.nd4j.linalg.activations.Activation;
-import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.DataSet;
-import org.nd4j.linalg.dataset.SplitTestAndTrain;
-import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
-import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
-import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
-import org.nd4j.linalg.learning.config.Sgd;
-import org.nd4j.linalg.lossfunctions.LossFunctions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @author Adam Gibson
  */
@@ -850,7 +823,7 @@ The neural network cloud execution stack consists of four main services that exp
 
 ### Vinnsl Service (vinnsl-service)
 
-The `vinnsl-service` is responsible for handling the import, management and manipulation of neural network objects and their status. It maps the CRUD[^5] operations to HTTP methods. A new neural network is created by sending a `POST` request to the `/vinnsl` endpoint containing a ViNNSL Definition XML as body. Sending a `GET` request to the `/vinnsl` route returns a JSON containing all ViNNSL neural network objects. 
+The `vinnsl-service` is responsible for handling the import, management and mani\-pulation of neural network objects and their status. It maps the CRUD[^5] operations to HTTP methods. A new neural network is created by sending a `POST` request to the `/vinnsl` endpoint containing a ViNNSL Definition XML as body. Sending a `GET` request to the `/vinnsl` route returns a JSON containing all ViNNSL neural network objects. 
 
 The `vinnsl-service` depends on the `vinnsl-db` service, which runs a MongoDB database to store the objects. 
 
@@ -860,7 +833,8 @@ The `vinnsl-nn-worker` implements a queue management for neural network training
 
 ### Storage Service (vinnsl-storage-service)
 
-Binary files, like trained network models, images or csv files are essential in the pocess of creating and training neural networks. File management is handled by the `vinnsl-storage-service`.
+Binary files, like trained network models, images or csv files are essential in the process of creating and training neural networks. File management is handled by the `vinnsl-storage-`
+`service`.
 
 ### Frontend UI (vinnsl-nn-ui)
 
@@ -943,7 +917,7 @@ External access from outside the cluster to specific services is managed and pro
 
 ## Neural Network Objects State
 
-The state of neural network objects is saved in the `NnCloud` object. When the object is instantiated the default value is `CREATED`.  When the network is queued, the worker service gathers all the necessary data from the vinnsl and vinnsl storage service and changes the state to `QUEUED`. During the network training, the worker changes the state to `INPROGRESS`. As soon as the training is finished, the worker service uploads the results and updated network state to the storage service and subsequently changes the state to `FINISHED`. Trained networks can be queued for retraining: in that case the state returns to `QUEUED`.  If errors occur during the training process the state will be set to `ERROR`.
+The state of neural network objects is saved in the `NnCloud` object. When the object is instantiated, the default value is `CREATED`.  When the network is queued, the worker service gathers all the necessary data from the vinnsl and vinnsl storage service and changes the state to `QUEUED`. During the network training, the worker changes the state to `INPROGRESS`. As soon as the training is finished, the worker service uploads the results and updated network state to the storage service and subsequently changes the state to `FINISHED`. Trained networks can be queued for retraining: in that case the state returns to `QUEUED`.  If errors occur during the training process the state will be set to `ERROR`.
 
 Figure \ref{nn-states} visualizes the state changes in a state machine.
 
@@ -1059,7 +1033,7 @@ The web application is a Javascript based frontend, using the *Vue.js* and *Twit
 
 ## Endpoints
 
-The following table gives an overview of the provided RESTful endpoints provided by different services. They are made available via *Ingress* outside the *Kubernetes* cluster.
+The following table gives an overview of the RESTful endpoints by different services. They are made available via *Ingress* outside the *Kubernetes* cluster.
 
 | Service Name           | Exposed Endpoints             |
 | ---------------------- | ----------------------------- |
@@ -1142,7 +1116,7 @@ The *vinnsl storage service* is a web service for storing and retrieving files i
 
 `VinnslStorageController` makes retrieving and uploading files available via the `/storage` endpoint.
 
-For one, there is an HTML form that enables a `Multipart` file upload from a browser, which is handled by the `handleFileUpload()` method. Secondly instead of directly uploading a file, a *URL* can be given as parameter via the `handleRestFileUploadFromUrl`. The storage service takes care of downloading and storing the file. The controller uses the *GridFS* template as an abstraction to the *MongoDB* database. 
+An HTML form that enables a `Multipart` file upload from a browser, which is handled by the `handleFileUpload()` method. Alternatively, instead of directly uploading a file, a *URL* can be passed as parameter via the `handleRestFileUploadFromUrl`. The storage service takes care of downloading and storing the file. The controller uses the *GridFS* template as an abstraction to the *MongoDB* database. 
 
 
 
@@ -2743,7 +2717,7 @@ Testing takes place automatically after training and evaluates the accuracy of t
 
 As soon as the training and testing process is finished, a file with the testing report is ready on the storage server. Figure \ref{usecase_1_datastructure_finished} clarifies the updated data structure of the neural network object. A result file with id `5b19972052faff0001cb6bbf` was uploaded to the storage service. The status is changed to `FINISHED` and the transformed *Deeplearning4J* model representation is updated in the field *dl4jNetwork*.
 
-![Neural Network Datastructure of the fninished network visualized in the Robo3T[^9] application \label{usecase_1_datastructure_finished}](images/usecase_1_datastructure_finished.png){width=12cm}
+![Neural Network Datastructure of the finished network visualized in the Robo3T[^9] application \label{usecase_1_datastructure_finished}](images/usecase_1_datastructure_finished.png){width=12cm}
 
 In the *ViNNSL NN UI*, the result file can be viewed by switching to the *Data* tab and selecting *See File* under the headline *Result Data*.
 
