@@ -219,7 +219,7 @@ under heavy load should be scaled for better performance. To deal with
 these challenges container orchestration technologies come into place.
 According to a study from 2017 published by Portworx, Kubernetes is the
 most frequently used container orchestration tool in organizations,
-followed by Docker Swarm and Amazon ECS. \cite{portworx-2017}
+followed by Docker Swarm. \cite{portworx-2017}
 
 This section describes the architecture of the mentioned container
 orchestration technologies and compares them.
@@ -383,6 +383,8 @@ hosts that act as managers and workers. Hosts can be managers, which
 means delegators of work, or workers, that run services, or both.
 \cite{dock-swarm}
 
+Fig. \ref{swarm_core_architecture} shows a simplified overview.
+
 \paragraph{Service}\label{service}
 
 Services are definitions of tasks that will be executed on manager or
@@ -400,7 +402,7 @@ the attributes during runtime, without restarting a service.
 
 A task is a running container itself which is assigned to the service.
 It is managed by the \emph{swarm manager}. Manager nodes assign tasks to
-worker nodes, respecting the service scale.\cite{dock-swarm}
+worker nodes, respecting the service scale \cite{dock-swarm}.
 
 \paragraph{Nodes}\label{nodes}
 
@@ -427,6 +429,13 @@ balance services.
 
 An internal DNS component assigns each service a DNS entry
 automatically. \cite{dock-swarm}
+
+\begin{figure}
+\centering
+\includegraphics[width=15.00000cm]{images/swarm_core_architecture}
+\caption{Docker Swarm Mode core
+architecture\label{swarm_core_architecture} \cite{dock-swarm}}
+\end{figure}
 
 \subsubsection{Announcements}\label{announcements}
 
@@ -945,7 +954,7 @@ contributors. Backed by Google, TensorFlow is fully integrated into the
 Google Cloud and Android platform. It has also been adopted by several
 large companies, like IBM, Twitter and Airbus \cite{dzone-frameworks}.
 Furthermore tech blogs rather report on TensorFlow than other
-frameworks. A Google search for TensorFlow on the popular tech blog
+frameworks. A search for TensorFlow on the popular tech blog
 \emph{DZone.com} returns over 5.300 results, while Deeplearning4J got
 less than 500 (as of July 17, 2018). The following table compares the
 statistics of the two mentioned projects on GitHub.
@@ -4120,6 +4129,125 @@ the API Specification.
 kubectl --context $CONTEXT apply -f ingress.yaml
 \end{verbatim}
 
+\section{Amazon EKS}\label{amazon-eks}
+
+This section describes how to deploy ConbexNN into a Kubernetes cluster
+in the \emph{Amazon Elastic Container Service} (EKS).
+
+\paragraph{Prerequisites}\label{prerequisites-2}
+
+\begin{itemize}
+\tightlist
+\item
+  AWS Account with activated billing or credits
+\item
+  \texttt{kubectl} tool on local machine installed:
+  (\url{https://kubernetes.io/docs/tasks/tools/install-kubectl/\#install-kubectl})
+\end{itemize}
+
+\paragraph{Create Cluster}\label{create-cluster-1}
+
+Log into the AWS Management Console\footnote{https://console.aws.amazon.com/eks}
+and select the Service \emph{Elastic Container Service for Kubernetes}.
+Create a new cluster in the user interface. Configure \emph{kubectl} for
+EKS using the current documentation\footnote{https://docs.aws.amazon.com/eks/latest/userguide/configure-kubectl.html}.
+
+\paragraph{Clone the repository}\label{clone-the-repository-1}
+
+Clone the \texttt{vinnsl-nn-cloud} project and swtich into the
+google-cloud folder.
+
+\begin{verbatim}
+git clone https://github.com/a00908270/vinnsl-nn-cloud.git
+cd kubernetes_config/aws-cloud/
+\end{verbatim}
+
+\paragraph{Run Services in Cluster}\label{run-services-in-cluster-2}
+
+\begin{verbatim}
+# MongoDB for vinnsl-service
+kubectl --context $CONTEXT create -f mongo_small.yaml 
+# Vinnsl Service
+kubectl --context $CONTEXT create -f vinnsl-service.yaml
+# MongoDB for vinnsl-storage-service
+kubectl --context $CONTEXT create -f mongo-storage-service_small.yaml
+# Vinnsl Storage Service
+kubectl --context $CONTEXT create -f vinnsl-storage-service.yaml
+# Vinnsl NN Worker Service
+kubectl --context $CONTEXT create -f vinnsl-nn-worker.yaml
+# Vinnsl Frontend UI Webapp
+kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
+\end{verbatim}
+
+\paragraph{Enable and Set Up Ingress}\label{enable-and-set-up-ingress-2}
+
+Sets up a proxy to make services available at the endpoint specified in
+the API Specification.
+
+\begin{verbatim}
+kubectl --context $CONTEXT apply -f ingress.yaml
+\end{verbatim}
+
+\section{Microsoft AKS}\label{microsoft-aks}
+
+This section describes how to deploy ConbexNN into a Kubernetes cluster
+in the \emph{Azure Kubernetes Service} (AKS).
+
+\paragraph{Prerequisites}\label{prerequisites-3}
+
+\begin{itemize}
+\tightlist
+\item
+  Microsoft Azure account with activated billing or credits
+\item
+  \texttt{kubectl} tool on local machine installed:
+  (\url{https://kubernetes.io/docs/tasks/tools/install-kubectl/\#install-kubectl})
+\end{itemize}
+
+\paragraph{Create Cluster}\label{create-cluster-2}
+
+Log into the AWS Management Console\footnote{https://portal.azure.com}
+and select the Service \emph{Azure Kubernetes Service}. Create a new
+cluster in the user interface. Launch the \emph{Cloud Shell} an run the
+following commands.
+
+\paragraph{Clone the repository}\label{clone-the-repository-2}
+
+Clone the \texttt{vinnsl-nn-cloud} project and swtich into the
+google-cloud folder.
+
+\begin{verbatim}
+git clone https://github.com/a00908270/vinnsl-nn-cloud.git
+cd kubernetes_config/azure-cloud/
+\end{verbatim}
+
+\paragraph{Run Services in Cluster}\label{run-services-in-cluster-3}
+
+\begin{verbatim}
+# MongoDB for vinnsl-service
+kubectl --context $CONTEXT create -f mongo_small.yaml 
+# Vinnsl Service
+kubectl --context $CONTEXT create -f vinnsl-service.yaml
+# MongoDB for vinnsl-storage-service
+kubectl --context $CONTEXT create -f mongo-storage-service_small.yaml
+# Vinnsl Storage Service
+kubectl --context $CONTEXT create -f vinnsl-storage-service.yaml
+# Vinnsl NN Worker Service
+kubectl --context $CONTEXT create -f vinnsl-nn-worker.yaml
+# Vinnsl Frontend UI Webapp
+kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
+
+\end{verbatim}
+
+\paragraph{Enable and Set Up Ingress}\label{enable-and-set-up-ingress-3}
+
+Sets up a proxy to make services available at the endpoint specified in
+the API Specification.
+
+\begin{verbatim}
+kubectl --context $CONTEXT apply -f ingress.yaml
+\end{verbatim}
+
 \chapter{Use Cases}\label{use-cases}
 
 As a demonstration of the implemented ConbexNN, this thesis features two
@@ -4169,7 +4297,7 @@ Sepal length, Sepal width, Petal length, Peta width, Iris species
 <more lines>
 \end{verbatim}
 
-\subsection{Prerequisites}\label{prerequisites-2}
+\subsection{Prerequisites}\label{prerequisites-4}
 
 \begin{itemize}
 \tightlist
@@ -4259,7 +4387,8 @@ BODY
         <valueparameter>threshold</valueparameter>
      </parameters>
      <data>
-        <description>iris txt file with 3 classifications, 4 input vars</description>
+        <description>iris txt file with 3 classifications,
+        4 input vars</description>
         <tabledescription>no input as table possible</tabledescription>
         <filedescription>CSV file</filedescription>
      </data>
@@ -4380,7 +4509,8 @@ BODY
     <valueparameter name="seed">6</valueparameter>
  </parameters>
  <data>
-    <description>iris txt file with 3 classifications, 4 input vars</description>
+    <description>iris txt file with 3 classifications,
+    4 input vars</description>
     <dataSchemaID>name/iris.txt</dataSchemaID>
  </data>
 </definition>
@@ -4598,7 +4728,7 @@ Rating Score Class, Category, Price (US$)
 <more lines>
 \end{verbatim}
 
-\subsection{Prerequisites}\label{prerequisites-3}
+\subsection{Prerequisites}\label{prerequisites-5}
 
 \begin{itemize}
 \tightlist
@@ -4690,7 +4820,8 @@ BODY
         <valueparameter>threshold</valueparameter>
      </parameters>
      <data>
-        <description>wine csv file with 2 classifications, 2 input vars</description>
+        <description>wine csv file with 2 classifications, 
+        2 input vars</description>
         <tabledescription>no input as table possible</tabledescription>
         <filedescription>CSV file</filedescription>
      </data>
@@ -4812,7 +4943,8 @@ BODY
     <valueparameter name="seed">6</valueparameter>
  </parameters>
  <data>
-    <description>wine csv file with 2 classifications, 2 input vars</description>
+    <description>wine csv file with 2 classifications,
+    2 input vars</description>
     <dataSchemaID>name/wines.csv</dataSchemaID>
  </data>
 </definition>

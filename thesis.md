@@ -102,7 +102,7 @@ Figure \ref{monolithic_vs_microservice} shows the architectural difference betwe
 
 ## Container Orchestration Technologies
 
-As every single microservice runs as a container, we need a tool to manage, organise and replace these containers. Services should also be able to talk to each other and to be restarted if they fail. Services under heavy load should be scaled for better performance. To deal with these challenges container orchestration technologies come into place.  According to a study from 2017 published by Portworx, Kubernetes is the most frequently used container orchestration tool in organizations, followed by Docker Swarm and Amazon ECS. \cite{portworx-2017}
+As every single microservice runs as a container, we need a tool to manage, organise and replace these containers. Services should also be able to talk to each other and to be restarted if they fail. Services under heavy load should be scaled for better performance. To deal with these challenges container orchestration technologies come into place.  According to a study from 2017 published by Portworx, Kubernetes is the most frequently used container orchestration tool in organizations, followed by Docker Swarm. \cite{portworx-2017}
 
 This section describes the architecture of the mentioned container orchestration technologies and compares them.
 
@@ -186,7 +186,9 @@ Minikube is a tool to run a single-node Kubernetes cluster locally on computers 
 
 #### Components
 
-Docker hosts can run in swarm mode, a swarm consists of one or more hosts that act as managers and workers. Hosts can be managers, which means delegators of work, or workers, that run services, or both. \cite{dock-swarm}
+Docker hosts can run in swarm mode, a swarm consists of one or more hosts that act as managers and workers. Hosts can be managers, which means delegators of work, or workers, that run services, or both. \cite{dock-swarm} 
+
+Fig. \ref{swarm_core_architecture} shows a simplified overview.
 
 ##### Service
 Services are definitions of tasks that will be executed on manager or worker nodes, specified by which container image to use and which commands to execute \cite{dock-swarm}.
@@ -199,7 +201,7 @@ Services can be replicated, attached to storage and network resources and expose
 
 ##### Task 
 
-A task is a running container itself which is assigned to the service. It is managed by the *swarm manager*. Manager nodes assign tasks to worker nodes, respecting the service scale.\cite{dock-swarm}
+A task is a running container itself which is assigned to the service. It is managed by the *swarm manager*. Manager nodes assign tasks to worker nodes, respecting the service scale \cite{dock-swarm}.
 
 <!--A **task** carries a Docker container and the commands to run inside the container. It is the atomic scheduling unit of swarm. Manager nodes assign tasks to worker nodes according to the number of replicas set in the service scale. Once a task is assigned to a node, it cannot move to another node. It can only run on the assigned node or fail.-->
 
@@ -220,6 +222,8 @@ Worker nodes execute tasks from the manager nodes and notify them about the curr
 Like Kubernetes, the swarm manager uses ingress to expose and load balance services. 
 
 An internal DNS component assigns each service a DNS entry automatically.  \cite{dock-swarm}
+
+![Docker Swarm Mode core architecture\label{swarm_core_architecture} \cite{dock-swarm}](images/swarm_core_architecture.png){width=15cm}
 
 #### Announcements
 
@@ -550,7 +554,7 @@ There are several other popular neural network frameworks \cite{dzone-frameworks
 
 Statistics (like *stars*, *contributors* and *forks*) of open-source projects hosted on the version control platform GitHub, increasingly influence the community and other developers. Every user on GitHub can show interest in a project by giving it a star, or copy the complete source code (a fork). Programmers that contributed code to a project are called contributors. In a blog article[^leaf], the founder of a machine learning framework called *Leaf* announced the suspension of the development. The announcement featured a screenshot that compared Leaf to TensorFlow by the amount of stars on GitHub. 
 
-TensorFlow is currently the leading framework in terms of stars and contributors. Backed by Google, TensorFlow is fully integrated into the Google Cloud and Android platform. It has also been adopted by several large companies, like IBM, Twitter and Airbus \cite{dzone-frameworks}. Furthermore tech blogs rather report on TensorFlow than other frameworks. A Google search for TensorFlow on the popular tech blog *DZone.com* returns over 5.300 results, while Deeplearning4J got less than 500 (as of July 17, 2018). The following table compares the statistics of the two mentioned projects on GitHub.
+TensorFlow is currently the leading framework in terms of stars and contributors. Backed by Google, TensorFlow is fully integrated into the Google Cloud and Android platform. It has also been adopted by several large companies, like IBM, Twitter and Airbus \cite{dzone-frameworks}. Furthermore tech blogs rather report on TensorFlow than other frameworks. A search for TensorFlow on the popular tech blog *DZone.com* returns over 5.300 results, while Deeplearning4J got less than 500 (as of July 17, 2018). The following table compares the statistics of the two mentioned projects on GitHub.
 
 |              | TensorFlow [^tens] | Deeplearning4J [^dl4j] |
 | ------------ | ------------------ | ---------------------- |
@@ -2422,6 +2426,110 @@ Sets up a proxy to make services available at the endpoint specified in the API 
 kubectl --context $CONTEXT apply -f ingress.yaml
 ```
 
+## Amazon EKS
+
+This section describes how to deploy ConbexNN into a Kubernetes cluster in the *Amazon Elastic Container Service* (EKS).
+
+##### Prerequisites
+
+- AWS Account with activated billing or credits
+- `kubectl` tool on local machine installed: (<https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl>)
+
+##### Create Cluster
+
+Log into the AWS Management Console[^awsc] and select the Service *Elastic Container Service for Kubernetes*. Create a new cluster in the user interface. Configure *kubectl* for EKS using the current documentation[^awskube].
+
+[^awsc]: https://console.aws.amazon.com/eks
+
+[^awskube]: https://docs.aws.amazon.com/eks/latest/userguide/configure-kubectl.html
+
+##### Clone the repository
+
+Clone the `vinnsl-nn-cloud` project and swtich into the google-cloud folder.
+
+```
+git clone https://github.com/a00908270/vinnsl-nn-cloud.git
+cd kubernetes_config/aws-cloud/
+
+```
+
+##### Run Services in Cluster
+
+```
+# MongoDB for vinnsl-service
+kubectl --context $CONTEXT create -f mongo_small.yaml 
+# Vinnsl Service
+kubectl --context $CONTEXT create -f vinnsl-service.yaml
+# MongoDB for vinnsl-storage-service
+kubectl --context $CONTEXT create -f mongo-storage-service_small.yaml
+# Vinnsl Storage Service
+kubectl --context $CONTEXT create -f vinnsl-storage-service.yaml
+# Vinnsl NN Worker Service
+kubectl --context $CONTEXT create -f vinnsl-nn-worker.yaml
+# Vinnsl Frontend UI Webapp
+kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
+
+```
+
+##### Enable and Set Up Ingress
+
+Sets up a proxy to make services available at the endpoint specified in the API Specification.
+
+```
+kubectl --context $CONTEXT apply -f ingress.yaml
+```
+
+## Microsoft AKS
+
+This section describes how to deploy ConbexNN into a Kubernetes cluster in the *Azure Kubernetes Service* (AKS).
+
+##### Prerequisites
+
+- Microsoft Azure account with activated billing or credits
+- `kubectl` tool on local machine installed: (<https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl>)
+
+##### Create Cluster
+
+Log into the AWS Management Console[^msp] and select the Service *Azure Kubernetes Service*. Create a new cluster in the user interface. Launch the *Cloud Shell* an run the following commands.
+
+[^msp]: https://portal.azure.com
+
+##### Clone the repository
+
+Clone the `vinnsl-nn-cloud` project and swtich into the google-cloud folder.
+
+```
+git clone https://github.com/a00908270/vinnsl-nn-cloud.git
+cd kubernetes_config/azure-cloud/
+
+```
+
+##### Run Services in Cluster
+
+```
+# MongoDB for vinnsl-service
+kubectl --context $CONTEXT create -f mongo_small.yaml 
+# Vinnsl Service
+kubectl --context $CONTEXT create -f vinnsl-service.yaml
+# MongoDB for vinnsl-storage-service
+kubectl --context $CONTEXT create -f mongo-storage-service_small.yaml
+# Vinnsl Storage Service
+kubectl --context $CONTEXT create -f vinnsl-storage-service.yaml
+# Vinnsl NN Worker Service
+kubectl --context $CONTEXT create -f vinnsl-nn-worker.yaml
+# Vinnsl Frontend UI Webapp
+kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
+
+
+```
+
+##### Enable and Set Up Ingress
+
+Sets up a proxy to make services available at the endpoint specified in the API Specification.
+
+```
+kubectl --context $CONTEXT apply -f ingress.yaml
+```
 
 # Use Cases
 
@@ -2538,7 +2646,8 @@ BODY
 	 	<valueparameter>threshold</valueparameter>
 	 </parameters>
 	 <data>
-	 	<description>iris txt file with 3 classifications, 4 input vars</description>
+	 	<description>iris txt file with 3 classifications,
+        4 input vars</description>
 	 	<tabledescription>no input as table possible</tabledescription>
 	 	<filedescription>CSV file</filedescription>
 	 </data>
@@ -2642,7 +2751,8 @@ BODY
 	<valueparameter name="seed">6</valueparameter>
  </parameters>
  <data>
- 	<description>iris txt file with 3 classifications, 4 input vars</description>
+ 	<description>iris txt file with 3 classifications,
+    4 input vars</description>
 	<dataSchemaID>name/iris.txt</dataSchemaID>
  </data>
 </definition>
@@ -2863,7 +2973,8 @@ BODY
 	 	<valueparameter>threshold</valueparameter>
 	 </parameters>
 	 <data>
-	 	<description>wine csv file with 2 classifications, 2 input vars</description>
+	 	<description>wine csv file with 2 classifications, 
+	 	2 input vars</description>
 	 	<tabledescription>no input as table possible</tabledescription>
 	 	<filedescription>CSV file</filedescription>
 	 </data>
@@ -2971,7 +3082,8 @@ BODY
 	<valueparameter name="seed">6</valueparameter>
  </parameters>
  <data>
- 	<description>wine csv file with 2 classifications, 2 input vars</description>
+ 	<description>wine csv file with 2 classifications,
+    2 input vars</description>
 	<dataSchemaID>name/wines.csv</dataSchemaID>
  </data>
 </definition>
