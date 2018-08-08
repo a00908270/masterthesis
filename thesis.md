@@ -1027,13 +1027,7 @@ A detailed introduction to Deeplearning4J can be found in Section \ref{deeplearn
 
 ### vinnsl-nn-ui (Frontend UI)
 
-The `vinnsl-nn-ui` is a single page application (SPA) that displays all neural networks and their details in a web based frontend. Figure \ref{img.vinnsl-nn-ui} shows a screenshot of the user interface. 
-
-![User Interface of ConbexNN \label{img.vinnsl-nn-ui}](images/VINNSL-NN-UI.png){width=15cm}
-
-#### Architecture
-
-The web application is a Javascript based frontend, using the *Vue.js* and *Twitter Bootstrap* framework. The single main controller, called `VinnslUI`, provides methods to fetch a list of neural networks and their status.  Additionally it queries for available files from the storage service and enables to connect them to a neural network. 
+The `vinnsl-nn-ui` is a single page application (SPA) that displays all neural networks and their details in a web based frontend. See section \ref{user-interface-2}.
 
 ## Endpoints
 
@@ -1064,7 +1058,6 @@ The API, provided by the services, is documented and *Swagger* provides a web in
 
 <!--\bild{vinnsl-nn-ui}{15cm}{User Interface of Prototype}{User Interface of Prototype} \label{vinnsl-nn-ui}-->
 
-#### 
 
 ## Class Diagrams
 
@@ -1182,6 +1175,38 @@ The ViNNSL to Deeplearning4J mapper currently supports the following parameters:
 4. epochs
 5. threshold
 6. activationfunction
+
+# User Interface
+
+## vinnsl-nn-ui (Frontend UI)
+
+The `vinnsl-nn-ui` is a single page application (SPA) that displays all neural networks and their details in a web based frontend. Figure \ref{img.vinnsl-nn-ui} shows a screenshot of the user interface. 
+
+![User Interface of ConbexNN \label{img.vinnsl-nn-ui}](images/VINNSL-NN-UI.png){width=15cm}
+
+### Architecture
+
+The web application is a Javascript based frontend, using the *Vue.js* and *Twitter Bootstrap* framework. The single main controller, called `VinnslUI`, provides methods to fetch a list of neural networks and their status.  Additionally it queries for available files from the storage service and enables to connect them to a neural network. 
+
+### Features
+
+#### List of Neural Networks
+
+On the left side the user can see a list of all created or imported neural networks. Next to the names of the networks, there is a colored text stating the training status. 
+
+#### Detail View
+
+In the detailed view on the right side, the title, id and author of the network. The visualisation of a neural network is divided into tabs.
+
+The tabs "Description", "Definition", "Instance" and "Result" represent the eponymous ViNNSL Description XML file into a graphical tree view. When enough information is provided by ViNNSL XML files, the worker service performs a transformation into the internally used model representation of the *Deeplearning4J* Framework. The "DL4J Transformation" tab shows the transformed object. 
+
+##### Assign training- and testset
+
+In the "Files" tab, imported files of the storage services are listed and can be selected as training- or testset. 
+
+### Limitations
+
+The user interface is primary read-only and designed to provide a graphical overview of neural networks and their data. The actual creation and training of neural networks must be done via the RESTful API, as documented in section \ref{api-documentation}.
 
 # API Documentation
 
@@ -1479,7 +1504,8 @@ GET /vinnsl/{id}
         <data>
             <description>Input are face images with 32x30 px</description>
             <tabledescription>no input as table possible</tabledescription>
-            <filedescription>prepare the input as file by reading the image files</filedescription>
+            <filedescription>prepare the input as file by reading 
+            the image files</filedescription>
         </data>
     </description>
     <definition>
@@ -1711,7 +1737,8 @@ PUT /vinnsl/{id}/definition
 	<valueparameter name="seed">6</valueparameter>
  </parameters>
  <data>
- 	<description>iris txt file with 3 classifications, 4 input vars</description>
+ 	<description>iris txt file with 3 classifications, 
+ 	4 input vars</description>
 	<dataSchemaID>name/iris.txt</dataSchemaID>
  </data>
 </definition>
