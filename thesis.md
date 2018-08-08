@@ -1007,7 +1007,8 @@ All services are written in *Java* and built using the *Apache Maven* build auto
 
 ##### Used in following services:
 
-`vinnsl-service`, `vinnsl-nn-ui`, `vinnsl-storage-service`, `vinnsl-nn-worker`
+`vinnsl-service`, `vinnsl-nn-ui`, `vinnsl-storage-service`, 
+`vinnsl-nn-worker`
 
 ### Deeplearning4J
 
@@ -1206,7 +1207,7 @@ In the "Files" tab, imported files of the storage services are listed and can be
 
 ### Limitations
 
-The user interface is primary read-only and designed to provide a graphical overview of neural networks and their data. The actual creation and training of neural networks must be done via the RESTful API, as documented in section \ref{api-documentation}.
+The user interface is read-only and designed to provide a graphical overview of neural networks, their data and training result. The actual creation and training of neural networks must be done via the RESTful API, as documented in section \ref{api-documentation}.
 
 # API Documentation
 
@@ -1321,7 +1322,8 @@ Content-Type: application/xml
 	 </structure>
 	 <parameters/>
 	 <data>
-	 	<description>iris txt file with 3 classifications, 4 input vars</description>
+	 	<description>iris txt file with 3 classifications,
+        4 input vars</description>
 	 	<tabledescription>no input as table possible</tabledescription>
 	 	<filedescription>CSV file</filedescription>
 	 </data>
@@ -2086,8 +2088,10 @@ GET /storage
 
 * vinnsl-storage-controller
 
-
 ### Download File by Original Filename
+
+The original filename is the name and extension at the time of the upload.
+
 ```
 GET /storage/files/name/{filename}
 ```
@@ -2118,14 +2122,13 @@ GET /storage/files/name/{filename}
 * vinnsl-storage-controller
 
 
+
 ### Download or Show File by FileID
+
 ```
 GET /storage/files/{fileId}
 ```
-
-
 #### Parameters
-
 |Type|Name|Description|Schema|
 |---|---|---|---|
 |**Path**|**fileId**  <br>*required*|fileId|string|

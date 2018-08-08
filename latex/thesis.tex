@@ -2405,8 +2405,8 @@ and can be selected as training- or testset.
 
 \subsection{Limitations}\label{limitations-1}
 
-The user interface is primary read-only and designed to provide a
-graphical overview of neural networks and their data. The actual
+The user interface is read-only and designed to provide a graphical
+overview of neural networks, their data and training result. The actual
 creation and training of neural networks must be done via the RESTful
 API, as documented in section \ref{api-documentation}.
 
@@ -2547,7 +2547,8 @@ Content-Type: application/xml
      </structure>
      <parameters/>
      <data>
-        <description>iris txt file with 3 classifications, 4 input vars</description>
+        <description>iris txt file with 3 classifications,
+        4 input vars</description>
         <tabledescription>no input as table possible</tabledescription>
         <filedescription>CSV file</filedescription>
      </data>
@@ -3653,6 +3654,9 @@ HTTP Code & Description & Schema\tabularnewline
 
 \subsection{Download File by Original
 Filename}\label{download-file-by-original-filename}
+
+The original filename is the name and extension at the time of the
+upload.
 
 \begin{verbatim}
 GET /storage/files/name/{filename}
