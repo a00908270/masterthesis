@@ -1176,6 +1176,8 @@ The ViNNSL to Deeplearning4J mapper currently supports the following parameters:
 4. epochs
 5. threshold
 6. activationfunction
+7. seed
+8. dl4jTrainerClass
 
 # User Interface
 
@@ -3173,6 +3175,243 @@ By examining the result file, it can be noticed that the accuracy of the network
 
 
 [^we]: https://www.winemag.com/?s=&drink_type=wine
+
+## MNIST Digit Recognition Example
+
+The third use case shows a deep neural network example, using the popular MNIST dataset [^mnisturl], an image collection of handwritten digits. *Deeplearning4J* provides an own data set iterator for this dataset. To make use of this implementation, a `dl4jTrainerClass` is specified in the ViNNSL network definition as a parameter.
+
+[^mnisturl]: http://yann.lecun.com/exdb/mnist/
+
+### Dataset
+
+The dataset which will be used for training, contains 60.000 elements, the test set 10.000 examples of handwritten digit images from zero to nine, so there are ten possible classification classes. The images have a size of 28x28 pixels.
+
+### Prerequisites
+
+- Kubernetes Cluster running
+- Services from the Neural Network Execution Stack deployed in cluster
+- Hostname `cluster.local` resolves to Minikube instance
+
+### Create the neural network
+
+#### Request
+
+```
+POST https://cluster.local/vinnsl
+
+```
+
+BODY
+
+```
+<vinnsl>
+  <description>
+    <identifier><!-- will be generated --></identifier>
+    <metadata>
+      <paradigm>Deep Learning</paradigm>
+      <name>MNIST Digit Recognition</name>
+      <description>MNIST Digit Recognition Example</description>
+      <version>
+        <major>1</major>
+        <minor>0</minor>
+      </version>
+    </metadata>
+    <creator>
+      <name>Author</name>
+      <contact>author@institution.com</contact>
+    </creator>
+    <problemDomain>
+      <propagationType type="feedforward">
+        <learningType>supervised</learningType>
+      </propagationType>
+      <applicationField>DeepLearning</applicationField>
+      <networkType>Backpropagation</networkType>
+      <problemType>DeepLearning</problemType>
+    </problemDomain>
+    <endpoints>
+      <train>true</train>
+      <retrain>true</retrain>
+      <evaluate>true</evaluate>
+    </endpoints>
+    <structure>
+	   <input>
+	    <ID>Input1</ID>
+	    <size>
+	    	<min>784</min>
+	    	<max>784</max>
+	    </size>
+	   </input>
+	   <hidden>
+	    <ID>DenseLayer</ID>
+	    <size>
+	    	<min>1000</min>
+	    	<max>1000</max>
+	    </size>
+	   </hidden>
+	   <output>
+	    <ID>Output1</ID>
+	    <size>
+	    	<min>10</min>
+	    	<max>10</max>
+	    </size>
+	   </output>
+	 </structure>
+	 <parameters>
+	 </parameters>
+	 <data>
+	 </data>
+  </description>
+</vinnsl>
+
+```
+
+#### Response
+
+```
+201 CREATED 
+```
+
+Aside from the HTTP Status Code, we also get HTTP headers in the response. The one needed for further requests is named `location`. The value of this field is the URL of the network, that was created and can be used to get and update fields on the dataset.
+
+In this example the following value is returned:
+
+| Header Name | Header Value                                          |
+| ----------- | ----------------------------------------------------- |
+| location    | https://cluster.local/vinnsl/5b8f16bb5d298600014f1ec1 |
+
+The id of the new dataset is 5b8f16bb5d298600014f1ec1. In the following requests the id is shortened as `{id}`. 
+
+### Add ViNNSL Definition to the Neural Network
+
+The ViNNSL definition XML contains metadata like name and description of the network as well as the stucture of the neural network model. There is one input and one output layer defined. In between there are two hidden layers. It is also possible to specify additional parameters.
+
+The parameter `dl4jTrainerClass` defines a special worker class, that adds additional attributes to the ViNNSL Network programatically.
+
+The Network has one input, one dense and one output layer. The learning rate is set to 0.006, the momentum to 0.9. The dense layer uses Rectified Linear Unit (ReLu) and the output layer Softmax  as activation function. 
+
+#### Request
+
+```
+POST https://cluster.local/vinnsl/{id}/definition
+
+```
+
+BODY
+
+```
+<definition>
+<identifier><!-- will be generated --></identifier>
+<metadata>
+  <paradigm>Deep Learning</paradigm>
+  <name>MNIST Digit Recognition</name>
+  <description>MNIST Digit Recognition Example</description>
+  <version>
+    <major>1</major>
+    <minor>0</minor>
+  </version>
+</metadata>
+<creator>
+  <name>Author</name>
+  <contact>author@institution.com</contact>
+</creator>
+<problemDomain>
+  <propagationType type="feedforward">
+    <learningType>supervised</learningType>
+  </propagationType>
+  <applicationField>Deep Learning</applicationField>
+  <networkType>Backpropagation</networkType>
+  <problemType>Deep Learning</problemType>
+</problemDomain>
+<endpoints>
+  <train>true</train>
+</endpoints>
+<executionEnvironment>
+	<serial>true</serial>
+</executionEnvironment>
+<structure>
+   <input>
+    <ID>Input1</ID>
+    <size>784</size>
+   </input>
+   <hidden>
+    <ID>DenseLayer</ID>
+    <size>1000</size>
+   </hidden>
+   <output>
+    <ID>Output1</ID>
+    <size>10</size>
+   </output>
+   <connections>
+   	<!--<fullconnected>
+   		<fromblock>Input1</fromblock>
+   		<toblock>DenseLayer</toblock>
+   		<fromblock>DenseLayer</fromblock>
+   		<toblock>Output1</toblock>
+   	</fullconnected>-->
+   </connections>
+ </structure>
+ <resultSchema>
+ 	<instance>true</instance>
+ 	<training>true</training>
+ </resultSchema>
+ <parameters>
+ 	<valueparameter name="learningrate">0.006</valueparameter>
+	<valueparameter name="epochs">15</valueparameter>
+	<valueparameter name="seed">123</valueparameter>
+	<valueparameter name="momentum">0.9</valueparameter>
+	<comboparameter name=
+	"dl4jTrainerClass">at.ac.univie.a00908270.nnworker.dl4j.Dl4jMnistNetworkTrainer
+	</comboparameter>
+ </parameters>
+ <data>
+ 	<description>DL4J MNIST Dataset</description>
+ </data>
+</definition>
+
+```
+
+#### Response
+
+```
+200 OK
+
+```
+
+### Queue Network for Training
+
+#### Request
+
+```
+POST https://cluster.local/worker/queue/{id}
+
+```
+
+#### Response
+
+```
+200 OK
+```
+
+### Evaluation Result
+
+As soon as the training and testing process is finished, a file with the testing report is ready on the storage server. A result file with id `5b8f2092852b830001ec105a` was uploaded to the storage service. The status is changed to `FINISHED` and the transformed *Deeplearning4J* model representation is updated in the field *dl4jNetwork*.
+
+In the *ViNNSL NN UI*, the result file can be viewed by switching to the *Data* tab and selecting *See File* under the headline *Result Data*.
+
+```
+[...]
+
+==========================Scores========================================
+ # of classes:    10
+ Accuracy:        0.9839
+ Precision:       0.9839
+ Recall:          0.9838
+ F1 Score:        0.9838
+Precision, recall & F1: macro-averaged (equally weighted avg. of 10 classes)
+========================================================================
+```
+
+By examining the result file, it can be noticed that the accuracy of the network was 98,4 percent. 
 
 # Future Work
 
