@@ -2347,6 +2347,17 @@ PUT /worker/queue/{id}
 
 # Deployment
 
+ConbexNN can be deployed locally or in the cloud in various environments. After deployment the following endpoints can be called with a RESTful client.
+
+| endpoint        | Service                           |
+| --------------- | --------------------------------- |
+| /#/             | Vinnsl NN UI                      |
+| /vinnsl         | Vinnsl Service                    |
+| /status         | Vinnsl NN Status                  |
+| /worker/queue   | Worker Queue                      |
+| /storage        | Storage Service                   |
+| /train/overview | DL4J Training UI (while training) |
+
 ## Local Machine
 
 ##### Prerequisites
@@ -2361,30 +2372,44 @@ PUT /worker/queue/{id}
 
 Starts the minikube cluster
 
+##### Check status
+
+```
+minikube status
+```
+
+Should return
+
+```
+minikube: Running
+cluster: Running
+kubectl: Correctly Configured: pointing to minikube-vm at 192.168.99.102
+```
+
 ##### Setting up
 
 Clone the repository
 
 ```
-git clone https://github.com/a00908270/vinnsl-nn-cloud.git
-cd kubernetes_config/
+git clone https://github.com/a00908270/conbexnn.git
+cd /deploy/local_minikube/
 ```
 
 ##### Run Services in Cluster
 
 ```
 # MongoDB for vinnsl-service
-kubectl --context $CONTEXT create -f mongo.yaml 
+kubectl create -f mongo_small.yaml 
 # Vinnsl Service
-kubectl --context $CONTEXT create -f vinnsl-service.yaml
+kubectl create -f vinnsl-service.yaml
 # MongoDB for vinnsl-storage-service
-kubectl --context $CONTEXT create -f mongo-storage-service.yaml
+kubectl create -f mongo-storage-service.yaml
 # Vinnsl Storage Service
-kubectl --context $CONTEXT create -f vinnsl-storage-service.yaml
+kubectl create -f vinnsl-storage-service.yaml
 # Vinnsl NN Worker Service
-kubectl --context $CONTEXT create -f vinnsl-nn-worker.yaml
+kubectl create -f vinnsl-nn-worker.yaml
 # Vinnsl Frontend UI Webapp
-kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
+kubectl create -f vinnsl-nn-ui.yaml
 ```
 
 ##### Enable and Set Up Ingress
@@ -2392,8 +2417,36 @@ kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
 Sets up a proxy to make services available at the endpoint specified in the API Specification.
 
 ```
-kubectl --context $CONTEXT apply -f ingress.yaml
+kubectl apply -f ingress.yaml
 ```
+
+##### Check status with Dashboard
+
+```
+minikube dashboard
+```
+
+This commands opens the dashboard and lets you check the status of the services. This can take a few minutes.
+
+##### Usage
+
+After a few minutes you can open the cluster ingress ip address to view the Vinnsl-NN-UI You can get the address by executing
+
+```
+minikube ip
+```
+
+Open your Browser <https://minikubeip/#/> to open Vinnsl-NN-UI.
+
+## Virtual Machine
+
+A virtual machine has been assembled, that comes preconfigured with Kubernetes running all necessary ConbexNN services and a neural network training set for testing.
+
+It is a VirtualBox image running Lubnutu 18.04 64 bit. Firefox and Postman for testing come preinstalled. 
+
+### Download
+
+The virtual machine can be downloaded at the project website: https://a00908270.github.io/vm
 
 ## Google Cloud Instance 
 
@@ -2409,19 +2462,21 @@ This section describes how to deploy ConbexNN into a Kubernetes cluster in the G
 ##### Create Cluster
 
 ```
-gcloud beta container --project "nn-cloud-201314" clusters create "cluster-1" 
---zone "us-central1-a" --username "admin" --cluster-version "1.8.8-gke.0" 
---machine-type "n1-standard-1" --image-type "COS" --disk-size "15" --scopes 
-"https://www.googleapis.com/auth/compute",
-"https://www.googleapis.com/auth/devstorage.read_only",
-"https://www.googleapis.com/auth/logging.write",
-"https://www.googleapis.com/auth/monitoring",
-"https://www.googleapis.com/auth/servicecontrol",
-"https://www.googleapis.com/auth/service.management.readonly",
-"https://www.googleapis.com/auth/trace.append" 
---num-nodes "4" --network "default" --enable-cloud-logging 
---enable-cloud-monitoring --subnetwork "default" --addons 
-HorizontalPodAutoscaling,HttpLoadBalancing,KubernetesDashboard
+gcloud beta container --project "nn-cloud-201314" clusters create "cluster-2"
+--zone "us-central1-a" --username "admin" --cluster-version "1.9.7-gke.6"
+--machine-type "n1-standard-1" --image-type "COS" --disk-type "pd-standard"
+--disk-size "100" --scopes "https://www.googleapis.com/auth/compute",
+"https://www.googleapis.com/auth/devstorage.read_only"
+,"https://www.googleapis.com/auth/logging.write"
+,"https://www.googleapis.com/auth/monitoring"
+,"https://www.googleapis.com/auth/servicecontrol"
+,"https://www.googleapis.com/auth/service.management.readonly"
+,"https://www.googleapis.com/auth/trace.append" 
+--num-nodes "3" --enable-cloud-logging --enable-cloud-monitoring 
+--network "projects/nn-cloud-201314/global/networks/default" 
+--subnetwork "projects/nn-cloud-201314/regions/us-central1/subnetworks/default" 
+--addons HorizontalPodAutoscaling,HttpLoadBalancing,KubernetesDashboard 
+--no-enable-autoupgrade --enable-autorepair
 ```
 
 ##### Clone the repository
@@ -2429,25 +2484,25 @@ HorizontalPodAutoscaling,HttpLoadBalancing,KubernetesDashboard
 Clone the `vinnsl-nn-cloud` project and swtich into the google-cloud folder.
 
 ```
-git clone https://github.com/a00908270/vinnsl-nn-cloud.git
-cd kubernetes_config/google-cloud/
+git clone https://github.com/a00908270/conbexnn.git
+cd deploy/cloud/google/
 ```
 
 ##### Run Services in Cluster
 
 ```
 # MongoDB for vinnsl-service
-kubectl --context $CONTEXT create -f mongo_small.yaml 
+kubectl create -f mongo_small.yaml 
 # Vinnsl Service
-kubectl --context $CONTEXT create -f vinnsl-service.yaml
+kubectl create -f vinnsl-service.yaml
 # MongoDB for vinnsl-storage-service
-kubectl --context $CONTEXT create -f mongo-storage-service_small.yaml
+kubectl create -f mongo-storage-service_small.yaml
 # Vinnsl Storage Service
-kubectl --context $CONTEXT create -f vinnsl-storage-service.yaml
+kubectl create -f vinnsl-storage-service.yaml
 # Vinnsl NN Worker Service
-kubectl --context $CONTEXT create -f vinnsl-nn-worker.yaml
+kubectl create -f vinnsl-nn-worker.yaml
 # Vinnsl Frontend UI Webapp
-kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
+kubectl create -f vinnsl-nn-ui.yaml
 ```
 
 ##### Enable and Set Up Ingress
@@ -2455,7 +2510,7 @@ kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
 Sets up a proxy to make services available at the endpoint specified in the API Specification.
 
 ```
-kubectl --context $CONTEXT apply -f ingress.yaml
+kubectl apply -f ingress_gke.yaml
 ```
 
 ## Amazon EKS
@@ -2477,11 +2532,11 @@ Log into the AWS Management Console[^awsc] and select the Service *Elastic Conta
 
 ##### Clone the repository
 
-Clone the `vinnsl-nn-cloud` project and swtich into the google-cloud folder.
+Clone the `vinnsl-nn-cloud` project and switch into the google-cloud folder.
 
 ```
-git clone https://github.com/a00908270/vinnsl-nn-cloud.git
-cd kubernetes_config/aws-cloud/
+git clone https://github.com/a00908270/conbexnn.git
+cd deploy/cloud/amazon/
 
 ```
 
@@ -2517,55 +2572,78 @@ This section describes how to deploy ConbexNN into a Kubernetes cluster in the *
 
 ##### Prerequisites
 
-- Microsoft Azure account with activated billing or credits
-- `kubectl` tool on local machine installed: (<https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl>)
+- Azure Account
+- Azure Cloud Shell
 
-##### Create Cluster
+##### Set up
 
-Log into the AWS Management Console[^msp] and select the Service *Azure Kubernetes Service*. Create a new cluster in the user interface. Launch the *Cloud Shell* an run the following commands.
+Login into Azure Portal and open Cloud Shell
 
-[^msp]: https://portal.azure.com
-
-##### Clone the repository
-
-Clone the `vinnsl-nn-cloud` project and swtich into the google-cloud folder.
+##### Create cluster
 
 ```
-git clone https://github.com/a00908270/vinnsl-nn-cloud.git
-cd kubernetes_config/azure-cloud/
-
+az group create --name conbexnn --location eastus
+az aks create --resource-group conbexnn --name 
+conbexnnCluster --node-count 2 --enable-addons monitoring
+--generate-ssh-keys
 ```
 
-##### Run Services in Cluster
+##### Configure kubectl
 
 ```
-# MongoDB for vinnsl-service
-kubectl --context $CONTEXT create -f mongo_small.yaml 
-# Vinnsl Service
-kubectl --context $CONTEXT create -f vinnsl-service.yaml
-# MongoDB for vinnsl-storage-service
-kubectl --context $CONTEXT create -f mongo-storage-service_small.yaml
-# Vinnsl Storage Service
-kubectl --context $CONTEXT create -f vinnsl-storage-service.yaml
-# Vinnsl NN Worker Service
-kubectl --context $CONTEXT create -f vinnsl-nn-worker.yaml
-# Vinnsl Frontend UI Webapp
-kubectl --context $CONTEXT create -f vinnsl-nn-ui.yaml
-
-
+az aks get-credentials --resource-group conbexnn --name conbexnnCluster
 ```
 
-##### Enable and Set Up Ingress
+#### Setup Services
 
-Sets up a proxy to make services available at the endpoint specified in the API Specification.
+##### Checkout Git Repo
+
+Checkout the repo containing the config files
 
 ```
-kubectl --context $CONTEXT apply -f ingress.yaml
+git clone https://github.com/a00908270/conbexnn.git
+cd deploy/cloud/azure 
+```
+
+##### Setup Services
+
+```
+kubectl apply -f mongo_small.yaml
+kubectl apply -f vinnsl-service.yaml
+kubectl apply -f vinnsl-nn-ui.yaml
+kubectl apply -f mongo-storage-service_small.yaml 
+kubectl apply -f vinnsl-storage-service.yaml
+kubectl apply -f vinnsl-nn-worker.yaml
+```
+
+##### Enable Service Discovery with Ingress
+
+```
+helm init
+helm install stable/nginx-ingress --namespace kube-system 
+kubectl apply -f ingress.yaml
+```
+
+##### Usage
+
+After a few minutes you can open the cluster ingress load balancer ip address to view the Vinnsl-NN-UI You can get the "EXTERNAL-IP" by executing
+
+```
+kubectl get service -l app=nginx-ingress --namespace kube-system
 ```
 
 # Use Cases
 
-As a demonstration of the implemented ConbexNN, this thesis features two use cases with practical relevance.
+As a demonstration of the implemented ConbexNN, this thesis features two use cases with practical relevance. The training was executed on the following hardware:
+
+|             |                                                       |
+| ----------- | ----------------------------------------------------- |
+| Model       | Macbook Pro 15'' Mid-2015                             |
+| Processor   | Intel Core i7 4870HQ @ 2.5 GHz                        |
+| Memory      | 16 GB DDR3 @ 1600 MHz                                 |
+| Environment | Kubernetes on Docker CE Edge 18.06.1-ce-mac73 (26764) |
+
+
 
 ## Iris Classification Example
 
@@ -2707,7 +2785,7 @@ The id of the new dataset is 5b1811a046e0fb0001fa28cc. In the following requests
 
 The ViNNSL definition XML contains metadata like name and description of the network as well as the stucture of the neural network model. There is one input and one output layer defined. In between there are two hidden layers. It is also possible to specify additional parameters.
 
-The activation function is set to tangens hyperbolicus, the learning rate is 0.1 and the training is limited to 500 iterations. A seed, set to 6, allows a reproducible training score.
+The activation function is set to tangens hyperbolicus, the learning rate is 0.1 and the training is limited to 500 iterations. A seed, set to 6, allows a reproducible training score. The label index specifies which column in the CSV file represents the iris species starting which zero. In this case it is the index with number 4. 
 
 #### Request
 
@@ -2781,6 +2859,7 @@ BODY
 	<comboparameter name="activationfunction">tanh</comboparameter>
 	<valueparameter name="iterations">500</valueparameter>
 	<valueparameter name="seed">6</valueparameter>
+	<valueparameter name="labelIndex">4</valueparameter>
  </parameters>
  <data>
  	<description>iris txt file with 3 classifications,
@@ -2866,23 +2945,23 @@ In the *ViNNSL NN UI*, the result file can be viewed by switching to the *Data* 
 ```
 [...]
 
-Examples labeled as 0 classified by model as 0: 19 times
-Examples labeled as 1 classified by model as 1: 17 times
-Examples labeled as 1 classified by model as 2: 2 times
-Examples labeled as 2 classified by model as 2: 15 times
+Examples labeled as 0 classified by model as 0: 24 times
+Examples labeled as 1 classified by model as 1: 15 times
+Examples labeled as 2 classified by model as 2: 14 times
 
 
-==========================Scores===========================================
+==========================Scores========================================
  # of classes:    3
- Accuracy:        0.9623
- Precision:       0.9608
- Recall:          0.9649
- F1 Score:        0.9606
+ Accuracy:        1.0000
+ Precision:       1.0000
+ Recall:          1.0000
+ F1 Score:        1.0000
 Precision, recall & F1: macro-averaged (equally weighted avg. of 3 classes)
-===========================================================================
+========================================================================
+Training took 0.841000 seconds
 ```
 
-By examining the result file, it can be noticed that the accuracy of the network was 96 percent. All *Iris setosa* and *Iris versicolor* from the testset were recognized correctly, two *Iris virginica* were incorrectly recognized as *Iris versicolor*. 
+By examining the result file, it can be noticed that the accuracy of the network was at 100 percent. After 500 training iterations, all iris flowers were classified correctly.  The training took 0.84 seconds to finish.
 
 <!--mnist?-->
 
@@ -2892,7 +2971,7 @@ The second use case shows that a very similar ViNNSL Network can be used on a di
 
 ### Dataset
 
-The dataset which will be used for training, contains 20.000 elements with two feature columns and two possible classes. The first feature column is the category of wine (red or white wine), the second is the price (numerical). There are two possible classes: the first class is applicable if the rating score, that has possible values between 0 and 100, is below 90. Otherwise the second class is applicable.  
+The dataset which will be used for training, contains 60.000 elements with two feature columns and two possible classes. The first feature column is the category of wine (red or white wine), the second is the price (numerical). There are two possible classes: the first class is applicable if the rating score, that has possible values between 0 and 100, is below 90. Otherwise the second class is applicable.  
 
 #### Possible Classification
 
@@ -3153,24 +3232,24 @@ In the *ViNNSL NN UI*, the result file can be viewed by switching to the *Data* 
 ```
 [...]
 
-Examples labeled as 0 classified by model as 0: 4648 times
-Examples labeled as 0 classified by model as 1: 548 times
-Examples labeled as 1 classified by model as 0: 959 times
-Examples labeled as 1 classified by model as 1: 845 times
+Examples labeled as 0 classified by model as 0: 15528 times
+Examples labeled as 0 classified by model as 1: 1209 times
+Examples labeled as 1 classified by model as 0: 2369 times
+Examples labeled as 1 classified by model as 1: 1894 times
 
 
-==========================Scores===========================================
+==========================Scores========================================
  # of classes:    2
- Accuracy:        0.7847
- Precision:       0.7178	
- Recall:          0.6815	
- F1 Score:        0.6946	
-Precision, recall & F1: macro-averaged (equally weighted avg. of 3 classes)
-===========================================================================
+ Accuracy:        0.8296
+ Precision:       0.7390
+ Recall:          0.6860
+ F1 Score:        0.5143
+========================================================================
+Training took 29.109000 seconds
 
 ```
 
-By examining the result file, it can be noticed that the accuracy of the network was 78.5 percent. The network was pretty good at classifying the ratings soly based on wine category and price.
+By examining the result file, it can be noticed that the accuracy of the network was 82.96 percent after 500 iterations. The network was pretty good at classifying the ratings soly based on wine category and price. The training took less than 30 seconds to finish.
 
 
 
@@ -3178,7 +3257,7 @@ By examining the result file, it can be noticed that the accuracy of the network
 
 ## MNIST Digit Recognition Example
 
-The third use case shows a deep neural network example, using the popular MNIST dataset [^mnisturl], an image collection of handwritten digits. *Deeplearning4J* provides an own data set iterator for this dataset. To make use of this implementation, a `dl4jTrainerClass` is specified in the ViNNSL network definition as a parameter.
+The third use case shows a deep neural network example, using the popular MNIST dataset [^mnisturl] \cite{lecun-mnisthandwrittendigit-2010}, an image collection of handwritten digits. *Deeplearning4J* provides an own data set iterator for this dataset. To make use of this implementation, a `dl4jTrainerClass` is specified in the ViNNSL network definition as a parameter.
 
 [^mnisturl]: http://yann.lecun.com/exdb/mnist/
 
@@ -3403,15 +3482,17 @@ In the *ViNNSL NN UI*, the result file can be viewed by switching to the *Data* 
 
 ==========================Scores========================================
  # of classes:    10
- Accuracy:        0.9839
- Precision:       0.9839
- Recall:          0.9838
- F1 Score:        0.9838
+ Accuracy:        0.9836
+ Precision:       0.9836
+ Recall:          0.9835
+ F1 Score:        0.9835
 Precision, recall & F1: macro-averaged (equally weighted avg. of 10 classes)
 ========================================================================
+
+Training took 211.468000 seconds
 ```
 
-By examining the result file, it can be noticed that the accuracy of the network was 98,4 percent. 
+By examining the result file, it can be noticed that the accuracy of the network was 98,4 percent after fifteen  training epochs. The training took three minutes and thirty seconds on the tested hardware.
 
 # Future Work
 
